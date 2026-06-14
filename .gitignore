@@ -1,0 +1,19 @@
+# Node dependencies
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+backend/.env
+.env.production
+.env.development
+
+# Production build directories
+dist/
+build/
+
+# Logs
+*.log
+backend/*.log
+frontend/*.log

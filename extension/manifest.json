@@ -1,0 +1,69 @@
+{
+  "manifest_version": 3,
+  "name": "HirenextAI Agent",
+  "version": "1.0.0",
+  "description": "AI powered job application agent by HirenextAI",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApLSJXPDXSfOmo0dy0j0mGUaTqJQEWQjWV+HhnLmX/2I23k4V5n9Z824gVuAl0JThD+QqY9wsw11rG8PDsXZcUf9AA3ui6OLC3nt0wxG1ze2ANUfaIsdgjgsZQKuMiHRdQXLM89gjy5fwPaKT36qVboDP/06uctNnh+GnRTy22KbYa73WW9j2Y65bXWH3sb7BQbyCc0ZNHh8kXKolWPNbN1msBWiLB90dMeUijiKoRv/TxKCWxoF3BaGTMAo6HJTFPvCLfoXxncU0BvK4aj/QHOQbN2STOSMoJfF7qcckTS2ZxZ/FPpikBRJP7UT6urE18hn6t7jVSg/L5MUn+q4u4QIDAQAB",
+  
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "scripting",
+    "notifications",
+    "downloads"
+  ],
+  
+  "host_permissions": [
+    "https://*.linkedin.com/*",
+    "https://*.indeed.com/*",
+    "https://*.naukri.com/*",
+    "https://*.glassdoor.com/*",
+    "https://*.internshala.com/*",
+    "https://hirenextai.com/*"
+  ],
+
+  "externally_connectable": {
+    "matches": [
+      "https://hirenextai.com/*",
+      "https://www.hirenextai.com/*",
+      "http://localhost:3003/*",
+      "http://127.0.0.1:3003/*"
+    ]
+  },
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.linkedin.com/*",
+        "https://*.indeed.com/*",
+        "https://*.naukri.com/*",
+        "https://*.glassdoor.com/*",
+        "https://*.internshala.com/*"
+      ],
+      "js": ["content.js", "overlay.js"],
+      "css": ["overlay.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["overlay.css", "sounds/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

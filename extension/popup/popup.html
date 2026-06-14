@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  
+  <div class="header">
+    <div class="logo">
+      <span class="logo-icon">H</span>
+      <span>HirenextAI <span class="agent-text">Agent</span></span>
+    </div>
+    <div class="status-indicator">
+      <div class="status-dot" id="status-dot"></div>
+      <span id="status-text">Checking...</span>
+    </div>
+  </div>
+
+  <!-- Disconnected State -->
+  <div class="body-content" id="disconnected-state" style="display: none;">
+    <div class="connect-message">
+      <p>Connect to HirenextAI to start auto-applying for jobs.</p>
+    </div>
+    <button class="primary-btn" id="open-hirenextai">Open HirenextAI</button>
+  </div>
+
+  <!-- Connected State -->
+  <div class="body-content" id="connected-state" style="display: none;">
+    <div class="user-info">
+      <div class="avatar" id="user-initials"></div>
+      <div class="user-details">
+        <div class="user-name" id="user-name">Loading...</div>
+        <div class="user-email" id="user-email">...</div>
+      </div>
+      <div class="plan-badge" id="plan-badge">PRO</div>
+    </div>
+
+    <div class="status-section">
+      <div class="ready-text">Ready to apply</div>
+      <div class="last-applied" id="last-applied">Last applied: -</div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="applied-today">-</div>
+        <div class="stat-label">Applied today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="total-applied">-</div>
+        <div class="stat-label">Total applied</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="success-rate">-</div>
+        <div class="stat-label">Success rate</div>
+      </div>
+    </div>
+
+    <button class="primary-btn" id="start-job-hunt">Start Job Hunt</button>
+  </div>
+
+  <div class="footer">
+    <div class="version">v1.0.0</div>
+    <div class="footer-links">
+      <a href="#" id="settings-link">Settings</a>
+      <a href="#" id="disconnect-link" style="display: none;">Disconnect</a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
