@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import anime from "animejs";
 import useAuthStore from "../store/useAuthStore";
 import useUserStore from "../store/useUserStore";
 import useUIStore from "../store/useUIStore";
@@ -99,11 +100,24 @@ export default function Auth() {
   const [otpHint, setOtpHint] = useState(null);
   const [otpArray, setOtpArray] = useState(Array(6).fill(""));
   const otpRefs = useRef([]);
+  const formRef = useRef(null);
 
   useEffect(() => {
     setOtp(otpArray.join(""));
   }, [otpArray]);
   const [error, setError] = useState("");
+  
+  // Trigger shake animation when error appears
+  useEffect(() => {
+    if (error && formRef.current) {
+      anime({
+        targets: formRef.current,
+        translateX: [0, -8, 8, -4, 4, 0],
+        duration: 400,
+        easing: 'easeInOutQuad',
+      });
+    }
+  }, [error]);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [forgotPasswordMode, setForgotPasswordMode] = useState(false);
   const [isSendingReset, setIsSendingReset] = useState(false);
@@ -370,7 +384,7 @@ export default function Auth() {
                       </button>
                     </form>
                   ) : (
-                    <form onSubmit={handleEmailSubmit} className="space-y-3">
+                    <form ref={formRef} onSubmit={handleEmailSubmit} className="space-y-3">
                       {mode === "signup" && (
                         <InputRow
                           icon={User}

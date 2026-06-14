@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import anime from "animejs";
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
 import { CheckCircle2, X, Loader2 } from "lucide-react";
@@ -26,6 +27,22 @@ export default function Pricing() {
   const { isAuthenticated, user, token, updateUser } = useAuthStore();
   const { showToast } = useUIStore();
   const navigate = useNavigate();
+  const cardsRef = useRef(null);
+
+  // Animate pricing cards on view
+  useEffect(() => {
+    if (!cardsRef.current) return;
+    const cards = cardsRef.current.querySelectorAll('.price-card, .price-card-featured');
+    
+    anime({
+      targets: cards,
+      opacity: [0, 1],
+      translateY: [30, 0],
+      duration: 600,
+      delay: anime.stagger(100),
+      easing: 'easeOutQuad',
+    });
+  }, []);
 
   const handlePay = async (planName, planId) => {
     if (!isAuthenticated) {
@@ -408,7 +425,7 @@ export default function Pricing() {
         </section>
 
         {/* Cards Grid */}
-        <section className="pb-16">
+        <section className="pb-16" ref={cardsRef}>
           <motion.div
             variants={containerVariants}
             initial="hidden"
