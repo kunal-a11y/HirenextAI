@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
@@ -26,6 +26,25 @@ export default function Pricing() {
   const { isAuthenticated, user, token, updateUser } = useAuthStore();
   const { showToast } = useUIStore();
   const navigate = useNavigate();
+  const cardsRef = useRef(null);
+
+  // Animate pricing cards on view
+  useEffect(() => {
+    if (!cardsRef.current) return;
+    const cards = cardsRef.current.querySelectorAll('.price-card, .price-card-featured');
+    
+    cards.forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      card.style.transition = 'none';
+      
+      setTimeout(() => {
+        card.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, 100 * index);
+    });
+  }, []);
 
   const handlePay = async (planName, planId) => {
     if (!isAuthenticated) {
@@ -408,7 +427,7 @@ export default function Pricing() {
         </section>
 
         {/* Cards Grid */}
-        <section className="pb-16">
+        <section className="pb-16" ref={cardsRef}>
           <motion.div
             variants={containerVariants}
             initial="hidden"

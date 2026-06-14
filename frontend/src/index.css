@@ -210,7 +210,7 @@ body,
     color: white;
   }
 
-  /* ── Job description HTML content typography ─────────────────────────── */
+  /* ── Job description HTML content typography ────────────────────────��── */
   .job-desc {
     font-size: 0.875rem;
     line-height: 1.75;
@@ -370,7 +370,7 @@ body,
 .stagger-4 { animation-delay: 400ms; }
 .stagger-5 { animation-delay: 500ms; }
 
-@keyframes scroll-x {
+@keyframes marqueeScroll {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }

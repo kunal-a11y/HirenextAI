@@ -99,11 +99,25 @@ export default function Auth() {
   const [otpHint, setOtpHint] = useState(null);
   const [otpArray, setOtpArray] = useState(Array(6).fill(""));
   const otpRefs = useRef([]);
+  const formRef = useRef(null);
 
   useEffect(() => {
     setOtp(otpArray.join(""));
   }, [otpArray]);
   const [error, setError] = useState("");
+  
+  // Trigger shake animation when error appears
+  useEffect(() => {
+    if (error && formRef.current) {
+      // Simple shake animation using CSS keyframes
+      formRef.current.style.animation = 'shake 0.4s ease-in-out';
+      setTimeout(() => {
+        if (formRef.current) {
+          formRef.current.style.animation = '';
+        }
+      }, 400);
+    }
+  }, [error]);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [forgotPasswordMode, setForgotPasswordMode] = useState(false);
   const [isSendingReset, setIsSendingReset] = useState(false);
@@ -370,7 +384,7 @@ export default function Auth() {
                       </button>
                     </form>
                   ) : (
-                    <form onSubmit={handleEmailSubmit} className="space-y-3">
+                    <form ref={formRef} onSubmit={handleEmailSubmit} className="space-y-3">
                       {mode === "signup" && (
                         <InputRow
                           icon={User}

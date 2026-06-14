@@ -10,6 +10,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 import { DemoRoleModal } from "../components/DemoRoleModal";
+import { animateFloatingParticles, animateMorphingBlobs, animateWordStagger, animateCardStaggerOnScroll, animateCountUp } from "../lib/animeAnimations";
 
 const phrases = [
   "Smarter — Not Harder",
@@ -246,6 +247,25 @@ export default function Landing() {
   };
 
   const typedText = useTypingCycle();
+  const heroParticlesRef = useRef(null);
+
+  // Initialize particles animation
+  useEffect(() => {
+    if (heroParticlesRef.current) {
+      // Simulate particles animation
+      const particles = heroParticlesRef.current.querySelectorAll('.particle');
+      anime({
+        targets: particles,
+        y: [anime.random(0, 30), anime.random(-30, 0)],
+        x: [anime.random(-20, 20), anime.random(-30, 30)],
+        opacity: [0.3, 0.8, 0.3],
+        duration: () => anime.random(3000, 5000),
+        delay: anime.stagger(50),
+        easing: 'easeInOutQuad',
+        loop: true,
+      });
+    }
+  }, []);
 
   const handleDemoRole = () => {
     setDemoRoleModalOpen(false);
@@ -383,12 +403,24 @@ export default function Landing() {
         style={{ paddingTop: '100px', minHeight: '100vh', overflow: 'visible' }}
         className="relative pb-20 px-6 flex flex-col justify-center items-center z-10"
       >
-        {/* Background Effects */}
-        <div className="absolute inset-0 z-0">
+        {/* Background Effects with Particles */}
+        <div className="absolute inset-0 z-0" ref={heroParticlesRef}>
           <div className="absolute inset-0 graph-grid opacity-20" />
           <div className="absolute inset-0 graph-grid-dots opacity-40" />
           <motion.div style={{ y: y1 }} className="absolute top-[-10%] left-[10%] w-[800px] h-[800px] rounded-full bg-indigo-500/10 blur-[150px] animate-pulse" />
           <motion.div style={{ y: y2 }} className="absolute bottom-[-10%] right-[10%] w-[600px] h-[600px] rounded-full bg-purple-600/10 blur-[130px] animate-pulse" />
+          
+          {/* Floating Particles */}
+          {Array.from({ length: 60 }).map((_, i) => (
+            <div
+              key={`particle-${i}`}
+              className="particle absolute w-1 h-1 rounded-full bg-purple-500/40 pointer-events-none"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+            />
+          ))}
           
           {/* Animated Graph Lines */}
           <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none" viewBox="0 0 1000 1000" preserveAspectRatio="none">
