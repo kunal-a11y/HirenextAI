@@ -1,0 +1,15 @@
+{
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "devCommand": "cd frontend && npm run dev",
+  "env": {
+    "VITE_API_URL": "@api_url"
+  },
+  "regions": ["iad1"],
+  "functions": {
+    "backend/**/*.js": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  }
+}
