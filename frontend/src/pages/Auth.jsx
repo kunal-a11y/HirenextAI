@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import anime from "animejs";
 import useAuthStore from "../store/useAuthStore";
 import useUserStore from "../store/useUserStore";
 import useUIStore from "../store/useUIStore";
@@ -110,12 +109,13 @@ export default function Auth() {
   // Trigger shake animation when error appears
   useEffect(() => {
     if (error && formRef.current) {
-      anime({
-        targets: formRef.current,
-        translateX: [0, -8, 8, -4, 4, 0],
-        duration: 400,
-        easing: 'easeInOutQuad',
-      });
+      // Simple shake animation using CSS keyframes
+      formRef.current.style.animation = 'shake 0.4s ease-in-out';
+      setTimeout(() => {
+        if (formRef.current) {
+          formRef.current.style.animation = '';
+        }
+      }, 400);
     }
   }, [error]);
   const [googleLoading, setGoogleLoading] = useState(false);

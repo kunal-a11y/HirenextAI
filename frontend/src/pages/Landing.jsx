@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
-import anime from "animejs";
 import {
   Sparkles, Zap, BrainCircuit, Target, Briefcase, ArrowRight,
   Star, Users, TrendingUp, Cpu, Rocket, FileText, Bot, UserPlus,

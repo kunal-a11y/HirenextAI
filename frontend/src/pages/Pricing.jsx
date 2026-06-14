@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import anime from "animejs";
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
 import { CheckCircle2, X, Loader2 } from "lucide-react";
@@ -34,13 +33,16 @@ export default function Pricing() {
     if (!cardsRef.current) return;
     const cards = cardsRef.current.querySelectorAll('.price-card, .price-card-featured');
     
-    anime({
-      targets: cards,
-      opacity: [0, 1],
-      translateY: [30, 0],
-      duration: 600,
-      delay: anime.stagger(100),
-      easing: 'easeOutQuad',
+    cards.forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      card.style.transition = 'none';
+      
+      setTimeout(() => {
+        card.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, 100 * index);
     });
   }, []);
 
