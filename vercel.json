@@ -1,6 +1,7 @@
 {
-  "buildCommand": "cd frontend && pnpm run build",
-  "outputDirectory": "frontend/dist",
-  "devCommand": "cd frontend && pnpm run dev",
+  "root": "frontend",
+  "buildCommand": "pnpm run build",
+  "outputDirectory": "dist",
+  "devCommand": "pnpm run dev",
   "regions": ["iad1"]
 }
