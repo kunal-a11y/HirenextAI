@@ -80,13 +80,13 @@ const FileUploadMenu = ({ onFileSelect, positionedByParent = false }) => {
           : undefined
       }
     >
-      <div className="rounded-xl border border-white/10 bg-[#12121c]/98 backdrop-blur-xl p-1.5 shadow-2xl shadow-purple-500/10">
+      <div className="rounded-xl border border-[#1F1F1F] bg-[#111111]/98 backdrop-blur-xl p-1.5 shadow-2xl shadow-black/50">
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-white/85 hover:bg-white/[0.06] hover:text-white transition-colors"
         >
-          <Upload size={17} className="text-purple-400 shrink-0" />
+          <Upload size={17} className="text-white/60 shrink-0" />
           Upload File
         </button>
         <button
@@ -94,7 +94,7 @@ const FileUploadMenu = ({ onFileSelect, positionedByParent = false }) => {
           onClick={openConnect}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-white/85 hover:bg-white/[0.06] hover:text-white transition-colors"
         >
-          <Link2 size={17} className="text-purple-400 shrink-0" />
+          <Link2 size={17} className="text-white/60 shrink-0" />
           Connect Account
         </button>
       </div>

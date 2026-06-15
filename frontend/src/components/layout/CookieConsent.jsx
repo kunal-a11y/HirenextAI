@@ -78,7 +78,7 @@ export function CookieConsent() {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6"
           >
-            <div className="max-w-5xl mx-auto bg-[#0f0f18] border border-white/10 rounded-2xl p-5 md:p-7 shadow-[0_-8px_40px_rgba(0,0,0,0.4)] backdrop-blur-xl">
+            <div className="max-w-5xl mx-auto bg-[#111111] border border-[#1F1F1F] rounded-2xl p-5 md:p-7 shadow-[0_-8px_40px_rgba(0,0,0,0.4)] backdrop-blur-xl">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-3 mb-3">
@@ -98,7 +98,7 @@ export function CookieConsent() {
                       className="flex items-center gap-3 cursor-pointer select-none"
                     >
                       <div
-                        style={{ backgroundColor: preferences.analytics ? '#8B5CF6' : 'rgba(255,255,255,0.1)' }}
+                        style={{ backgroundColor: preferences.analytics ? '#FFFFFF' : 'rgba(255,255,255,0.1)' }}
                         className="relative w-10 h-5 rounded-full transition-colors duration-300"
                       >
                         <motion.div
@@ -115,7 +115,7 @@ export function CookieConsent() {
                       className="flex items-center gap-3 cursor-pointer select-none"
                     >
                       <div
-                        style={{ backgroundColor: preferences.preference ? '#8B5CF6' : 'rgba(255,255,255,0.1)' }}
+                        style={{ backgroundColor: preferences.preference ? '#FFFFFF' : 'rgba(255,255,255,0.1)' }}
                         className="relative w-10 h-5 rounded-full transition-colors duration-300"
                       >
                         <motion.div
@@ -154,7 +154,7 @@ export function CookieConsent() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 100, scale: 0.9 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed top-24 right-6 z-[9999] inline-flex items-center gap-3 px-5 py-3.5 rounded-xl bg-[#0f0f18]/95 border border-emerald-500/30 text-emerald-400 text-sm font-semibold shadow-[0_8px_30px_rgba(16,185,129,0.15)] backdrop-blur-xl"
+            className="fixed top-24 right-6 z-[9999] inline-flex items-center gap-3 px-5 py-3.5 rounded-xl bg-[#111111]/95 border border-[#1F1F1F] text-emerald-400 text-sm font-semibold shadow-[0_8px_30px_rgba(16,185,129,0.15)] backdrop-blur-xl"
           >
             <div className="w-5 h-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
               <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />

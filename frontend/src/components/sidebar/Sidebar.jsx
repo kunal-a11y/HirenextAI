@@ -89,7 +89,7 @@ const Sidebar = ({ isDemoMode: propDemoMode }) => {
                 alt="HirenextAI"
                 className="w-12 h-12 block flex-shrink-0 object-contain"
                 style={{
-                  filter: "drop-shadow(0 0 14px rgba(168,85,247,0.65)) drop-shadow(0 0 5px rgba(99,102,241,0.4))",
+                  filter: "drop-shadow(0 0 14px rgba(255,255,255,0.3)) drop-shadow(0 0 5px rgba(255,255,255,0.2))",
                 }}
               />
             </button>
@@ -102,7 +102,7 @@ const Sidebar = ({ isDemoMode: propDemoMode }) => {
                     alt="HirenextAI"
                     className="w-10 h-10 block flex-shrink-0 object-contain"
                     style={{
-                      filter: "drop-shadow(0 0 10px rgba(168,85,247,0.5))",
+                      filter: "drop-shadow(0 0 10px rgba(255,255,255,0.25))",
                     }}
                   />
                   <span className="text-[15px] font-semibold text-white leading-none">HirenextAI</span>
@@ -124,7 +124,7 @@ const Sidebar = ({ isDemoMode: propDemoMode }) => {
           {!sidebarCollapsed ? (
             <button 
               onClick={handleNewChat}
-              className="w-full mb-2 flex items-center justify-center gap-2 bg-white text-black text-sm font-medium py-2 px-4 rounded-lg hover:bg-[#e8e8e8] hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-all duration-300"
+              className="w-full mb-2 flex items-center justify-center gap-2 bg-white text-black text-sm font-medium py-2 px-4 rounded-lg hover:bg-[#e8e8e8] hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] transition-all duration-300"
             >
               <Plus size={16} />
               <span>{t('newChat')}</span>
@@ -150,7 +150,7 @@ const Sidebar = ({ isDemoMode: propDemoMode }) => {
                   w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all
                   ${sidebarCollapsed ? 'justify-center' : ''}
                   ${isActive(item.path)
-                    ? 'bg-purple-500/10 border-l-2 border-purple-500 text-white'
+                    ? 'bg-white/5 border-l-2 border-white text-white'
                     : 'hover:bg-active border-l-2 border-transparent'}
                 `}
                 title={sidebarCollapsed ? item.label : ''}
@@ -201,7 +201,7 @@ const Sidebar = ({ isDemoMode: propDemoMode }) => {
       <div className="flex-shrink-0 border-t border-white/6 p-3 mt-auto bg-sidebar">
         {!sidebarCollapsed && !isDemo && user && (user?.role === 'admin' || ADMIN_EMAILS.includes((user?.email || '').toLowerCase())) && (
           <div className="px-2 mb-2">
-            <Link to="/admin" className="flex items-center gap-2 px-3 py-2 text-xs text-purple-400 hover:text-purple-300">
+            <Link to="/admin" className="flex items-center gap-2 px-3 py-2 text-xs text-white/50 hover:text-white/40">
               <Shield className="w-3 h-3" />
               <span>Admin Panel</span>
             </Link>
@@ -212,7 +212,7 @@ const Sidebar = ({ isDemoMode: propDemoMode }) => {
           className={`flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-white/5 cursor-pointer ${sidebarCollapsed ? 'justify-center' : ''}`}
         >
           {/* Avatar circle */}
-          <div className="w-8 h-8 rounded-full bg-[#8B5CF6]/20 border border-[#8B5CF6]/30 flex items-center justify-center text-[#8B5CF6] text-sm font-bold flex-shrink-0">
+          <div className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
             {String(user?.name || user?.firstName || 'G').charAt(0).toUpperCase()}
           </div>
           

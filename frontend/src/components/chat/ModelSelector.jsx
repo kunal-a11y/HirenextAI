@@ -37,8 +37,8 @@ const ModelSelector = ({ selectedModel, onSelect, open, onOpenChange }) => {
           flex items-center gap-2 pl-3 pr-2.5 py-1.5 rounded-full text-[12px] font-medium
           border transition-all duration-200
           ${open
-            ? 'bg-purple-500/15 border-purple-500/40 text-white'
-            : 'bg-white/[0.04] border-white/10 text-white/70 hover:border-purple-500/30 hover:bg-white/[0.07] hover:text-white'}
+            ? 'bg-white/5 border-[#1F1F1F] text-white'
+            : 'bg-white/[0.04] border-[#1F1F1F] text-white/70 hover:border-[#2A2A2A] hover:bg-[#111111] hover:text-white'}
         `}
       >
         <span className="max-w-[110px] truncate">{current.name}</span>
@@ -57,7 +57,7 @@ const ModelSelector = ({ selectedModel, onSelect, open, onOpenChange }) => {
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
             className="absolute bottom-full left-0 mb-2 w-[260px] z-50 origin-bottom-left"
           >
-            <div className="rounded-2xl border border-white/10 bg-[#12121c]/95 backdrop-blur-xl shadow-2xl shadow-black/50 overflow-hidden">
+            <div className="rounded-2xl border border-[#1F1F1F] bg-[#111111]/95 backdrop-blur-xl shadow-2xl shadow-black/50 overflow-hidden">
               <div className="px-3 py-2 border-b border-white/[0.06]">
                 <p className="text-[10px] uppercase tracking-wider text-white/35 font-semibold">AI Model</p>
               </div>
@@ -78,7 +78,7 @@ const ModelSelector = ({ selectedModel, onSelect, open, onOpenChange }) => {
                       className={`
                         w-full text-left px-3 py-3 rounded-xl flex gap-3 items-start transition-colors
                         ${model.disabled ? 'opacity-45 cursor-not-allowed' : 'hover:bg-white/[0.06]'}
-                        ${selected ? 'bg-purple-500/12 ring-1 ring-purple-500/25' : ''}
+                        ${selected ? 'bg-white/5 ring-1 ring-white/10' : ''}
                       `}
                     >
                       <div className="flex-1 min-w-0">
@@ -86,7 +86,7 @@ const ModelSelector = ({ selectedModel, onSelect, open, onOpenChange }) => {
                         <p className="text-[11px] text-white/40 mt-0.5 leading-snug">{model.description}</p>
                       </div>
                       {selected && (
-                        <Check size={16} className="text-purple-400 shrink-0 mt-0.5" strokeWidth={2.5} />
+                        <Check size={16} className="text-white shrink-0 mt-0.5" strokeWidth={2.5} />
                       )}
                     </button>
                   );

@@ -49,7 +49,7 @@ const JobCard = ({ job, applyingJobId, onApplyWithAI }) => {
         <button 
           onClick={() => onApplyWithAI(job)}
           disabled={applyingJobId === job.id}
-          className="flex-1 px-4 py-2 bg-[#8B5CF6] hover:bg-[#7c3aed] text-white text-[13px] font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5"
+          className="flex-1 px-4 py-2 bg-white hover:bg-white/90 text-black text-[13px] font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5"
         >
           {applyingJobId === job.id ? (
             <>
@@ -93,7 +93,7 @@ const AgentReportCard = ({ data }) => {
   }, [data]);
 
   return (
-    <div className="mt-2 p-5 bg-[#111111] border border-white/10 rounded-2xl max-w-[450px] shadow-2xl animate-slide-up relative">
+    <div className="mt-2 p-5 bg-[#111111] border border-[#1F1F1F] rounded-2xl max-w-[450px] shadow-2xl animate-slide-up relative">
       <div className="flex items-center gap-2 mb-4 border-b border-white/5 pb-3">
         <span className="text-xl">🤖</span>
         <h4 className="text-[15px] font-bold text-white">AI Agent Report</h4>
@@ -180,7 +180,7 @@ const MessageItem = ({ message, applyingJobId, onApplyWithAI }) => {
         )}
         <div className={`flex flex-col min-w-0 ${!isAI ? 'items-end' : ''}`}>
           {!isAI && !isAgentReport && (
-            <span className="text-[12px] text-[#8B5CF6] font-semibold mb-1.5 mr-1">
+            <span className="text-[12px] text-white/60 font-semibold mb-1.5 mr-1">
               {getDisplayName()}
             </span>
           )}
@@ -188,7 +188,7 @@ const MessageItem = ({ message, applyingJobId, onApplyWithAI }) => {
             <div className={`
               px-5 py-3.5 rounded-2xl text-[14px] leading-relaxed break-words shadow-sm
               ${isAI 
-                ? 'bg-[#1a1a1a] border border-[rgba(139,92,246,0.1)] text-white/90 rounded-tl-sm' 
+                ? 'bg-[#1a1a1a] border border-[#1F1F1F] text-white/90 rounded-tl-sm' 
                 : 'bg-white text-black font-medium rounded-tr-sm'}
             `}>
               {displayContent}
@@ -327,7 +327,7 @@ const MessageList = () => {
               <div className="w-8 h-8 rounded-full bg-[#111] border border-white/10 flex items-center justify-center text-[12px] font-bold text-white flex-shrink-0 shadow-lg mt-1">
                 H
               </div>
-              <div className="px-5 py-4 bg-[#1a1a1a] border border-[rgba(139,92,246,0.1)] rounded-2xl rounded-tl-sm flex items-center gap-1.5 shadow-sm">
+              <div className="px-5 py-4 bg-[#1a1a1a] border border-[#1F1F1F] rounded-2xl rounded-tl-sm flex items-center gap-1.5 shadow-sm">
                 <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                 <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                 <div className="w-2 h-2 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -353,12 +353,12 @@ const MessageList = () => {
               initial={{ opacity: 0, scale: 0.95, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 16 }}
-              className="relative z-10 w-full max-w-md bg-[#0f0f1a] border border-[#8B5CF6]/30 rounded-2xl p-8 text-center"
+              className="relative z-10 w-full max-w-md bg-[#111111] border border-[#1F1F1F] rounded-2xl p-8 text-center"
             >
               <motion.div
                 animate={{ y: [0, -6, 0] }}
                 transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
-                className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] mb-4"
+                className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 border border-[#1F1F1F] text-white mb-4"
               >
                 <Puzzle size={24} />
               </motion.div>
@@ -368,7 +368,7 @@ const MessageList = () => {
                 To apply with AI, you need the HirenextAI Chrome extension. It takes 30 seconds to install.
               </p>
               
-              <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl mb-6 text-left">
+              <div className="bg-white/[0.02] border border-[#1F1F1F] p-4 rounded-xl mb-6 text-left">
                 <p className="text-white/60 text-xs mb-2">You were trying to apply for:</p>
                 <p className="text-white font-semibold text-sm">
                   {selectedJob.title} <span className="text-white/40 font-normal">at</span> {selectedJob.company}
@@ -385,7 +385,7 @@ const MessageList = () => {
                       navigate('/chat');
                     }, 3000);
                   }}
-                  className="w-full h-11 bg-gradient-to-r from-indigo-500 via-purple-500 to-violet-600 hover:opacity-95 text-white text-sm font-semibold rounded-xl flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-all"
+                  className="w-full h-11 bg-white text-black text-sm font-semibold rounded-xl flex items-center justify-center gap-2 shadow-none transition-all"
                 >
                   Download Extension
                 </button>
@@ -393,7 +393,7 @@ const MessageList = () => {
                 <button
                   type="button"
                   onClick={() => setShowExtensionModal(false)}
-                  className="w-full h-11 border border-white/10 bg-white/5 text-white text-sm font-semibold rounded-xl hover:bg-white/10 transition-all"
+                  className="w-full h-11 border border-[#1F1F1F] bg-[#111111] text-white text-sm font-semibold rounded-xl hover:bg-white/10 transition-all"
                 >
                   Maybe later
                 </button>

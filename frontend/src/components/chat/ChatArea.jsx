@@ -12,7 +12,7 @@ import { getPlanDisplay } from '../../lib/planUtils';
 const DeleteConfirmModal = ({ onConfirm, onCancel, t }) => (
   <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onCancel} />
-    <div className="relative bg-[#111111] border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl animate-slide-up">
+    <div className="relative bg-[#111111] border border-[#1F1F1F] rounded-2xl p-6 w-full max-w-sm shadow-2xl animate-slide-up">
       <div className="flex items-center gap-3 mb-4 text-red-400">
         <AlertCircle size={24} />
         <h3 className="text-lg font-bold text-white">{t('deleteChat')}?</h3>
@@ -138,7 +138,7 @@ const ChatArea = ({ demo }) => {
           <h1 className="text-sm font-medium text-white/80">
             HirenextAI
             {demo && (
-              <span className="text-[#8B5CF6] text-sm font-normal">/ {user.firstName}</span>
+              <span className="text-white/60 text-sm font-normal">/ {user.firstName}</span>
             )}
           </h1>
           <div className="flex-1 flex justify-end items-center gap-3">
@@ -158,7 +158,7 @@ const ChatArea = ({ demo }) => {
               </button>
 
               {menuOpen && (
-                <div className="absolute top-full right-0 mt-2 w-[200px] bg-[#1e1e1e] border border-white/10 rounded-[10px] p-1.5 shadow-2xl z-50 animate-fade-in">
+                <div className="absolute top-full right-0 mt-2 w-[200px] bg-[#111111] border border-[#1F1F1F] rounded-[10px] p-1.5 shadow-2xl z-50 animate-fade-in">
                   <button
                     onClick={handleShare}
                     className="w-full flex items-center gap-[10px] px-3 py-2.5 rounded-md text-[13px] text-white/80 hover:bg-white/6 transition-colors"
@@ -233,7 +233,7 @@ const ChatArea = ({ demo }) => {
       <div className="flex-1 flex flex-col items-center justify-center p-6 overflow-y-auto">
         <div className="w-full max-w-[680px] text-center mb-8">
           <h2 className="text-[2.2rem] font-semibold text-white mb-2 leading-tight">
-            {t(greetingKey)}, <span className="text-[#8B5CF6]">{demo ? 'Guest' : user.firstName}</span>
+            {t(greetingKey)}, <span className="text-white/60">{demo ? 'Guest' : user.firstName}</span>
           </h2>
           <p className="text-text-secondary text-base">{t('chatSubtitle')}</p>
           {demo && (
@@ -253,7 +253,7 @@ const ChatArea = ({ demo }) => {
               key={action.key}
               type="button"
               onClick={() => sendMessage(action.text)}
-              className="px-4 py-2 rounded-full bg-white/6 border border-white/10 text-[13px] text-text-secondary hover:bg-white/10 hover:text-white hover:border-purple-500/30 transition-all"
+              className="px-4 py-2 rounded-full bg-white/6 border border-white/10 text-[13px] text-text-secondary hover:bg-white/10 hover:text-white hover:border-white/20 transition-all"
             >
               {action.text}
             </button>

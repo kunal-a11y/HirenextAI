@@ -29,7 +29,7 @@ const PLANS = [
     id: 'pro',
     name: 'Pro',
     badge: 'Most Popular',
-    badgeClass: 'bg-purple-500/25 text-purple-200 border-purple-500/50',
+    badgeClass: 'bg-white/10 text-white border-white/20',
     price: 299,
     features: [
       { text: '200 AI Credits/month', included: true },
@@ -43,8 +43,8 @@ const PLANS = [
     ],
     cta: 'Upgrade to Pro',
     disabled: false,
-    buttonClass: 'bg-gradient-to-r from-indigo-500 via-purple-500 to-violet-600 text-white shadow-[0_0_24px_rgba(139,92,246,0.4)] hover:opacity-95',
-    cardClass: 'border-[#8B5CF6]/50 shadow-[0_0_40px_rgba(139,92,246,0.2)]',
+    buttonClass: 'bg-white text-black font-semibold hover:bg-white/90 shadow-[0_0_24px_rgba(255,255,255,0.1)] hover:opacity-95',
+    cardClass: 'border-white/30 shadow-[0_0_40px_rgba(255,255,255,0.05)]',
     isPro: true,
     isUltimate: false,
   },
@@ -52,7 +52,7 @@ const PLANS = [
     id: 'max',
     name: 'Max',
     badge: 'Power User',
-    badgeClass: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40',
+    badgeClass: 'bg-white/10 text-white/70 border-white/20',
     price: 599,
     features: [
       { text: 'Unlimited AI Credits', included: true },
@@ -66,7 +66,7 @@ const PLANS = [
     ],
     cta: 'Upgrade to Max',
     disabled: false,
-    buttonClass: 'bg-gradient-to-r from-indigo-500 via-purple-500 to-violet-600 text-white hover:opacity-95',
+    buttonClass: 'bg-white text-black font-semibold hover:bg-white/90',
     cardClass: 'border-white/10',
     isPro: false,
     isUltimate: false,
@@ -75,7 +75,7 @@ const PLANS = [
     id: 'ultimate',
     name: 'Ultimate',
     badge: 'Family & Friends',
-    badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+    badgeClass: 'bg-white/10 text-white/70 border-white/20',
     price: 999,
     features: [
       { text: 'Everything in Max', included: true },
@@ -90,8 +90,8 @@ const PLANS = [
     ],
     cta: 'Get Ultimate',
     disabled: false,
-    buttonClass: 'bg-gradient-to-r from-amber-500 to-amber-600 text-black font-semibold hover:opacity-95 shadow-[0_0_20px_rgba(245,158,11,0.3)]',
-    cardClass: 'border-amber-500/40',
+    buttonClass: 'bg-white text-black font-semibold hover:bg-white/90 shadow-[0_0_20px_rgba(255,255,255,0.1)]',
+    cardClass: 'border-white/20',
     isPro: false,
     isUltimate: true,
   },
@@ -140,7 +140,7 @@ const PricingModal = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.92 }}
               transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-              className="w-full max-w-6xl my-6 rounded-2xl border border-white/10 bg-[#0a0a0f] shadow-2xl overflow-hidden relative"
+              className="w-full max-w-6xl my-6 rounded-2xl border border-white/10 bg-[#000000] shadow-2xl overflow-hidden relative"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -155,7 +155,7 @@ const PricingModal = () => {
                 className="absolute inset-0 pointer-events-none"
                 style={{
                   background:
-                    'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(139,92,246,0.15), transparent 70%)',
+                    'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,255,255,0.05), transparent 70%)',
                 }}
               />
 
@@ -180,8 +180,8 @@ const PricingModal = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.07, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                       className={`
-                        relative flex flex-col bg-[#0f0f1a] rounded-2xl p-6 border transition-all duration-300
-                        hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(139,92,246,0.12)]
+                        relative flex flex-col bg-[#111111] rounded-2xl p-6 border transition-all duration-300
+                        hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)]
                         ${plan.cardClass}
                       `}
                     >
@@ -206,7 +206,7 @@ const PricingModal = () => {
                             {f.included ? (
                               <CheckCircle2
                                 size={16}
-                                className="text-[#8B5CF6] shrink-0 mt-0.5"
+                                className="text-white shrink-0 mt-0.5"
                                 strokeWidth={2}
                               />
                             ) : (

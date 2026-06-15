@@ -595,12 +595,12 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
   const hasActiveGlow = isFocused || isListening || input.length > 0;
 
   const inputGlowClass = isListening
-    ? 'border-[#8B5CF6]/40 shadow-[0_0_20px_rgba(139,92,246,0.15)] bg-white/[0.03]'
+    ? 'border-[#444444] shadow-[0_0_20px_rgba(255,255,255,0.05)] bg-[#0D0D0D]'
     : hasActiveGlow
-      ? 'border-[rgba(139,92,246,0.8)] shadow-[0_0_25px_rgba(139,92,246,0.25),0_0_50px_rgba(139,92,246,0.1)] bg-white/[0.03]'
+      ? 'border-[#444444] shadow-[0_0_15px_rgba(255,255,255,0.05)] bg-[#0D0D0D]'
       : isHovered
-        ? 'border-[rgba(139,92,246,0.6)] shadow-[0_0_20px_rgba(139,92,246,0.15),0_0_40px_rgba(139,92,246,0.08)] bg-white/[0.03]'
-        : 'border-white/10 shadow-lg shadow-black/20 bg-white/[0.02]';
+        ? 'border-[#2A2A2A] shadow-[0_0_10px_rgba(255,255,255,0.03)] bg-[#0D0D0D]'
+        : 'border-[#1F1F1F] shadow-lg shadow-black/20 bg-[#111111]';
 
   return (
     <div
@@ -639,7 +639,7 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
         <div
           className={`chat-input-bar rounded-2xl border transition-all duration-300 ease-in-out !overflow-visible 
             ${isVoiceMode 
-              ? 'bg-[#1a0a2e] border-[#8B5CF6]/60 shadow-[0_0_30px_rgba(139,92,246,0.3)]' 
+              ? 'bg-[#111111] border-[#1F1F1F] shadow-[0_0_30px_rgba(255,255,255,0.05)]' 
               : inputGlowClass}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -653,7 +653,7 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
                   {[0, 1, 2, 3, 4].map((i) => (
                     <div
                       key={i}
-                      className={`w-1 rounded-full transition-colors duration-300 ${isListening ? 'bg-[#8B5CF6]' : 'bg-[#3B82F6]'} animate-voice-bounce`}
+                      className={`w-1 rounded-full transition-colors duration-300 ${isListening ? 'bg-white' : 'bg-[#999999]'} animate-voice-bounce`}
                       style={{ animationDelay: `${i * 0.1}s` }}
                     />
                   ))}
@@ -705,7 +705,7 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
                     w-full bg-transparent border-none outline-none resize-none
                     text-[15px] text-white placeholder:text-white/25
                     max-h-[200px] custom-scrollbar leading-relaxed
-                    ${isListening ? 'placeholder:text-purple-400/50' : ''}
+                    ${isListening ? 'placeholder:text-white/30' : ''}
                   `}
                 />
               </div>
@@ -721,7 +721,7 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
                       className={`
                         p-2 rounded-xl transition-all relative z-[1]
                         ${plusPopupOpen
-                          ? 'bg-purple-500/20 text-purple-300'
+                          ? 'bg-white/10 text-white/70'
                           : 'text-white/45 hover:text-white hover:bg-white/[0.06]'}
                       `}
                       aria-label="Attach file"
@@ -772,7 +772,7 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
                       }
                     }}
                     title="Voice to Voice"
-                    className={`p-2 rounded-xl transition-all ${isVoiceMode ? 'bg-[#8B5CF6]/20 text-purple-300' : 'text-white/45 hover:text-purple-300 hover:bg-purple-500/10'}`}
+                    className={`p-2 rounded-xl transition-all ${isVoiceMode ? 'bg-white/10 text-white/70' : 'text-white/45 hover:text-white/70 hover:bg-white/5'}`}
                     aria-label="Start voice conversation"
                   >
                     <AudioLines size={20} />
@@ -785,7 +785,7 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
                     className={`
                       p-2.5 rounded-xl transition-all duration-300 ml-0.5
                       ${canSend
-                        ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-violet-600 text-white shadow-[0_0_15px_rgba(139,92,246,0.5)] hover:shadow-[0_0_22px_rgba(139,92,246,0.65)] hover:scale-[1.03] active:scale-[0.98] animate-pulse-glow'
+                        ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.15)] hover:shadow-[0_0_22px_rgba(255,255,255,0.25)] hover:scale-[1.03] active:scale-[0.98]'
                         : 'bg-white/[0.06] text-white/20 cursor-not-allowed'}
                     `}
                     aria-label="Send message"

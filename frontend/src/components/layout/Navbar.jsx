@@ -78,8 +78,8 @@ export function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       className={`fixed inset-x-0 top-0 z-[1000] border-b transition-all duration-300 ${
         scrolled 
-          ? "border-white/10 bg-[#030307]/95 backdrop-blur-2xl shadow-lg" 
-          : "border-white/[0.06] bg-[#06060d]/60 backdrop-blur-xl"
+          ? "border-[#1F1F1F] bg-black/95 backdrop-blur-2xl shadow-lg" 
+          : "border-[#1F1F1F]/50 bg-black/60 backdrop-blur-xl"
       }`}
     >
       <div className="mx-auto flex h-[70px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
@@ -113,7 +113,7 @@ export function Navbar() {
                   }
                 }}
                 aria-label={t(item.labelKey)}
-                className="group relative py-2 text-sm font-medium text-white/68 transition-colors duration-200 hover:text-[#8B5CF6]"
+                className="group relative py-2 text-sm font-medium text-white/68 transition-colors duration-200 hover:text-white"
               >
                 <span className="inline-flex items-center gap-1.5">
                   {item.href === "/updates" && (
@@ -121,7 +121,7 @@ export function Navbar() {
                       size={14} 
                       className="mr-[5px] inline-block"
                       style={{ 
-                        color: '#A78BFA',
+                        color: '#FFFFFF',
                         animation: 'megaphoneFade 3s ease infinite',
                         transformOrigin: 'bottom center'
                       }} 
@@ -131,9 +131,9 @@ export function Navbar() {
                   {item.highlight && (
                     <span 
                       style={{ 
-                        background: 'rgba(139,92,246,0.2)',
-                        border: '1px solid rgba(139,92,246,0.4)',
-                        color: '#A78BFA',
+                        background: 'rgba(255,255,255,0.1)',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        color: '#FFFFFF',
                         fontSize: '10px',
                         fontWeight: '700',
                         padding: '2px 7px',
@@ -146,7 +146,7 @@ export function Navbar() {
                     </span>
                   )}
                 </span>
-                <span className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-gradient-to-r from-indigo-500 to-purple-500 transition-transform duration-300 group-hover:scale-x-100" />
+                <span className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-white transition-transform duration-300 group-hover:scale-x-100" />
               </Link>
             ))}
           </div>
@@ -167,7 +167,7 @@ export function Navbar() {
               </button>
               <button 
                 onClick={() => navigate('/register')} 
-                className="btn-primary h-10 px-5 text-sm transition-all hover:shadow-[0_0_24px_rgba(139,92,246,0.35)] flex items-center justify-center"
+                className="btn-primary h-10 px-5 text-sm transition-all flex items-center justify-center"
               >
                 Get Started
               </button>
@@ -191,7 +191,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="space-y-3 border-t border-white/6 bg-[#06060d]/95 px-4 py-5 backdrop-blur-xl md:hidden"
+            className="space-y-3 border-t border-[#1F1F1F] bg-black/95 px-4 py-5 backdrop-blur-xl md:hidden"
           >
             {navLinks.map((item) => (
               <Link
@@ -228,7 +228,7 @@ export function Navbar() {
                       size={14} 
                       className="mr-[5px] inline-block"
                       style={{ 
-                        color: '#A78BFA',
+                        color: '#FFFFFF',
                         animation: 'megaphoneFade 3s ease infinite',
                         transformOrigin: 'bottom center'
                       }} 
@@ -238,9 +238,9 @@ export function Navbar() {
                   {item.highlight && (
                     <span 
                       style={{ 
-                        background: 'rgba(139,92,246,0.2)',
-                        border: '1px solid rgba(139,92,246,0.4)',
-                        color: '#A78BFA',
+                        background: 'rgba(255,255,255,0.1)',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        color: '#FFFFFF',
                         fontSize: '10px',
                         fontWeight: '700',
                         padding: '2px 7px',

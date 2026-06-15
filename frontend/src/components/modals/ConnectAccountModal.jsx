@@ -209,7 +209,7 @@ const ConnectAccountModal = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 12 }}
               transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-              className="pointer-events-auto w-full max-w-lg flex flex-col rounded-2xl border border-white/10 bg-[#0d0d16] shadow-2xl overflow-hidden max-h-[80vh]"
+              className="pointer-events-auto w-full max-w-lg flex flex-col rounded-2xl border border-[#1F1F1F] bg-[#111111] shadow-2xl overflow-hidden max-h-[80vh]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
@@ -239,7 +239,7 @@ const ConnectAccountModal = () => {
                     placeholder="Search integrations..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white focus:border-[#8B5CF6]/50 focus:outline-none transition-all placeholder:text-white/20"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-[#1F1F1F] rounded-xl text-sm text-white focus:border-[#444444] focus:outline-none transition-all placeholder:text-white/20"
                   />
                 </div>
               </div>
@@ -272,7 +272,7 @@ const ConnectAccountModal = () => {
                               <button
                                 type="button"
                                 onClick={() => setEditingField(isExpanded ? null : item.field)}
-                                className="bg-[#8B5CF6] hover:bg-[#7c3aed] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all"
+                                className="bg-white text-black px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-white/90"
                               >
                                 Connect
                               </button>
@@ -326,13 +326,13 @@ const ConnectAccountModal = () => {
                                         [item.field]: e.target.value
                                       }))
                                     }
-                                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:border-[#8B5CF6]/50 outline-none placeholder:text-white/20"
+                                    className="flex-1 bg-white/5 border border-[#1F1F1F] rounded-xl px-4 py-2.5 text-sm text-white focus:border-[#444444] outline-none placeholder:text-white/20"
                                   />
                                   <button
                                     type="button"
                                     disabled={savingField === item.field}
                                     onClick={() => handleSave(item.field, item.name)}
-                                    className="bg-[#8B5CF6] hover:bg-[#7c3aed] text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 shrink-0 flex items-center justify-center min-w-[70px]"
+                                    className="bg-white text-black hover:bg-white/90 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 shrink-0 flex items-center justify-center min-w-[70px]"
                                   >
                                     {savingField === item.field ? (
                                       <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -346,7 +346,7 @@ const ConnectAccountModal = () => {
                                       setTempUrls((prev) => ({ ...prev, [item.field]: urls[item.field] || '' }));
                                       setEditingField(null);
                                     }}
-                                    className="border border-white/10 bg-white/5 text-white/60 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:bg-white/10"
+                                    className="border border-[#1F1F1F] bg-white/5 text-white/60 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:bg-white/10"
                                   >
                                     Cancel
                                   </button>
@@ -361,9 +361,9 @@ const ConnectAccountModal = () => {
                 )}
 
                 {/* Bottom Info Box */}
-                <div className="mt-6 p-4 rounded-xl bg-[#8B5CF6]/8 border border-[#8B5CF6]/20">
+                <div className="mt-6 p-4 rounded-xl bg-white/5 border border-[#1F1F1F]">
                   <div className="flex items-start gap-3">
-                    <Sparkles className="w-5 h-5 text-[#8B5CF6] mt-0.5 shrink-0" />
+                    <Sparkles className="w-5 h-5 text-white/60 mt-0.5 shrink-0" />
                     <div>
                       <p className="font-semibold text-white text-sm mb-1">Why connect your profiles?</p>
                       <p className="text-white/50 text-xs leading-relaxed">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import anime from "animejs/lib/anime.es.js";
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
 import {
@@ -965,61 +966,54 @@ const itemVariants = {
 };
 
 export default function Features() {
+  // Anime.js entrance animation
+  useEffect(() => {
+    anime({
+      targets: '.features-animate',
+      opacity: [0, 1],
+      translateY: [30, 0],
+      duration: 600,
+      easing: 'easeOutExpo',
+      delay: anime.stagger(80, { start: 100 })
+    });
+  }, []);
+
   return (
-    <div style={{ minHeight: "100vh", overflowX: "hidden", width: "100%" }} className="bg-background relative flex flex-col">
-      {/* Background Gradients */}
+    <div style={{ minHeight: "100vh", overflowX: "hidden", width: "100%" }} className="bg-black relative flex flex-col">
+      {/* Background */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[20%] w-[600px] h-[600px] rounded-full bg-[#8B5CF6]/5 blur-[150px]" />
-        <div className="absolute bottom-[10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-purple-600/5 blur-[120px]" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
       </div>
 
       <Navbar />
 
       {/* Hero */}
       <section className="relative z-10 pt-40 pb-20 px-6 max-w-7xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-md"
-        >
-          <Zap className="w-4 h-4 text-[#8B5CF6]" />
-          <span className="text-sm font-medium text-white/80">Built for serious job seekers</span>
-        </motion.div>
+        <div className="features-animate inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#111111] border border-[#1F1F1F] mb-8">
+          <Zap className="w-4 h-4 text-white/60" />
+          <span className="text-sm font-medium text-[#999999]">Built for serious job seekers</span>
+        </div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-4xl md:text-6xl font-display font-extrabold tracking-tight mb-6 leading-tight text-white"
-        >
-          Every Tool You Need<br />
-          <span className="text-gradient">to Land the Job</span>
-        </motion.h1>
+        <h1 className="features-animate text-4xl md:text-6xl font-display font-extrabold tracking-tight mb-6 leading-tight text-white">
+          Everything You Need<br />
+          <span className="text-gradient">to Get Hired</span>
+        </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-lg text-white/60 max-w-2xl mx-auto mb-12 font-light"
-        >
+        <p className="features-animate text-lg text-[#999999] max-w-2xl mx-auto mb-12 font-light">
           HirenextAI gives you an unfair advantage at every stage of your job search — from finding the right role to acing the interview.
-        </motion.p>
+        </p>
 
         {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto"
-        >
+        <div className="features-animate grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
           {stats.map((s, i) => (
-            <div key={i} className="glass-card p-4 text-center">
+            <div key={i} className="glass-card p-4 text-center"
+              onMouseEnter={(e) => anime({ targets: e.currentTarget, translateY: -4, duration: 250, easing: 'easeOutQuad' })}
+              onMouseLeave={(e) => anime({ targets: e.currentTarget, translateY: 0, duration: 250, easing: 'easeOutQuad' })}>
               <p className="text-3xl font-display font-bold text-gradient mb-1">{s.value}</p>
-              <p className="text-xs text-white/50">{s.label}</p>
+              <p className="text-xs text-[#555555]">{s.label}</p>
             </div>
           ))}
-        </motion.div>
+        </div>
       </section>
 
       {/* Feature Sections */}
@@ -1040,12 +1034,12 @@ export default function Features() {
                 transition={{ duration: 0.6 }}
                 className={`max-w-[500px] w-full ${isEven ? "md:order-2" : "md:order-1"}`}
               >
-                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-r ${feature.color} border ${feature.border} mb-4`}>
-                  <feature.icon className={`w-4 h-4 ${feature.iconColor}`} />
-                  <span className={`text-xs font-semibold uppercase tracking-wider ${feature.iconColor}`}>{feature.subtitle}</span>
+                <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#1F1F1F] bg-[#111111] mb-4`}>
+                  <feature.icon className={`w-4 h-4 text-white/60`} />
+                  <span className={`text-xs font-semibold uppercase tracking-wider text-[#999999]`}>{feature.subtitle}</span>
                 </div>
                 <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 text-white">{feature.title}</h2>
-                <p className="text-white/60 text-lg leading-relaxed mb-8 font-light">{feature.desc}</p>
+                <p className="text-[#999999] text-lg leading-relaxed mb-8 font-light">{feature.desc}</p>
                 
                 <motion.ul 
                   variants={listVariants}
@@ -1056,8 +1050,8 @@ export default function Features() {
                 >
                   {feature.benefits.map((b, j) => (
                     <motion.li key={j} variants={itemVariants} className="flex items-center gap-3">
-                      <CheckCircle2 className={`w-5 h-5 shrink-0 ${feature.iconColor}`} />
-                      <span className="text-white/80 font-light">{b}</span>
+                      <CheckCircle2 className={`w-5 h-5 shrink-0 text-white/50`} />
+                      <span className="text-[#999999] font-light">{b}</span>
                     </motion.li>
                   ))}
                 </motion.ul>
@@ -1080,26 +1074,22 @@ export default function Features() {
 
       {/* CTA */}
       <section className="relative z-10 py-24 px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-3xl mx-auto text-center glass-card p-12 relative overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6]/10 to-purple-500/10 pointer-events-none" />
+        <div className="max-w-3xl mx-auto text-center glass-card p-12 relative overflow-hidden"
+          onMouseEnter={(e) => anime({ targets: e.currentTarget, translateY: -4, duration: 250, easing: 'easeOutQuad' })}
+          onMouseLeave={(e) => anime({ targets: e.currentTarget, translateY: 0, duration: 250, easing: 'easeOutQuad' })}>
           <div className="relative z-10">
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 text-white">Ready to Accelerate Your Search?</h2>
-            <p className="text-white/60 mb-8 font-light">Start for free — no credit card required. Upgrade anytime.</p>
+            <p className="text-[#999999] mb-8 font-light">Start for free — no credit card required. Upgrade anytime.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/register" className="btn-primary py-4 px-8 flex items-center justify-center gap-2 text-white">
+              <Link to="/register" className="btn-primary py-4 px-8 flex items-center justify-center gap-2">
                 Get Started Free <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link to="/pricing" className="btn-secondary py-4 px-8 text-white">
+              <Link to="/pricing" className="btn-secondary py-4 px-8">
                 View Pricing
               </Link>
             </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       <Footer />
