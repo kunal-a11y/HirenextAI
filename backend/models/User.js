@@ -80,7 +80,7 @@ const User = {
   },
 
   find: (query) => {
-    let selectFields = 'id, firstName, lastName, email, plan, role, createdAt, isVerified';
+    let selectFields = 'id, firstName, lastName, email, plan, role, createdAt, isVerified, adminNotes';
     let sortStr = 'ORDER BY createdAt DESC';
     let limitVal = null;
     let offsetVal = null;
@@ -136,7 +136,8 @@ const User = {
               role: r.role || 'user',
               createdAt: r.createdAt,
               updatedAt: r.createdAt, // fallback to createdAt
-              isVerified: Boolean(r.isVerified)
+              isVerified: Boolean(r.isVerified),
+              adminNotes: r.adminNotes || ''
             };
           });
 

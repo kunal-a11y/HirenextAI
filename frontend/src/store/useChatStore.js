@@ -23,6 +23,31 @@ const saveChats = (chats) => {
   getStorage().setItem(getChatKey(), JSON.stringify(chats));
 };
 
+const generateSmartTitle = (content) => {
+  const lower = content.toLowerCase();
+  if (lower.includes('resume') || lower.includes('cv')) {
+    const match = content.match(/(?:for|as|a)\s+([a-zA-Z\s.-]{3,25})(?:\s+position|\s+role|\b)/i);
+    const role = match ? match[1].trim() : '';
+    return role ? `${role.replace(/\b\w/g, c => c.toUpperCase())} Resume Review` : 'AI Resume Review';
+  }
+  if (lower.includes('interview')) {
+    const match = content.match(/(?:at|with|for)\s+([a-zA-Z\s.-]{3,20})/i);
+    const company = match ? match[1].trim() : '';
+    return company ? `${company.replace(/\b\w/g, c => c.toUpperCase())} Interview Prep` : 'AI Interview Prep';
+  }
+  if (lower.includes('cover letter')) {
+    const match = content.match(/(?:for|at)\s+([a-zA-Z\s.-]{3,20})/i);
+    const target = match ? match[1].trim() : '';
+    return target ? `AI Cover Letter — ${target.replace(/\b\w/g, c => c.toUpperCase())}` : 'AI Cover Letter';
+  }
+  if (lower.includes('roadmap') || lower.includes('career path') || lower.includes('career goals') || lower.includes('coach')) {
+    const match = content.match(/(?:for|as|to\s+become\s+a)\s+([a-zA-Z\s.-]{3,25})/i);
+    const role = match ? match[1].trim() : '';
+    return role ? `${role.replace(/\b\w/g, c => c.toUpperCase())} Career Roadmap` : 'AI Career Roadmap';
+  }
+  return content.substring(0, 30) + (content.length > 30 ? '...' : '');
+};
+
 const useChatStore = create((set, get) => {
   const savedChats = loadChats();
   const savedModel = localStorage.getItem('selectedModel') || 'hirenext-flash';
@@ -76,7 +101,7 @@ const useChatStore = create((set, get) => {
         const otherChats = loadChats().filter((c) => c.id !== demoChatId);
         const nextChat = {
           id: demoChatId,
-          title: content.substring(0, 30) + (content.length > 30 ? '...' : ''),
+          title: generateSmartTitle(content),
           messages: nextMessages,
           createdAt: new Date().toISOString(),
           pinned: false,
@@ -104,7 +129,7 @@ const useChatStore = create((set, get) => {
         newChatId = Date.now().toString();
         const newChat = {
           id: newChatId,
-          title: content.substring(0, 30) + (content.length > 30 ? '...' : ''),
+          title: generateSmartTitle(content),
           messages: newMessages,
           createdAt: new Date().toISOString(),
           pinned: false,
@@ -149,53 +174,197 @@ const useChatStore = create((set, get) => {
         }
 
         let parsedJob = null;
-        // Search for a JSON block representing a job card
-        const jobJsonRegex = /```json\s*(\{\s*"type"\s*:\s*"job_card"[\s\S]*?\})\s*```/;
-        const match = aiText.match(jobJsonRegex);
-        if (match) {
+        let parsedJobs = [];
+        let parsedResumeReview = null;
+        let parsedImageGen = null;
+        let showMemoryConsent = false;
+
+        // 1. Search for ALL JSON blocks representing job cards
+        const jobJsonRegex = /```json\s*(\{\s*"type"\s*:\s*"job_card"[\s\S]*?\})\s*```/g;
+        let jobMatch;
+        while ((jobMatch = jobJsonRegex.exec(aiText)) !== null) {
           try {
-            const jobData = JSON.parse(match[1]);
-            parsedJob = {
-              id: jobData.id || Date.now().toString(),
+            const jobData = JSON.parse(jobMatch[1]);
+            parsedJobs.push({
+              id: jobData.id || `job-${Date.now()}-${parsedJobs.length}`,
               title: jobData.title || '',
               company: jobData.company || '',
+              companyLogo: jobData.companyLogo || null,
               location: jobData.location || '',
-              salary: jobData.salary || '',
-              match: jobData.match || 90,
-              url: jobData.url || '#'
-            };
-            // Clean up the text by removing the JSON code block
-            aiText = aiText.replace(jobJsonRegex, '').trim();
+              salary: jobData.salary || 'Competitive Salary',
+              postedTime: jobData.postedTime || 'Just posted',
+              workStyle: jobData.workStyle || jobData.remoteOrHybrid || 'Hybrid',
+              experience: jobData.experience || 'Not Specified',
+              employmentType: jobData.employmentType || 'Full-time',
+              applyType: jobData.applyType || 'Direct Apply',
+              match: jobData.match || 70,
+              matchBreakdown: jobData.matchBreakdown || {
+                resume: jobData.match || 70,
+                skill: jobData.match || 70,
+                experience: jobData.match || 70,
+                salary: jobData.match || 70,
+                location: jobData.match || 70
+              },
+              missingKeywords: jobData.missingKeywords || [],
+              improvements: jobData.improvements || [],
+              url: jobData.url || '#',
+              description: jobData.description || '',
+              platform: jobData.platform || 'Direct'
+            });
           } catch (e) {
             console.error('Failed to parse job JSON from AI response:', e);
           }
         }
 
-        const aiResponse = {
-          id: (Date.now() + 1).toString(),
+        // Remove all job_card JSON blocks from displayed text
+        aiText = aiText.replace(/```json\s*\{\s*"type"\s*:\s*"job_card"[\s\S]*?\}\s*```/g, '').trim();
+
+        // Backward compatibility: set parsedJob to first job if any found
+        if (parsedJobs.length > 0) {
+          parsedJob = parsedJobs[0];
+        }
+
+        // 2. Search for a JSON block representing a resume review
+        const resumeReviewRegex = /```json\s*(\{\s*"type"\s*:\s*"resume_review"[\s\S]*?\})\s*```/;
+        const resumeMatch = aiText.match(resumeReviewRegex);
+        if (resumeMatch) {
+          try {
+            parsedResumeReview = JSON.parse(resumeMatch[1]);
+            aiText = aiText.replace(resumeReviewRegex, '').trim();
+          } catch (e) {
+            console.error('Failed to parse resume review JSON:', e);
+          }
+        }
+
+        // 3. Search for a JSON block representing image generation
+        const imageGenRegex = /```json\s*(\{\s*"type"\s*:\s*"image_generation"[\s\S]*?\})\s*```/;
+        const imageMatch = aiText.match(imageGenRegex);
+        if (imageMatch) {
+          try {
+            parsedImageGen = JSON.parse(imageMatch[1]);
+            aiText = aiText.replace(imageGenRegex, '').trim();
+            
+            // Trigger Image Gen Modal
+            useUIStore.getState().setImageGenPrompt(parsedImageGen.prompt || 'Professional portfolio photo');
+            useUIStore.getState().setImageGenStatus('generating');
+            useUIStore.getState().setImageGenOpen(true);
+          } catch (e) {
+            console.error('Failed to parse image generation JSON:', e);
+          }
+        }
+
+        // 4. Check for Memory Consent keyword
+        if (aiText.includes('[Memory Consent]')) {
+          showMemoryConsent = true;
+          aiText = aiText.replace('[Memory Consent]', '').trim();
+        }
+
+        // 5. Automerge Extracted Resume Info if user memory consent is active
+        const memoryConsentActive = localStorage.getItem('hirenextai_profile_memory_consent') === 'true';
+        if (memoryConsentActive && parsedResumeReview?.extractedResumeInfo) {
+          try {
+            const currentMemory = JSON.parse(localStorage.getItem('hirenextai_profile_memory') || '{}');
+            const merged = {
+              ...currentMemory,
+              ...parsedResumeReview.extractedResumeInfo,
+              skills: Array.isArray(parsedResumeReview.extractedResumeInfo.skills) 
+                ? parsedResumeReview.extractedResumeInfo.skills.join(', ')
+                : parsedResumeReview.extractedResumeInfo.skills || currentMemory.skills || '',
+              education: Array.isArray(parsedResumeReview.extractedResumeInfo.education)
+                ? parsedResumeReview.extractedResumeInfo.education.join('; ')
+                : parsedResumeReview.extractedResumeInfo.education || currentMemory.education || '',
+              experience: Array.isArray(parsedResumeReview.extractedResumeInfo.experience)
+                ? parsedResumeReview.extractedResumeInfo.experience.join('; ')
+                : parsedResumeReview.extractedResumeInfo.experience || currentMemory.experience || ''
+            };
+            localStorage.setItem('hirenextai_profile_memory', JSON.stringify(merged));
+            console.log('[useChatStore] Successfully auto-synchronized parsed resume details to AI long-term profile memory.');
+          } catch (memErr) {
+            console.warn('[useChatStore] Failed to update long-term profile memory:', memErr.message);
+          }
+        }
+
+        // 6. Streaming effect simulation
+        const responseId = (Date.now() + 1).toString();
+        const placeholderResponse = {
+          id: responseId,
           role: 'assistant',
-          content: aiText,
+          content: '',
           timestamp: new Date().toISOString(),
-          job: parsedJob,
+          job: null,
+          resumeReview: null,
+          memoryConsent: false,
         };
 
-        const updatedMessages = [...get().messages, aiResponse];
-        const updatedChats = get().chats.map((c) =>
-          c.id === get().currentChatId ? { ...c, messages: updatedMessages } : c
+        const initialMessages = [...get().messages, placeholderResponse];
+        const initialChats = get().chats.map((c) =>
+          c.id === get().currentChatId ? { ...c, messages: initialMessages } : c
         );
 
         set({
-          messages: updatedMessages,
-          chats: updatedChats,
-          isTyping: false,
+          messages: initialMessages,
+          chats: initialChats,
+          isTyping: true, // Keep mascot in thinking state during stream
         });
-        saveChats(updatedChats);
-        autoSaveFromAIResponse(aiResponse.content, {
-          jobTitle: aiResponse.job?.title,
-          jobCompany: aiResponse.job?.company,
-        });
+
+        const words = aiText.split(' ');
+        let wordIndex = 0;
+        let tempContent = '';
+
+        const timer = setInterval(() => {
+          if (wordIndex < words.length) {
+            tempContent += (wordIndex === 0 ? '' : ' ') + words[wordIndex];
+            wordIndex++;
+
+            const activeMsgs = get().messages.map((m) =>
+              m.id === responseId ? { ...m, content: tempContent } : m
+            );
+            const activeChats = get().chats.map((c) =>
+              c.id === get().currentChatId ? { ...c, messages: activeMsgs } : c
+            );
+
+            set({
+              messages: activeMsgs,
+              chats: activeChats,
+            });
+          } else {
+            clearInterval(timer);
+
+            // Finalize message state payload
+            const finalizedMsgs = get().messages.map((m) =>
+              m.id === responseId
+                ? {
+                    ...m,
+                    content: aiText,
+                    job: parsedJob,
+                    jobs: parsedJobs.length > 0 ? parsedJobs : null,
+                    resumeReview: parsedResumeReview,
+                    memoryConsent: showMemoryConsent,
+                    extractedResumeInfo: parsedResumeReview?.extractedResumeInfo
+                  }
+                : m
+            );
+            const finalizedChats = get().chats.map((c) =>
+              c.id === get().currentChatId ? { ...c, messages: finalizedMsgs } : c
+            );
+
+            set({
+              messages: finalizedMsgs,
+              chats: finalizedChats,
+              isTyping: false, // Transition mascot back to idle
+            });
+
+            saveChats(finalizedChats);
+            
+            // Auto Save generated templates
+            autoSaveFromAIResponse(aiText, {
+              jobTitle: parsedJob?.title,
+              jobCompany: parsedJob?.company,
+            });
+          }
+        }, 25); // 25ms per word for premium quick stream feel
       } catch (err) {
-        console.error('Gemini chat error:', err);
+        console.error('Chat error:', err);
         const isLimitError = err.response?.status === 429;
         const errorMsg =
           err.response?.data?.message ||
@@ -240,12 +409,25 @@ const useChatStore = create((set, get) => {
     },
 
     pinChat: (id) => {
-      const newChats = get().chats.map((c) =>
+      const chats = get().chats;
+      const targetChat = chats.find((c) => c.id === id);
+      if (!targetChat) return false;
+      const isAlreadyPinned = targetChat.pinned;
+
+      if (!isAlreadyPinned) {
+        const pinnedCount = chats.filter((c) => c.pinned && !c.archived).length;
+        if (pinnedCount >= 5) {
+          useUIStore.getState().showToast("You can pin a maximum of 5 chats");
+          return false;
+        }
+      }
+
+      const newChats = chats.map((c) =>
         c.id === id ? { ...c, pinned: !c.pinned } : c
       );
       set({ chats: newChats });
       saveChats(newChats);
-      return !get().chats.find((c) => c.id === id).pinned;
+      return !isAlreadyPinned;
     },
 
     archiveChat: (id) => {
@@ -257,6 +439,14 @@ const useChatStore = create((set, get) => {
         currentChatId: get().currentChatId === id ? null : get().currentChatId,
         messages: get().currentChatId === id ? [] : get().messages,
       });
+      saveChats(newChats);
+    },
+
+    restoreChat: (id) => {
+      const newChats = get().chats.map((c) =>
+        c.id === id ? { ...c, archived: false } : c
+      );
+      set({ chats: newChats });
       saveChats(newChats);
     },
 

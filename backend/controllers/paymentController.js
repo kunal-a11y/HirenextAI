@@ -11,16 +11,14 @@ const razorpay = new Razorpay({
 // Fallback plans list if database table does not exist
 const mockPlans = {
     'free': { name: 'free', price_inr: 0, price_usd: 0 },
-    'pro': { name: 'pro', price_inr: 299, price_usd: 9 },
-    'max': { name: 'max', price_inr: 499, price_usd: 15 },
-    'ultimate': { name: 'ultimate', price_inr: 799, price_usd: 25 }
+    'plus': { name: 'plus', price_inr: 149, price_usd: 5 },
+    'pro': { name: 'pro', price_inr: 299, price_usd: 10 }
 };
 
 const planIdToName = {
     1: 'free',
-    2: 'pro',
-    3: 'max',
-    4: 'ultimate'
+    2: 'plus',
+    3: 'pro'
 };
 
 function normalizePlanName(planId, planName) {

@@ -12,8 +12,10 @@ export default {
         display: ["Outfit", "sans-serif"],
       },
       colors: {
-        sidebar: "hsl(240 20% 6%)",
-        "text-secondary": "hsl(240 5% 65%)",
+        sidebar: "#F7F7F7",
+        panel: "#FFFFFF",
+        inputSurface: "#FFFFFF",
+        "text-secondary": "#555555",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {

@@ -10,6 +10,8 @@ import VoiceToVoiceOverlay from '../components/chat/VoiceToVoiceOverlay';
 import ConnectAccountModal from '../components/modals/ConnectAccountModal';
 import SettingsModal from '../components/modals/SettingsModal';
 import SearchPopup from '../components/modals/SearchPopup';
+import FilePreviewModal from '../components/modals/FilePreviewModal';
+import ImageGenModal from '../components/modals/ImageGenModal';
 import useAuthStore from '../store/useAuthStore';
 import useUIStore from '../store/useUIStore';
 import useChatStore from '../store/useChatStore';
@@ -149,8 +151,8 @@ const ChatPage = ({ demo }) => {
   }, [demo]);
 
   const formatTime = (s) => `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
-  const timerColor = timeLeft > 300 ? 'text-emerald-400' : timeLeft > 120 ? 'text-amber-400' : 'text-rose-400';
-  const timerBg = timeLeft > 300 ? 'bg-emerald-500/10 border-emerald-500/25' : timeLeft > 120 ? 'bg-amber-500/10 border-amber-500/25' : 'bg-rose-500/10 border-rose-500/25';
+  const timerColor = timeLeft > 300 ? 'text-gray-700' : timeLeft > 120 ? 'text-yellow-600' : 'text-red-600';
+  const timerBg = timeLeft > 300 ? 'bg-white border-[#E0E0E0]' : timeLeft > 120 ? 'bg-yellow-50 border-yellow-200' : 'bg-red-50 border-red-200';
 
   const responsesLeft = Math.max(0, DEMO_MAX_RESPONSES - aiResponseCount);
 
@@ -161,19 +163,19 @@ const ChatPage = ({ demo }) => {
   };
 
   return (
-    <div className="h-screen w-full overflow-hidden flex flex-col relative">
+    <div className="h-screen w-full overflow-hidden flex flex-col relative bg-white">
       {demo && (
-        <div className="w-full flex-shrink-0 flex items-center justify-between px-4 py-2.5 bg-[#0A0A0A] border-b border-[#1F1F1F] backdrop-blur-md">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-[#1F1F1F] text-white/60 text-[11px] font-bold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-white/40" />
+        <div className="w-full flex-shrink-0 flex items-center justify-between px-4 py-2.5 bg-[#F7F7F7] border-b border-[#E0E0E0] backdrop-blur-md">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[#E0E0E0] text-gray-500 text-[11px] font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-gray-600" />
             Demo Mode — Data not saved
           </div>
 
           <div className="flex items-center gap-3">
             {/* Response counter */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#1F1F1F] bg-[#111111]">
-              <MessageSquare className={`w-3.5 h-3.5 ${responsesLeft > 0 ? 'text-white/50' : 'text-rose-400'}`} />
-              <span className={`font-mono font-bold text-sm ${responsesLeft > 0 ? 'text-white/70' : 'text-rose-400'}`}>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#E0E0E0] bg-white">
+              <MessageSquare className={`w-3.5 h-3.5 ${responsesLeft > 0 ? 'text-gray-600' : 'text-black'}`} />
+              <span className={`font-mono font-bold text-sm ${responsesLeft > 0 ? 'text-gray-600' : 'text-black'}`}>
                 {responsesLeft}/{DEMO_MAX_RESPONSES}
               </span>
             </div>
@@ -195,14 +197,14 @@ const ChatPage = ({ demo }) => {
             </button>
             <button
               onClick={() => { clearDemoSession(); navigate('/login'); }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#1F1F1F] bg-[#111111] text-[#999999] text-xs font-semibold hover:bg-[#161616] transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E0E0E0] bg-white text-black text-xs font-semibold hover:bg-gray-50 transition-all"
             >
               <LogIn className="w-3.5 h-3.5" />
               Log In
             </button>
             <button
               onClick={() => { clearDemoSession(); navigate('/'); }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#1F1F1F] bg-[#111111] text-[#555555] text-xs font-semibold hover:bg-[#161616] transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E0E0E0] bg-white text-black text-xs font-semibold hover:bg-gray-50 transition-all"
             >
               <X className="w-3.5 h-3.5" />
               Exit
@@ -212,22 +214,22 @@ const ChatPage = ({ demo }) => {
       )}
 
       {showUnverifiedBanner && (
-        <div className="w-full flex-shrink-0 flex items-center justify-between px-6 py-2 bg-white/[0.02] border-b border-[#1F1F1F] text-white/70 backdrop-blur-md">
+        <div className="w-full flex-shrink-0 flex items-center justify-between px-6 py-2 bg-red-50 border-b border-red-100 text-red-700 backdrop-blur-md">
           <div className="w-6" />
           <div className="flex items-center gap-2 text-xs font-semibold">
-            <AlertTriangle className="w-4 h-4 text-[#F59E0B] shrink-0" />
+            <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
             <span>Please verify your email address to secure your account.</span>
             <button
               onClick={handleResendVerification}
               disabled={isResending}
-              className="ml-2 bg-white text-black rounded-lg px-4 py-1.5 text-xs transition-all font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/90"
+              className="ml-2 bg-red-600 text-black rounded-lg px-4 py-1.5 text-xs transition-all font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700"
             >
               {isResending ? 'Sending...' : 'Resend Verification Link'}
             </button>
           </div>
           <button
             onClick={handleDismissBanner}
-            className="p-1 rounded-lg text-[#555555] hover:text-white hover:bg-white/5 transition-all"
+            className="p-1 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-100/50 transition-all"
             aria-label="Dismiss banner"
           >
             <X className="w-4 h-4" />
@@ -242,6 +244,8 @@ const ChatPage = ({ demo }) => {
           <ConnectAccountModal />
           <SettingsModal />
           <SearchPopup />
+          <FilePreviewModal />
+          <ImageGenModal />
         </ChatLayout>
       </div>
 
@@ -250,41 +254,41 @@ const ChatPage = ({ demo }) => {
         <AnimatePresence>
           {showExpiredModal && (
             <>
-              <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md" />
-              <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
-                <div className="demo-expired-modal w-full max-w-[400px] bg-[#111111] border border-[#1F1F1F] rounded-2xl p-8 text-center relative overflow-hidden">
+              <div className="fixed inset-0 z-[9998] bg-white/55 backdrop-blur-[12px] animate-fade-in" />
+              <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-[15vh] p-4 pointer-events-none">
+                <div className="demo-expired-modal w-full max-w-[400px] bg-white border border-[#E0E0E0] rounded-2xl p-8 text-center relative overflow-hidden shadow-2xl pointer-events-auto">
                   <div className="relative z-10">
-                    <div className="inline-flex mb-4">
-                      <Clock className="w-10 h-10 text-white/60" />
+                    <div className="w-14 h-14 rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center mb-5 mx-auto">
+                      <Clock className="w-6 h-6 text-black" />
                     </div>
-                    <h2 className="text-xl font-bold text-white mb-2">Demo Session Ended</h2>
-                    <p className="text-[#999999] text-sm mb-6 leading-relaxed">
+                    <h2 className="text-xl font-bold text-black mb-2">Demo Session Ended</h2>
+                    <p className="text-gray-600 text-xs mb-6 leading-relaxed max-w-[280px] mx-auto">
                       Your 10-minute demo has ended. Sign up free to get full access to HirenextAI — no credit card required.
                     </p>
                     <div className="space-y-3">
                       <button
                         onClick={() => { clearDemoSession(); navigate('/register'); }}
-                        className="w-full h-11 bg-white text-black rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-white/90 transition-all"
+                        className="w-full h-11 bg-black text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-neutral-800 transition-all"
                       >
                         <UserPlus className="w-4 h-4" />
-                        Sign Up Free — No Credit Card
+                        Sign Up Free
                       </button>
                       <button
                         onClick={() => { clearDemoSession(); navigate('/login'); }}
-                        className="w-full h-11 border border-[#1F1F1F] bg-[#0D0D0D] text-[#999999] rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[#161616] transition-all"
+                        className="w-full h-11 border border-[#E0E0E0] bg-transparent text-black rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[#F2F2F2] transition-all"
                       >
                         <LogIn className="w-4 h-4" />
                         Already have an account? Log In
                       </button>
                       <button
                         onClick={() => navigate('/')}
-                        className="w-full h-11 border border-[#1F1F1F] bg-transparent text-[#555555] rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[#111111] transition-all"
+                        className="w-full h-11 border border-[#E0E0E0] bg-transparent text-black rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[#F2F2F2] transition-all"
                       >
                         <X className="w-4 h-4" />
                         Back to Home
                       </button>
                     </div>
-                    <p className="text-[#333333] text-[11px] mt-4">Free forever plan · No credit card · Cancel anytime</p>
+                    <p className="text-gray-600 text-[11px] mt-4">Free forever plan · Cancel anytime</p>
                   </div>
                 </div>
               </div>
@@ -299,36 +303,36 @@ const ChatPage = ({ demo }) => {
           {showLimitModal && (
             <>
               <div
-                className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md"
+                className="fixed inset-0 z-[9998] bg-white/55 backdrop-blur-[12px] animate-fade-in"
                 onClick={() => setShowLimitModal(false)}
               />
-              <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
-                <div className="demo-limit-modal w-full max-w-[400px] bg-[#111111] border border-[#1F1F1F] rounded-2xl p-8 text-center relative overflow-hidden">
+              <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-[15vh] p-4 pointer-events-none">
+                <div className="demo-limit-modal w-full max-w-[400px] bg-white border border-[#E0E0E0] rounded-2xl p-8 text-center relative overflow-hidden shadow-2xl pointer-events-auto">
                   <div className="relative z-10 flex flex-col items-center">
-                    <div className="w-14 h-14 rounded-2xl bg-white/5 border border-[#1F1F1F] flex items-center justify-center mb-5">
-                      <MessageSquare className="w-7 h-7 text-white/60" />
+                    <div className="w-14 h-14 rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center mb-5">
+                      <MessageSquare className="w-6 h-6 text-black" />
                     </div>
-                    <h3 className="text-white font-bold text-xl mb-2">Demo Limit Reached</h3>
-                    <p className="text-[#999999] text-sm mb-6 leading-relaxed max-w-xs">
+                    <h3 className="text-black font-bold text-xl mb-2">Demo Limit Reached</h3>
+                    <p className="text-gray-600 text-xs mb-6 leading-relaxed max-w-xs">
                       You've used all {DEMO_MAX_RESPONSES} free AI responses in this demo. Create a free account for unlimited access.
                     </p>
                     <button
                       onClick={() => { clearDemoSession(); navigate('/register'); }}
-                      className="w-full h-12 bg-white text-black rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-white/90 transition-all mb-3"
+                      className="w-full h-11 bg-black text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-neutral-800 transition-all mb-3"
                     >
                       <UserPlus className="w-4 h-4" />
-                      Sign Up Free — Unlimited Access
+                      Sign Up Free
                     </button>
                     <button
                       onClick={() => { clearDemoSession(); navigate('/login'); }}
-                      className="w-full h-12 border border-[#1F1F1F] bg-[#0D0D0D] text-[#999999] rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[#161616] transition-all mb-3"
+                      className="w-full h-11 border border-[#E0E0E0] bg-transparent text-black rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[#F2F2F2] transition-all mb-4"
                     >
                       <LogIn className="w-4 h-4" />
                       Log In
                     </button>
                     <button
                       onClick={() => setShowLimitModal(false)}
-                      className="text-[#555555] text-xs mt-2 hover:text-white/60 transition-colors"
+                      className="text-gray-500 text-xs hover:text-black transition-colors"
                     >
                       Continue browsing demo
                     </button>
@@ -345,32 +349,34 @@ const ChatPage = ({ demo }) => {
         {showSparklesModal && (
           <>
             <div
-              className="fixed inset-0 z-[9999] bg-black/70 backdrop-blur-sm"
+              className="fixed inset-0 z-[9998] bg-white/55 backdrop-blur-[12px] animate-fade-in"
               onClick={() => setShowSparklesModal(false)}
             />
-            <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
-              <div className="w-full max-w-sm bg-[#111111] border border-[#1F1F1F] rounded-2xl p-8 text-center relative overflow-hidden">
+            <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-[15vh] p-4 pointer-events-none">
+              <div className="w-full max-w-sm bg-white border border-[#E0E0E0] rounded-2xl p-8 text-center relative overflow-hidden shadow-2xl pointer-events-auto">
                 <div className="relative z-10 flex flex-col items-center">
-                  <Sparkles className="w-10 h-10 text-white/60 mb-4" />
-                  <h3 className="text-white font-bold text-lg mb-2">Create a free account to access this</h3>
-                  <p className="text-[#999999] text-sm mb-6 leading-relaxed">
+                  <div className="w-14 h-14 rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center mb-5">
+                    <Sparkles className="w-6 h-6 text-black" />
+                  </div>
+                  <h3 className="text-black font-bold text-lg mb-2">Create a free account to access this</h3>
+                  <p className="text-gray-600 text-xs mb-6 leading-relaxed max-w-xs">
                     Sign up free to unlock Applications, Files, Interview prep and more.
                   </p>
                   <button
                     onClick={() => { setShowSparklesModal(false); navigate('/register'); }}
-                    className="w-full h-11 bg-white text-black rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-white/90 transition-all mb-3"
+                    className="w-full h-11 bg-black text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-neutral-800 transition-all mb-3"
                   >
-                    Sign Up Free — It's Free
+                    Sign Up Free
                   </button>
                   <button
                     onClick={() => { setShowSparklesModal(false); navigate('/login'); }}
-                    className="w-full h-11 border border-[#1F1F1F] bg-[#0D0D0D] text-[#999999] rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[#161616] transition-all mb-3"
+                    className="w-full h-11 border border-[#E0E0E0] bg-transparent text-black rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:bg-[#F2F2F2] transition-all mb-4"
                   >
                     Log In
                   </button>
                   <button
                     onClick={() => setShowSparklesModal(false)}
-                    className="text-[#555555] text-xs mt-2 hover:text-[#999999] transition-colors"
+                    className="text-gray-500 text-xs hover:text-black transition-colors"
                   >
                     Continue browsing demo
                   </button>

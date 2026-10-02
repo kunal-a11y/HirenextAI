@@ -4,7 +4,7 @@ import { Upload, Link2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useUIStore from '../../store/useUIStore';
 
-const FILE_ACCEPT = '.pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp';
+const FILE_ACCEPT = '.pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif,.webp,.zip,.rar,.tar,.gz,.7z,.mp4,.mov,.avi,.mkv,.webm,.mp3,.wav,.ogg,.m4a';
 
 const FileUploadMenu = ({ onFileSelect, positionedByParent = false }) => {
   const { plusPopupOpen, setPlusPopupOpen, setConnectModalOpen } = useUIStore();
@@ -80,21 +80,21 @@ const FileUploadMenu = ({ onFileSelect, positionedByParent = false }) => {
           : undefined
       }
     >
-      <div className="rounded-xl border border-[#1F1F1F] bg-[#111111]/98 backdrop-blur-xl p-1.5 shadow-2xl shadow-black/50">
+      <div className="rounded-xl border border-[#E0E0E0] bg-[#F7F7F7] backdrop-blur-xl p-1.5 shadow-2xl shadow-black/50">
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-white/85 hover:bg-white/[0.06] hover:text-white transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-[#333333] hover:bg-[#F2F2F2] hover:text-black hover:text-black transition-colors"
         >
-          <Upload size={17} className="text-white/60 shrink-0" />
+          <Upload size={17} className="text-[#555555] shrink-0" />
           Upload File
         </button>
         <button
           type="button"
           onClick={openConnect}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-white/85 hover:bg-white/[0.06] hover:text-white transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-[#333333] hover:bg-[#F2F2F2] hover:text-black hover:text-black transition-colors"
         >
-          <Link2 size={17} className="text-white/60 shrink-0" />
+          <Link2 size={17} className="text-[#555555] shrink-0" />
           Connect Account
         </button>
       </div>
@@ -120,7 +120,7 @@ const FileUploadMenu = ({ onFileSelect, positionedByParent = false }) => {
 
   return (
     <AnimatePresence>
-      <div className="absolute bottom-full left-0 mb-2 w-[220px] z-50">{menuContent}</div>
+      <div className="absolute bottom-full left-0 mb-2 w-[220px] z-[200]">{menuContent}</div>
     </AnimatePresence>
   );
 };

@@ -35,20 +35,14 @@ const ChatLayout = ({ children, className = 'h-screen' }) => {
       {/* Mobile Overlay */}
       {isMobile && mobileSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/60 z-40 transition-opacity animate-fade-in"
+          className="fixed inset-0 bg-white/60 z-40 transition-opacity animate-fade-in"
           onClick={() => setMobileSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <div 
-        className={`
-          fixed md:relative z-50 h-full transition-all duration-300 ease-in-out
-          ${isMobile 
-            ? (mobileSidebarOpen ? 'translate-x-0 w-[260px]' : '-translate-x-full w-0') 
-            : (sidebarCollapsed ? 'w-[60px]' : 'w-[260px]')
-          }
-        `}
+        className={` fixed md:relative z-[100] h-full transition-all duration-300 ease-in-out ${isMobile ? (mobileSidebarOpen ? 'translate-x-0 w-[260px]' : '-translate-x-full w-0') : (sidebarCollapsed ? 'w-[60px]' : 'w-[260px]') } `}
       >
         <Sidebar />
       </div>

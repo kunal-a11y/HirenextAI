@@ -24,8 +24,8 @@ function FadeUp({ children, delay = 0, className = "" }) {
 const sections = [
   {
     icon: CheckCircle,
-    color: "text-emerald-400",
-    bg: "bg-emerald-500/10 border-emerald-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "Required",
     title: "Acceptance of Terms",
     content: [
@@ -37,8 +37,8 @@ const sections = [
   },
   {
     icon: Globe,
-    color: "text-blue-400",
-    bg: "bg-blue-500/10 border-blue-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "Global",
     title: "Use of Service",
     content: [
@@ -52,8 +52,8 @@ const sections = [
   },
   {
     icon: Brain,
-    color: "text-purple-400",
-    bg: "bg-purple-500/10 border-purple-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "AI Tools",
     title: "AI-Generated Content",
     content: [
@@ -66,8 +66,8 @@ const sections = [
   },
   {
     icon: CreditCard,
-    color: "text-amber-400",
-    bg: "bg-amber-500/10 border-amber-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "Billing",
     title: "Subscription & Billing",
     content: [
@@ -81,8 +81,8 @@ const sections = [
   },
   {
     icon: FileText,
-    color: "text-indigo-400",
-    bg: "bg-indigo-500/10 border-indigo-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "Ownership",
     title: "Intellectual Property",
     content: [
@@ -94,8 +94,8 @@ const sections = [
   },
   {
     icon: AlertTriangle,
-    color: "text-rose-400",
-    bg: "bg-rose-500/10 border-rose-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "Prohibited",
     title: "Prohibited Conduct",
     content: [
@@ -109,8 +109,8 @@ const sections = [
   },
   {
     icon: Info,
-    color: "text-teal-400",
-    bg: "bg-teal-500/10 border-teal-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "Limitations",
     title: "Disclaimers",
     content: [
@@ -122,8 +122,8 @@ const sections = [
   },
   {
     icon: XCircle,
-    color: "text-orange-400",
-    bg: "bg-orange-500/10 border-orange-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "Accounts",
     title: "Termination",
     content: [
@@ -135,8 +135,8 @@ const sections = [
   },
   {
     icon: RefreshCw,
-    color: "text-pink-400",
-    bg: "bg-pink-500/10 border-pink-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "Updates",
     title: "Changes to Terms",
     content: [
@@ -154,9 +154,9 @@ export default function Terms() {
   return (
     <div style={{ minHeight: '100vh', overflowX: 'hidden', width: '100%' }} className="bg-background relative">
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-60px] left-[15%] w-[600px] h-[600px] rounded-full bg-indigo-500/10 blur-[160px]" />
-        <div className="absolute bottom-[10%] right-[-60px] w-[400px] h-[400px] rounded-full bg-purple-600/8 blur-[130px]" />
-        <div className="absolute bottom-[20%] right-[-5%] w-[400px] h-[400px] rounded-full bg-purple-500/4 blur-[100px]" />
+        <div className="absolute top-[-60px] left-[15%] w-[600px] h-[600px] rounded-full bg-[#F7F7F7] blur-[160px]" />
+        <div className="absolute bottom-[10%] right-[-60px] w-[400px] h-[400px] rounded-full bg-[#F7F7F7] blur-[130px]" />
+        <div className="absolute bottom-[20%] right-[-5%] w-[400px] h-[400px] rounded-full bg-[#F7F7F7] blur-[100px]" />
         <div className="absolute inset-0 opacity-[0.018]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px,rgba(255,255,255,0.5) 1px,transparent 0)", backgroundSize: "40px 40px" }} />
       </div>
 
@@ -168,41 +168,41 @@ export default function Terms() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-4"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] mb-4"
           >
-            <Sparkles className="w-4 h-4 text-[#8B5CF6]" />
-            <span className="text-white/80 text-sm font-medium">Terms & Legal</span>
+            <Sparkles className="w-4 h-4 text-black" />
+            <span className="text-[#222222] text-sm font-medium">Terms & Legal</span>
           </motion.div>
 
           <motion.div
             animate={{ y: [0, -4, 0] }}
             transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-            className="w-16 h-16 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(99,102,241,0.2)]"
+            className="w-16 h-16 rounded-2xl bg-[#F7F7F7] border border-[#E0E0E0] flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(255,255,255,0.2)]"
           >
-            <FileText className="w-8 h-8 text-purple-400" />
+            <FileText className="w-8 h-8 text-black" />
           </motion.div>
 
-          <h1 className="text-4xl md:text-5xl font-display font-extrabold mb-3 text-white">Terms & Conditions</h1>
-          <p className="text-white/35 text-sm mb-4">Last updated: May 2026</p>
-          <p className="text-white/55 max-w-2xl mx-auto text-sm leading-relaxed font-light">
+          <h1 className="text-4xl md:text-5xl font-display font-extrabold mb-3 text-black">Terms & Conditions</h1>
+          <p className="text-black/35 text-sm mb-4">Last updated: May 2026</p>
+          <p className="text-black/55 max-w-2xl mx-auto text-sm leading-relaxed font-light">
             Please read these terms carefully. By using HirenextAI, you agree to these terms. We've written them in plain language so they're easy to understand.
           </p>
 
           <div className="flex flex-wrap justify-center gap-3 mt-6">
-            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/60 text-xs font-medium">
-              <FileText className="w-3.5 h-3.5 text-purple-400" />
+            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] text-[#555555] text-xs font-medium">
+              <FileText className="w-3.5 h-3.5 text-black" />
               <span>Plain Language</span>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/60 text-xs font-medium">
-              <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] text-[#555555] text-xs font-medium">
+              <CheckCircle className="w-3.5 h-3.5 text-black" />
               <span>48hr Refund Policy</span>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/60 text-xs font-medium">
-              <Globe className="w-3.5 h-3.5 text-blue-400" />
+            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] text-[#555555] text-xs font-medium">
+              <Globe className="w-3.5 h-3.5 text-black" />
               <span>Global Platform</span>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/60 text-xs font-medium">
-              <Shield className="w-3.5 h-3.5 text-indigo-400" />
+            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] text-[#555555] text-xs font-medium">
+              <Shield className="w-3.5 h-3.5 text-black" />
               <span>GDPR Compliant</span>
             </motion.div>
           </div>
@@ -214,7 +214,7 @@ export default function Terms() {
             <div
               key={i}
               onClick={() => document.getElementById(`section-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
-              className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/40 text-xs hover:text-white/70 hover:bg-white/8 transition-all cursor-pointer whitespace-nowrap"
+              className="px-3 py-1.5 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] text-[#777777] text-xs hover:text-[#444444] hover:bg-[#F2F2F2] hover:text-black transition-all cursor-pointer whitespace-nowrap"
             >
               {section.title}
             </div>
@@ -241,8 +241,8 @@ export default function Terms() {
                         <IconComponent className={`w-5 h-5 ${section.color}`} />
                       </div>
                       <div className="flex items-center">
-                        <span className="text-base font-bold text-white">{section.title}</span>
-                        <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-white/30 text-[10px] ml-3">
+                        <span className="text-base font-bold text-black">{section.title}</span>
+                        <span className="px-2 py-0.5 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] text-[#888888] text-[10px] ml-3">
                           {section.tag}
                         </span>
                       </div>
@@ -252,7 +252,7 @@ export default function Terms() {
                       transition={{ duration: 0.3 }}
                       className="shrink-0"
                     >
-                      <ChevronDown className="w-4 h-4 text-white/40" />
+                      <ChevronDown className="w-4 h-4 text-[#777777]" />
                     </motion.div>
                   </div>
 
@@ -265,12 +265,12 @@ export default function Terms() {
                         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                         className="overflow-hidden"
                       >
-                        <div className="border-t border-white/5 px-6 pb-6 pt-5">
+                        <div className="border-t border-[#E0E0E0] px-6 pb-6 pt-5">
                           <ul className="space-y-3">
                             {section.content.map((item, j) => (
                               <li key={j} className="flex items-start gap-3">
                                 <div className={`w-1.5 h-1.5 rounded-full mt-2 shrink-0 bg-current ${section.color}`} />
-                                <p className="text-white/60 text-sm leading-relaxed font-light">{item}</p>
+                                <p className="text-[#555555] text-sm leading-relaxed font-light">{item}</p>
                               </li>
                             ))}
                           </ul>
@@ -288,40 +288,40 @@ export default function Terms() {
         <div className="mt-16">
           <FadeUp>
             <div className="glass-card p-10 text-center relative overflow-hidden max-w-3xl mx-auto mb-8">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/8 to-[#8B5CF6]/8 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-br from-white to-[#999999]/8 pointer-events-none" />
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                 className="inline-flex mb-4"
               >
-                <Scale className="w-8 h-8 text-purple-400" />
+                <Scale className="w-8 h-8 text-black" />
               </motion.div>
 
-              <h2 className="text-2xl font-display font-bold text-white mb-3 relative z-10">Questions About These Terms?</h2>
-              <p className="text-white/55 text-sm mb-6 max-w-lg mx-auto relative z-10 font-light">
+              <h2 className="text-2xl font-display font-bold text-black mb-3 relative z-10">Questions About These Terms?</h2>
+              <p className="text-black/55 text-sm mb-6 max-w-lg mx-auto relative z-10 font-light">
                 We've tried to keep our terms clear and fair. If anything is unclear or you have a question, our team is happy to help.
               </p>
 
               <div className="flex gap-3 justify-center mb-6 relative z-10">
-                <Link to="/contact" className="btn-primary py-3 px-8 inline-flex items-center gap-2 text-white">
+                <Link to="/contact" className="btn-primary py-3 px-8 inline-flex items-center gap-2 text-black">
                   <Mail className="w-4 h-4" /> Contact Us
                 </Link>
-                <Link to="/privacy-policy" className="btn-secondary py-3 px-8 inline-flex items-center gap-2 text-white">
+                <Link to="/privacy-policy" className="btn-secondary py-3 px-8 inline-flex items-center gap-2 text-black">
                   <Shield className="w-4 h-4" /> Privacy Policy
                 </Link>
               </div>
 
               <div className="flex flex-wrap gap-4 justify-center mt-5 relative z-10">
-                <div className="flex items-center gap-1.5 text-white/35 text-xs">
+                <div className="flex items-center gap-1.5 text-black/35 text-xs">
                   <Mail className="w-3.5 h-3.5" />
                   <span>support@hirenextai.com</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-white/35 text-xs">
-                  <Clock className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="flex items-center gap-1.5 text-black/35 text-xs">
+                  <Clock className="w-3.5 h-3.5 text-black" />
                   <span>48hr refund window</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-white/35 text-xs">
-                  <CheckCircle className="w-3.5 h-3.5 text-purple-400" />
+                <div className="flex items-center gap-1.5 text-black/35 text-xs">
+                  <CheckCircle className="w-3.5 h-3.5 text-black" />
                   <span>Plain language terms</span>
                 </div>
               </div>

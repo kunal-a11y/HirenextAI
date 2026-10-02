@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HirenextAI — Career Assistant</title>
+  <meta name="description" content="AI-powered career assistant sidebar for HirenextAI browser extension">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+
+  <!-- ========== LOADING SPINNER ========== -->
+  <div id="loading-screen" class="screen active">
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p class="loading-text">Loading HirenextAI…</p>
+    </div>
+  </div>
+
+  <!-- ========== LOGIN SCREEN ========== -->
+  <div id="login-screen" class="screen">
+    <div class="login-wrapper">
+      <div class="login-brand">
+        <div class="brand-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="#000"/>
+            <path d="M8 16L14 10L20 16L14 22Z" fill="#FFF"/>
+            <circle cx="22" cy="10" r="3" fill="#FFF"/>
+          </svg>
+        </div>
+        <h1 class="brand-title">HirenextAI</h1>
+        <p class="brand-subtitle">Your AI Career Companion</p>
+      </div>
+
+      <form id="login-form" class="login-form" autocomplete="off">
+        <div class="form-group">
+          <label for="login-email">Email address</label>
+          <input type="email" id="login-email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="Enter your password" required>
+        </div>
+        <div id="login-error" class="login-error" style="display:none;"></div>
+        <button type="submit" id="login-btn" class="btn btn-primary btn-full">
+          <span class="btn-text">Sign In</span>
+          <span class="btn-spinner" style="display:none;">
+            <span class="spinner-small"></span>
+          </span>
+        </button>
+      </form>
+
+      <p class="login-footer">
+        Don't have an account? <a href="https://hirenextai.com/signup" target="_blank" rel="noopener">Sign up free</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- ========== MAIN DASHBOARD ========== -->
+  <div id="dashboard-screen" class="screen">
+
+    <!-- Tab Bar -->
+    <nav id="tab-bar" class="tab-bar">
+      <button class="tab-item active" data-tab="home">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </button>
+      <button class="tab-item" data-tab="analysis">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span>Analysis</span>
+      </button>
+      <button class="tab-item" data-tab="resume">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span>Resume</span>
+      </button>
+      <button class="tab-item" data-tab="documents">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+        <span>Docs</span>
+      </button>
+      <button class="tab-item" data-tab="history">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>History</span>
+      </button>
+      <button class="tab-item" data-tab="settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <!-- ===== TAB: HOME ===== -->
+    <section id="tab-content-home" class="tab-content active">
+      <!-- User Profile Header -->
+      <div class="profile-header">
+        <div class="avatar" id="user-avatar">KS</div>
+        <div class="profile-info">
+          <h2 id="user-name" class="profile-name">User</h2>
+          <span id="user-plan" class="plan-badge">Free</span>
+        </div>
+      </div>
+
+      <!-- Resume Status -->
+      <div class="card" id="resume-status-card">
+        <div class="card-row">
+          <div class="card-row-icon">📄</div>
+          <div class="card-row-body">
+            <span class="card-row-title" id="resume-status-title">No resume uploaded</span>
+            <span class="card-row-sub" id="resume-status-sub">Upload your resume to unlock AI analysis</span>
+          </div>
+          <button class="btn btn-sm btn-secondary" id="home-upload-resume-btn">Upload</button>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <h3 class="section-title">Quick Actions</h3>
+      <div class="quick-actions">
+        <button class="action-card" id="qa-analyze">
+          <span class="action-icon">📊</span>
+          <span class="action-label">Analyze Job</span>
+        </button>
+        <button class="action-card" id="qa-cover-letter">
+          <span class="action-icon">✉️</span>
+          <span class="action-label">Cover Letter</span>
+        </button>
+        <button class="action-card" id="qa-apply-ai">
+          <span class="action-icon">🤖</span>
+          <span class="action-label">Apply with AI</span>
+        </button>
+        <button class="action-card" id="qa-history">
+          <span class="action-icon">📋</span>
+          <span class="action-label">View History</span>
+        </button>
+      </div>
+
+      <!-- Detected Job Preview -->
+      <div id="job-preview-card" class="card" style="display:none;">
+        <h3 class="card-title">Detected Job</h3>
+        <div class="job-preview">
+          <p class="job-preview-title" id="job-preview-title"></p>
+          <p class="job-preview-company" id="job-preview-company"></p>
+          <p class="job-preview-location" id="job-preview-location"></p>
+          <div class="job-preview-tags" id="job-preview-tags"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TAB: ANALYSIS ===== -->
+    <section id="tab-content-analysis" class="tab-content">
+      <!-- Empty state when no job detected -->
+      <div id="analysis-empty" class="empty-state">
+        <div class="empty-icon">📊</div>
+        <h3 class="empty-title">No job detected</h3>
+        <p class="empty-desc">Navigate to a job listing on a supported site and we'll automatically analyze it for you.</p>
+      </div>
+
+      <!-- Analysis loading state -->
+      <div id="analysis-loading" class="loading-section" style="display:none;">
+        <div class="spinner"></div>
+        <p class="loading-text">Analyzing job posting…</p>
+        <p class="loading-sub">This may take a few seconds</p>
+      </div>
+
+      <!-- Analysis results -->
+      <div id="analysis-results" style="display:none;">
+        <!-- Match Score Circle -->
+        <div class="score-section">
+          <div class="score-circle-wrap">
+            <svg class="score-circle" width="140" height="140" viewBox="0 0 140 140">
+              <circle class="score-bg" cx="70" cy="70" r="62" />
+              <circle class="score-fill" id="score-fill" cx="70" cy="70" r="62" />
+            </svg>
+            <div class="score-value" id="score-value">0%</div>
+          </div>
+          <p class="score-verdict" id="score-verdict">Calculating…</p>
+        </div>
+
+        <!-- Breakdown Bars -->
+        <div class="card" id="breakdown-card">
+          <h3 class="card-title">Breakdown</h3>
+          <div id="breakdown-bars"></div>
+        </div>
+
+        <!-- Missing Skills -->
+        <div class="card" id="missing-skills-card" style="display:none;">
+          <h3 class="card-title">Missing Skills</h3>
+          <div class="tags-wrap" id="missing-skills-tags"></div>
+        </div>
+
+        <!-- Strengths -->
+        <div class="card" id="strengths-card" style="display:none;">
+          <h3 class="card-title">✅ Strengths</h3>
+          <ul class="insight-list" id="strengths-list"></ul>
+        </div>
+
+        <!-- Weaknesses -->
+        <div class="card" id="weaknesses-card" style="display:none;">
+          <h3 class="card-title">⚠️ Weaknesses</h3>
+          <ul class="insight-list" id="weaknesses-list"></ul>
+        </div>
+
+        <!-- Resume Suggestions -->
+        <div class="card" id="suggestions-card" style="display:none;">
+          <h3 class="card-title">💡 Resume Suggestions</h3>
+          <ul class="insight-list" id="suggestions-list"></ul>
+        </div>
+
+        <!-- Salary Insight -->
+        <div class="card" id="salary-card" style="display:none;">
+          <h3 class="card-title">💰 Salary Insight</h3>
+          <p id="salary-text" class="salary-text"></p>
+        </div>
+      </div>
+
+      <!-- Analyze Button (shown when job detected but not yet analyzed) -->
+      <div id="analysis-action" style="display:none;">
+        <button id="analyze-btn" class="btn btn-primary btn-full">
+          <span class="btn-text">Analyze This Job</span>
+          <span class="btn-spinner" style="display:none;">
+            <span class="spinner-small"></span>
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===== TAB: RESUME ===== -->
+    <section id="tab-content-resume" class="tab-content">
+      <!-- No resume state -->
+      <div id="resume-empty">
+        <div class="empty-state">
+          <div class="empty-icon">📄</div>
+          <h3 class="empty-title">No resume found</h3>
+          <p class="empty-desc">Upload your resume or create one with AI to get started.</p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Paste Resume Text</h3>
+          <textarea id="resume-text-input" class="textarea" placeholder="Paste your resume content here…" rows="6"></textarea>
+          <button id="resume-upload-btn" class="btn btn-primary btn-full" style="margin-top:12px;">Upload Resume</button>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">Create with AI</h3>
+          <p class="card-desc">Answer a few questions and we'll build a professional resume for you.</p>
+          <div id="ai-resume-questions">
+            <div class="form-group">
+              <label for="ai-fullname">Full name</label>
+              <input type="text" id="ai-fullname" placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label for="ai-jobtitle">Target job title</label>
+              <input type="text" id="ai-jobtitle" placeholder="Frontend Developer">
+            </div>
+            <div class="form-group">
+              <label for="ai-experience">Years of experience</label>
+              <input type="number" id="ai-experience" placeholder="3">
+            </div>
+            <div class="form-group">
+              <label for="ai-skills">Key skills (comma separated)</label>
+              <input type="text" id="ai-skills" placeholder="React, Node.js, Python">
+            </div>
+            <div class="form-group">
+              <label for="ai-education">Education</label>
+              <input type="text" id="ai-education" placeholder="B.Tech in Computer Science">
+            </div>
+            <div class="form-group">
+              <label for="ai-summary">Brief career summary</label>
+              <textarea id="ai-summary" class="textarea" rows="3" placeholder="Describe your career highlights…"></textarea>
+            </div>
+          </div>
+          <button id="ai-resume-create-btn" class="btn btn-primary btn-full" style="margin-top:12px;">
+            <span class="btn-text">Create Resume with AI</span>
+            <span class="btn-spinner" style="display:none;"><span class="spinner-small"></span></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Has resume state -->
+      <div id="resume-view" style="display:none;">
+        <div class="card">
+          <h3 class="card-title">Your Resume</h3>
+          <div id="resume-preview-content" class="resume-preview"></div>
+        </div>
+
+        <!-- ATS Score -->
+        <div class="score-section" id="resume-ats-section" style="display:none;">
+          <div class="score-circle-wrap small">
+            <svg class="score-circle" width="100" height="100" viewBox="0 0 100 100">
+              <circle class="score-bg" cx="50" cy="50" r="44" />
+              <circle class="score-fill" id="ats-score-fill" cx="50" cy="50" r="44" />
+            </svg>
+            <div class="score-value small" id="ats-score-value">0%</div>
+          </div>
+          <p class="score-label">ATS Compatibility Score</p>
+        </div>
+
+        <!-- Resume strengths/weaknesses -->
+        <div class="card" id="resume-strengths-card" style="display:none;">
+          <h3 class="card-title">✅ Strengths</h3>
+          <ul class="insight-list" id="resume-strengths-list"></ul>
+        </div>
+
+        <div class="card" id="resume-weaknesses-card" style="display:none;">
+          <h3 class="card-title">⚠️ Areas to Improve</h3>
+          <ul class="insight-list" id="resume-weaknesses-list"></ul>
+        </div>
+
+        <div class="card" id="resume-improvements-card" style="display:none;">
+          <h3 class="card-title">💡 Suggested Improvements</h3>
+          <ul class="insight-list" id="resume-improvements-list"></ul>
+        </div>
+
+        <div class="btn-group">
+          <button id="resume-analyze-btn" class="btn btn-primary">
+            <span class="btn-text">Analyze Resume</span>
+            <span class="btn-spinner" style="display:none;"><span class="spinner-small"></span></span>
+          </button>
+          <button id="resume-upload-new-btn" class="btn btn-secondary">Upload New</button>
+          <button id="resume-download-btn" class="btn btn-secondary">Download</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TAB: DOCUMENTS ===== -->
+    <section id="tab-content-documents" class="tab-content">
+      <!-- Document type selector -->
+      <h3 class="section-title">Generate Document</h3>
+      <div class="doc-type-pills">
+        <button class="pill active" data-doctype="cover_letter">Cover Letter</button>
+        <button class="pill" data-doctype="recruiter_message">Recruiter Message</button>
+        <button class="pill" data-doctype="application_answers">Application Answers</button>
+      </div>
+
+      <!-- Generation Form -->
+      <div class="card" id="doc-gen-form">
+        <div class="form-group">
+          <label for="doc-job-title">Job title</label>
+          <input type="text" id="doc-job-title" placeholder="Software Engineer">
+        </div>
+        <div class="form-group">
+          <label for="doc-company">Company name</label>
+          <input type="text" id="doc-company" placeholder="Google">
+        </div>
+        <div class="form-group">
+          <label for="doc-description">Job description / context</label>
+          <textarea id="doc-description" class="textarea" rows="4" placeholder="Paste or type the job description…"></textarea>
+        </div>
+        <button id="doc-generate-btn" class="btn btn-primary btn-full">
+          <span class="btn-text">Generate</span>
+          <span class="btn-spinner" style="display:none;"><span class="spinner-small"></span></span>
+        </button>
+      </div>
+
+      <!-- Generated Output -->
+      <div id="doc-output-section" class="card" style="display:none;">
+        <h3 class="card-title" id="doc-output-title">Generated Document</h3>
+        <textarea id="doc-output-text" class="textarea" rows="10" readonly></textarea>
+        <div class="btn-group" style="margin-top:12px;">
+          <button id="doc-copy-btn" class="btn btn-primary btn-sm">Copy</button>
+          <button id="doc-save-btn" class="btn btn-secondary btn-sm">Save</button>
+        </div>
+      </div>
+
+      <!-- Document History -->
+      <div id="doc-history-section">
+        <h3 class="section-title">Saved Documents</h3>
+        <div id="doc-history-list" class="doc-history-list">
+          <div class="empty-state small">
+            <p class="empty-desc">No saved documents yet.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TAB: HISTORY ===== -->
+    <section id="tab-content-history" class="tab-content">
+      <h3 class="section-title">Application History</h3>
+
+      <!-- Filter Pills -->
+      <div class="filter-pills" id="history-filters">
+        <button class="pill active" data-filter="all">All</button>
+        <button class="pill" data-filter="applied">Applied</button>
+        <button class="pill" data-filter="interview">Interview</button>
+        <button class="pill" data-filter="offer">Offer</button>
+        <button class="pill" data-filter="rejected">Rejected</button>
+      </div>
+
+      <!-- Applications List -->
+      <div id="history-list" class="history-list">
+        <div class="empty-state" id="history-empty">
+          <div class="empty-icon">📋</div>
+          <h3 class="empty-title">No applications yet</h3>
+          <p class="empty-desc">Start applying to jobs and they'll appear here.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TAB: SETTINGS ===== -->
+    <section id="tab-content-settings" class="tab-content">
+      <h3 class="section-title">Settings</h3>
+
+      <div class="card">
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Dark Mode</span>
+            <span class="setting-desc">Coming soon</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-theme" disabled>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Notifications</span>
+            <span class="setting-desc">Receive alerts for job matches</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-notifications" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Account</span>
+            <span class="setting-desc" id="settings-email">user@email.com</span>
+          </div>
+        </div>
+      </div>
+
+      <button id="logout-btn" class="btn btn-danger btn-full" style="margin-top:20px;">Sign Out</button>
+
+      <p class="version-text" id="version-text">HirenextAI v1.0.0</p>
+    </section>
+
+  </div>
+
+  <script src="sidebar.js"></script>
+</body>
+</html>

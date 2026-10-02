@@ -38,26 +38,26 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen overflow-y-auto bg-[#0d0d0d] text-white flex items-center justify-center p-6">
+    <div className="min-h-screen overflow-y-auto bg-[#F7F7F7] text-black flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link to="/" className="font-syne text-2xl font-extrabold text-white no-underline">
+          <Link to="/" className="font-syne text-2xl font-extrabold text-black no-underline">
             HirenextAI
           </Link>
-          <p className="mt-2 text-sm text-white/45">Create your account</p>
+          <p className="mt-2 text-sm text-black/45">Create your account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="card-dark space-y-4">
           {error && (
-            <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+            <div className="rounded-lg border border-[#E0E0E0] bg-[#F7F7F7] px-4 py-3 text-sm text-black">
               {error}
             </div>
           )}
 
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-white/40">Full name</label>
+            <label className="mb-1.5 block text-xs font-medium text-[#777777]">Full name</label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#888888]" />
               <input
                 type="text"
                 className="input-dark pl-10"
@@ -70,9 +70,9 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-white/40">Email</label>
+            <label className="mb-1.5 block text-xs font-medium text-[#777777]">Email</label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#888888]" />
               <input
                 type="email"
                 className="input-dark pl-10"
@@ -85,9 +85,9 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-white/40">Password</label>
+            <label className="mb-1.5 block text-xs font-medium text-[#777777]">Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#888888]" />
               <input
                 type="password"
                 className="input-dark pl-10"
@@ -115,15 +115,15 @@ export default function SignupPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-white/45">
+        <p className="mt-6 text-center text-sm text-black/45">
           Already have an account?{' '}
-          <Link to="/login" className="text-white hover:underline">
+          <Link to="/login" className="text-black hover:underline">
             Sign in
           </Link>
         </p>
 
         <p className="mt-3 text-center">
-          <Link to="/" className="text-sm text-white/35 hover:text-white/60">
+          <Link to="/" className="text-sm text-black/35 hover:text-[#555555]">
             ← Back to home
           </Link>
         </p>

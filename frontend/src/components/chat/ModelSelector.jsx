@@ -4,12 +4,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from '../../hooks/useTranslation';
 
 export const AI_MODELS = [
-  { id: 'hirenext-flash', name: 'HirenextAI Flash', description: 'Fast & efficient' },
-  { id: 'hirenext-pro', name: 'HirenextAI Pro', description: 'Most capable' },
+  { id: 'hirenext-0.1', name: 'HirenextAI 0.1', description: 'Balanced for everyday tasks' },
+  { id: 'hirenext-flash', name: 'HirenextAI Flash ⚡', description: 'Fastest responses' },
+  { id: 'hirenext-pro', name: 'HirenextAI Pro 🚀', description: 'Highest quality responses' }
 ];
 
 const ModelSelector = ({ selectedModel, onSelect, open, onOpenChange }) => {
   const { t } = useTranslation();
+
   const current = AI_MODELS.find((m) => m.id === selectedModel) || AI_MODELS[0];
 
   useEffect(() => {
@@ -33,18 +35,12 @@ const ModelSelector = ({ selectedModel, onSelect, open, onOpenChange }) => {
       <button
         type="button"
         onClick={() => onOpenChange(!open)}
-        className={`
-          flex items-center gap-2 pl-3 pr-2.5 py-1.5 rounded-full text-[12px] font-medium
-          border transition-all duration-200
-          ${open
-            ? 'bg-white/5 border-[#1F1F1F] text-white'
-            : 'bg-white/[0.04] border-[#1F1F1F] text-white/70 hover:border-[#2A2A2A] hover:bg-[#111111] hover:text-white'}
-        `}
+        className={` flex items-center gap-2 pl-3 pr-2.5 py-1.5 rounded-full text-[12px] font-medium border transition-all duration-200 ${open ? 'bg-gray-100 border-[#E0E0E0] text-black' : 'bg-white border-[#E0E0E0] text-gray-700 hover:bg-gray-50'} `}
       >
-        <span className="max-w-[110px] truncate">{current.name}</span>
+        <span className="max-w-[120px] truncate">{current.name}</span>
         <ChevronDown
           size={14}
-          className={`text-white/50 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          className={`text-gray-500 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
         />
       </button>
 
@@ -55,45 +51,39 @@ const ModelSelector = ({ selectedModel, onSelect, open, onOpenChange }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute bottom-full left-0 mb-2 w-[260px] z-50 origin-bottom-left"
+            className="absolute bottom-full left-0 mb-2 z-[200] origin-bottom-left w-[280px]"
           >
-            <div className="rounded-2xl border border-[#1F1F1F] bg-[#111111]/95 backdrop-blur-xl shadow-2xl shadow-black/50 overflow-hidden">
-              <div className="px-3 py-2 border-b border-white/[0.06]">
-                <p className="text-[10px] uppercase tracking-wider text-white/35 font-semibold">AI Model</p>
+            <div className="rounded-2xl border border-[#E0E0E0] bg-white shadow-2xl overflow-hidden p-1.5 space-y-1">
+              <div className="px-3 py-1 border-b border-gray-100/50 shrink-0">
+                <p className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Select Model</p>
               </div>
-              <div className="p-1.5">
+              <div className="space-y-0.5">
                 {AI_MODELS.map((model) => {
-                  const selected = selectedModel === model.id && !model.disabled;
+                  const isSelected = selectedModel === model.id;
                   return (
                     <button
                       key={model.id}
                       type="button"
-                      disabled={model.disabled}
                       onClick={() => {
-                        if (!model.disabled) {
-                          onSelect(model.id);
-                          onOpenChange(false);
-                        }
+                        onSelect(model.id);
+                        onOpenChange(false);
                       }}
-                      className={`
-                        w-full text-left px-3 py-3 rounded-xl flex gap-3 items-start transition-colors
-                        ${model.disabled ? 'opacity-45 cursor-not-allowed' : 'hover:bg-white/[0.06]'}
-                        ${selected ? 'bg-white/5 ring-1 ring-white/10' : ''}
-                      `}
+                      className={`w-full text-left px-3 py-2.5 rounded-xl flex items-start justify-between gap-2.5 transition-colors ${
+                        isSelected
+                          ? 'bg-[#F7F7F7] font-medium text-black'
+                          : 'hover:bg-gray-50 text-gray-700 hover:text-black'
+                      }`}
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="text-[13px] font-medium text-white/95">{model.name}</p>
-                        <p className="text-[11px] text-white/40 mt-0.5 leading-snug">{model.description}</p>
+                        <p className="text-[13px] font-semibold leading-tight">{model.name}</p>
+                        <p className="text-[11px] text-gray-500 mt-1 leading-normal font-normal">{model.description}</p>
                       </div>
-                      {selected && (
-                        <Check size={16} className="text-white shrink-0 mt-0.5" strokeWidth={2.5} />
+                      {isSelected && (
+                        <Check size={14} className="text-black shrink-0 mt-0.5" strokeWidth={2.5} />
                       )}
                     </button>
                   );
                 })}
-              </div>
-              <div className="px-3 py-2 text-[10px] text-center text-white/25 border-t border-white/[0.06]">
-                {t('moreComingSoon')}
               </div>
             </div>
           </motion.div>

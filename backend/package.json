@@ -23,10 +23,11 @@
     "helmet": "^8.2.0",
     "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.22.3",
-    "nodemailer": "^8.0.8",
+    "nodemailer": "^9.0.1",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "razorpay": "^2.9.6",
+    "uuid": "^14.0.1",
     "xss": "^1.0.15"
   }
 }

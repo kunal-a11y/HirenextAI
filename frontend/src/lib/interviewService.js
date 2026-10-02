@@ -301,3 +301,31 @@ function getDemoQuestions(role, difficulty, type, count) {
     category: role
   }))
 }
+
+// Get past interview history
+export async function getInterviewHistory() {
+  try {
+    const response = await api.get('/api/interview/history');
+    if (response.data && response.data.success) {
+      return response.data.history;
+    }
+    return [];
+  } catch (err) {
+    console.error('Failed to get interview history:', err);
+    return [];
+  }
+}
+
+// Get interview detail by ID
+export async function getInterviewDetail(id) {
+  try {
+    const response = await api.get(`/api/interview/${id}`);
+    if (response.data && response.data.success) {
+      return response.data.interview;
+    }
+    return null;
+  } catch (err) {
+    console.error('Failed to get interview detail:', err);
+    return null;
+  }
+}

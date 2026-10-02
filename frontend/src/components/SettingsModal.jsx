@@ -8,7 +8,7 @@ import { getPlanDisplay } from '../lib/planUtils';
 const SettingsModal = ({ isOpen, onClose }) => {
   const { i18n } = useTranslation();
   const { user } = useUserStore();
-  
+
   // AI Response Language state (local storage)
   const [aiLanguage, setAiLanguage] = useState('English');
 
@@ -28,7 +28,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
   const handleInterfaceLanguageChange = (e) => {
     const code = e.target.value;
     i18n.changeLanguage(code);
-    
+
     // Apply RTL for Arabic
     if (code === 'ar') {
       document.documentElement.dir = 'rtl';
@@ -41,41 +41,41 @@ const SettingsModal = ({ isOpen, onClose }) => {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.2 }}
-          className="bg-[#1e1e1e] border border-white/10 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]"
+          className="bg-[#F7F7F7] border border-[#E0E0E0] rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]"
           dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-            <h2 className="text-lg font-medium text-white">Settings</h2>
-            <button onClick={onClose} className="p-2 text-gray-400 hover:text-white rounded-md hover:bg-white/5 transition-colors">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[#E0E0E0]">
+            <h2 className="text-lg font-medium text-black">Settings</h2>
+            <button onClick={onClose} className="p-2 text-black hover:text-black rounded-md hover:bg-[#F2F2F2] hover:text-black transition-colors">
               <X size={20} />
             </button>
           </div>
 
           {/* Content Body */}
           <div className="p-6 overflow-y-auto flex-1 space-y-8">
-            
+
             {/* 1. LANGUAGE & AI OUTPUT */}
             <section>
-              <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-medium text-black uppercase tracking-wider mb-4 flex items-center gap-2">
                 <Globe size={16} /> Language & AI Output
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-white font-medium">AI Response Language</p>
-                    <p className="text-sm text-gray-400">The language the AI will reply to you in.</p>
+                    <p className="text-black font-medium">AI Response Language</p>
+                    <p className="text-sm text-black">The language the AI will reply to you in.</p>
                   </div>
-                  <select 
+                  <select
                     value={aiLanguage}
                     onChange={handleAiLanguageChange}
-                    className="bg-[#161616] border border-white/10 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/30"
+                    className="bg-[#F7F7F7] border border-[#E0E0E0] text-black rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/30"
                   >
                     <option value="English">English</option>
                     <option value="Hindi">Hindi</option>
@@ -88,13 +88,13 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-white font-medium">Interface Language</p>
-                    <p className="text-sm text-gray-400">Language for buttons and menus.</p>
+                    <p className="text-black font-medium">Interface Language</p>
+                    <p className="text-sm text-black">Language for buttons and menus.</p>
                   </div>
-                  <select 
+                  <select
                     value={i18n.language}
                     onChange={handleInterfaceLanguageChange}
-                    className="bg-[#161616] border border-white/10 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/30"
+                    className="bg-[#F7F7F7] border border-[#E0E0E0] text-black rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-white/30"
                   >
                     <option value="en">English</option>
                     <option value="hi">Hindi</option>
@@ -108,29 +108,29 @@ const SettingsModal = ({ isOpen, onClose }) => {
               </div>
             </section>
 
-            <div className="h-px bg-white/10 w-full"></div>
+            <div className="h-px bg-[#F7F7F7] w-full"></div>
 
             {/* 2. ACCOUNT */}
             <section>
-              <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-medium text-black uppercase tracking-wider mb-4 flex items-center gap-2">
                 <User size={16} /> Account
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-lg font-medium text-white">
+                    <div className="w-12 h-12 bg-[#F7F7F7] rounded-full flex items-center justify-center text-lg font-medium text-black">
                       JD
                     </div>
                     <div>
-                      <p className="text-white font-medium">John Doe</p>
-                      <p className="text-sm text-gray-400">john.doe@example.com</p>
+                      <p className="text-black font-medium">John Doe</p>
+                      <p className="text-sm text-black">john.doe@example.com</p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-[#161616] border border-white/10 rounded-lg p-4 flex items-center justify-between mt-4">
+                <div className="bg-[#F7F7F7] border border-[#E0E0E0] rounded-lg p-4 flex items-center justify-between mt-4">
                   <div>
-                    <p className="text-white font-medium">{getPlanDisplay(user.plan)}</p>
-                    <p className="text-sm text-gray-400">10 messages/day. Upgrade for unlimited access.</p>
+                    <p className="text-black font-medium">{getPlanDisplay(user.plan)}</p>
+                    <p className="text-sm text-black">10 messages/day. Upgrade for unlimited access.</p>
                   </div>
                   <div className="flex gap-3">
                     <button className="btn-outline">Learn More</button>
@@ -140,27 +140,27 @@ const SettingsModal = ({ isOpen, onClose }) => {
               </div>
             </section>
 
-            <div className="h-px bg-white/10 w-full"></div>
+            <div className="h-px bg-[#F7F7F7] w-full"></div>
 
             {/* 3. SUPPORT */}
             <section>
-              <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-medium text-black uppercase tracking-wider mb-4 flex items-center gap-2">
                 <HelpCircle size={16} /> Support
               </h3>
               <div className="flex gap-4 items-center">
                 <button className="btn-solid">Get Help</button>
-                <a href="#" className="text-sm text-gray-400 hover:text-white flex items-center underline underline-offset-2">Contact Us</a>
+                <a href="#" className="text-sm text-black hover:text-black flex items-center underline underline-offset-2">Contact Us</a>
               </div>
             </section>
 
-            <div className="h-px bg-white/10 w-full"></div>
+            <div className="h-px bg-[#F7F7F7] w-full"></div>
 
             {/* 4. SESSION */}
             <section>
-              <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <h3 className="text-sm font-medium text-black uppercase tracking-wider mb-4 flex items-center gap-2">
                 <LogOut size={16} /> Session
               </h3>
-              <button className="px-4 py-2 bg-transparent border border-red-500/30 text-red-400 font-medium rounded-lg hover:bg-red-500/10 transition-colors text-sm">
+              <button className="px-4 py-2 bg-transparent border border-[#E0E0E0] text-black font-medium rounded-lg hover:bg-[#F2F2F2] hover:text-black transition-colors text-sm">
                 Logout
               </button>
             </section>

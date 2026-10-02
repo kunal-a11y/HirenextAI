@@ -1,37 +1,42 @@
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const geminiService = require('./geminiService');
 
-const SYSTEM_PROMPT = `You are HirenextAI - an AI job assistant. 
-You ONLY answer job related questions.
-Help users find jobs, prepare resumes, 
-practice interviews, and apply for jobs.
-If user asks anything unrelated to jobs, 
-politely redirect them to job topics.`;
+// Helper to extract JSON from markdown code blocks or plain text
+function extractJSON(text) {
+    try {
+        return JSON.parse(text);
+    } catch (e) {
+        const match = text.match(/```json\s*([\s\S]*?)\s*```/) || text.match(/```\s*([\s\S]*?)\s*```/);
+        if (match) {
+            try {
+                return JSON.parse(match[1]);
+            } catch (e2) {
+                // Fall through
+            }
+        }
+        const firstBrace = text.indexOf('{');
+        const lastBrace = text.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace !== -1) {
+            try {
+                return JSON.parse(text.slice(firstBrace, lastBrace + 1));
+            } catch (e3) {
+                // Fall through
+            }
+        }
+        throw e;
+    }
+}
 
 exports.generateChatResponse = async (messages) => {
     try {
-        const payload = {
-            model: "openai/gpt-4o-mini",
-            messages: [
-                { role: "system", content: SYSTEM_PROMPT },
-                ...messages
-            ]
-        };
+        const prompt = messages.map(msg => {
+            const roleName = (msg.role === 'user' || msg.role === 'customer') ? 'User' : 'HirenextAI';
+            return `${roleName}: ${msg.content}`;
+        }).join('\n\n') + '\n\nHirenextAI:';
 
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
+        const response = await geminiService.generateContent(prompt, {
+            endpoint: '/api/chat/send'
         });
-
-        if (!response.ok) {
-            throw new Error(`OpenRouter API error: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        return data.choices[0].message.content;
+        return response;
     } catch (error) {
         console.error("AI Service Error:", error);
         throw error;
@@ -50,28 +55,12 @@ exports.calculateMatchScore = async (userProfile, jobDescription) => {
         Job Description:
         ${jobDescription}`;
 
-        const payload = {
-            model: "openai/gpt-4o-mini",
-            response_format: { type: "json_object" },
-            messages: [{ role: "user", content: prompt }]
-        };
-
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
+        const response = await geminiService.generateContent(prompt, {
+            endpoint: '/api/jobs/match'
         });
 
-        if (!response.ok) {
-            throw new Error(`OpenRouter API error: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        const result = JSON.parse(data.choices[0].message.content);
-        return result.score;
+        const result = extractJSON(response);
+        return result.score || 0;
     } catch (error) {
         console.error("Match Score Error:", error);
         return 0; // default to 0 on error

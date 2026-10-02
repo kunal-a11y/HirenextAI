@@ -31,48 +31,123 @@ const PLAN_LIMITS = {
   }
 };
 
-// -1 means unlimited
+const MODEL_CREDIT_CONFIGS = {
+  'hirenext-0.1': {
+    cost: 1000,
+    limits: {
+      free: 5000,
+      pro: 20000,
+      max: 200000,
+      ultimate: -1
+    }
+  },
+  'hirenext-flash': {
+    cost: 1000,
+    limits: {
+      free: 5000,
+      pro: 15000,
+      max: 150000,
+      ultimate: -1
+    }
+  },
+  'hirenext-pro': {
+    cost: 1000,
+    limits: {
+      free: 0, // Premium required
+      pro: 8000,
+      max: 80000,
+      ultimate: -1
+    }
+  }
+};
+
+// Log AI Usage on successful generation
+const logAIUsage = async (userId, type) => {
+  try {
+    await db.query(
+      'INSERT INTO ai_usage (userId, type, createdAt) VALUES (?, ?, NOW())',
+      [userId, type]
+    );
+  } catch (err) {
+    console.error('[Credits Service] Failed to log AI usage:', err.message);
+  }
+};
 
 const checkCredits = (type) => async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.id || req.user.userId;
+    if (!userId) return res.status(401).json({ error: 'Authentication required' });
+
     const [rows] = await db.query('SELECT plan FROM users WHERE id = ?', [userId]);
-    const plan = rows[0]?.plan || 'free';
-    const limits = PLAN_LIMITS[plan.toLowerCase()] || PLAN_LIMITS.free;
-    
-    const limit = limits[type];
-    if (limit === -1) return next(); // unlimited
-    
-    // Check usage from DB
+    const plan = (rows[0]?.plan || 'free').toLowerCase();
+    const limits = PLAN_LIMITS[plan] || PLAN_LIMITS.free;
+
     const period = type.includes('weekly') ? 'week' : 
                    type.includes('daily') ? 'day' : 'month';
-    
+
+    // Model specific daily credit limits
+    if (type === 'dailyAI') {
+      const modelId = req.body.model || 'hirenext-flash';
+      const config = MODEL_CREDIT_CONFIGS[modelId] || MODEL_CREDIT_CONFIGS['hirenext-flash'];
+      const limit = config.limits[plan] ?? config.limits.free;
+
+      if (limit === 0) {
+        return res.status(403).json({
+          error: 'Premium Required',
+          message: `The model ${modelId} requires a Premium subscription. Please upgrade to Pro or higher.`,
+          upgradeUrl: '/pricing',
+          plan
+        });
+      }
+
+      if (limit !== -1) {
+        // Query daily usage count
+        const [usage] = await db.query(
+          `SELECT COUNT(*) as count FROM ai_usage 
+           WHERE userId = ? AND type = 'dailyAI' 
+           AND createdAt >= CURDATE()`,
+          [userId]
+        );
+        const usedCount = usage[0].count;
+        const usedCredits = usedCount * 1000;
+
+        if (usedCredits >= limit) {
+          return res.status(429).json({
+            error: 'Limit reached',
+            message: `You've used ${usedCredits.toLocaleString()}/${limit.toLocaleString()} credits for today. Upgrade your plan for more.`,
+            upgradeUrl: '/pricing',
+            used: usedCredits,
+            limit,
+            plan
+          });
+        }
+      }
+      return next();
+    }
+
+    // Default plan limits check (e.g. cover letters, resumes)
+    const limit = limits[type];
+    if (limit === -1) return next(); // unlimited
+
     const [usage] = await db.query(
       `SELECT COUNT(*) as count FROM ai_usage 
        WHERE userId = ? AND type = ? 
        AND createdAt >= DATE_SUB(NOW(), INTERVAL 1 ${period.toUpperCase()})`,
       [userId, type]
     );
-    
     const used = usage[0].count;
-    
+
     if (used >= limit) {
       return res.status(429).json({
         error: `Limit reached`,
-        message: `You've used ${used}/${limit} ${type} for this ${period}. Upgrade your plan for more.`,
+        message: `You've used ${used}/${limit} operations for this ${period}. Upgrade your plan for more.`,
         upgradeUrl: '/pricing',
         used,
         limit,
         plan
       });
     }
-    
-    // Log this usage
-    await db.query(
-      'INSERT INTO ai_usage (userId, type, createdAt) VALUES (?, ?, NOW())',
-      [userId, type]
-    );
-    
+
     next();
   } catch(e) {
     console.error('Credits check error:', e.message);
@@ -80,4 +155,4 @@ const checkCredits = (type) => async (req, res, next) => {
   }
 };
 
-module.exports = { checkCredits, PLAN_LIMITS };
+module.exports = { checkCredits, logAIUsage, PLAN_LIMITS, MODEL_CREDIT_CONFIGS };

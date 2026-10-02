@@ -31,11 +31,16 @@ const useAuthStore = create(
       isAuthenticated: false,
       isLoading: false,
       isDemoMode: false,
+      isValidatingSession: !!localStorage.getItem('token'),
 
       login: async (email, password) => {
         set({ isLoading: true });
         try {
           const res = await api.post('/api/auth/login', { email, password });
+          if (res.data.requiresOTP) {
+            set({ isLoading: false });
+            return { success: true, requiresOTP: true, email: res.data.email };
+          }
           const { token, user } = res.data;
           localStorage.setItem('token', token);
           localStorage.setItem('user', JSON.stringify(user));
@@ -109,8 +114,12 @@ const useAuthStore = create(
 
       fetchMe: async () => {
         const token = localStorage.getItem('token') || get().token;
-        if (!token) return;
+        if (!token) {
+          set({ isValidatingSession: false });
+          return;
+        }
 
+        set({ isValidatingSession: true });
         try {
           const res = await api.get('/api/auth/me');
           const user = res.data;
@@ -119,7 +128,8 @@ const useAuthStore = create(
             user,
             token,
             isAuthenticated: true,
-            isDemoMode: false
+            isDemoMode: false,
+            isValidatingSession: false
           });
           syncUserToProfile(user);
         } catch (err) {
@@ -129,8 +139,11 @@ const useAuthStore = create(
             set({
               user: null,
               token: null,
-              isAuthenticated: false
+              isAuthenticated: false,
+              isValidatingSession: false
             });
+          } else {
+            set({ isValidatingSession: false });
           }
         }
       },

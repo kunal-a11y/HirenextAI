@@ -6,6 +6,9 @@ export const FILE_FOLDERS = [
   { id: 'job-descriptions', label: 'Job Descriptions', icon: '📁' },
   { id: 'interview-notes', label: 'Interview Notes', icon: '📁' },
   { id: 'mind-maps', label: 'Mind Maps', icon: '📁' },
+  { id: 'recruiter-messages', label: 'Recruiter Messages', icon: '✉️' },
+  { id: 'job-reports', label: 'Job Reports', icon: '📊' },
+  { id: 'images', label: 'Images', icon: '🖼️' },
 ];
 
 const STORAGE_KEY = 'hirenextai_files';
@@ -40,6 +43,18 @@ const useFilesStore = create((set, get) => ({
     persist(files);
     set({ files });
     return entry;
+  },
+
+  deleteFile: (id) => {
+    const files = get().files.filter((f) => f.id !== id);
+    persist(files);
+    set({ files });
+  },
+
+  renameFile: (id, newTitle) => {
+    const files = get().files.map((f) => f.id === id ? { ...f, title: newTitle } : f);
+    persist(files);
+    set({ files });
   },
 
   getByFolder: (folderId) => get().files.filter((f) => f.folderId === folderId),

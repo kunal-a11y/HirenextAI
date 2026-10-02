@@ -4,6 +4,8 @@ const { OAuth2Client } = require('google-auth-library');
 const crypto = require('crypto');
 const pool = require('../config/db');
 const { sendWelcomeEmail, sendVerificationEmail, sendPasswordResetEmail } = require('../services/emailService');
+const { logSecurityEvent, logVerificationEvent } = require('../services/securityLogger');
+const { getRealIp } = require('../utils/ipHelper');
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -41,8 +43,17 @@ async function deleteAuthToken(type, userId) {
   await pool.query('DELETE FROM auth_tokens WHERE type = ? AND userId = ?', [type, userId]);
 }
 
-function signToken(userId) {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '30d' });
+async function signToken(userId) {
+  let tokenVersion = 1;
+  try {
+    const [rows] = await pool.query('SELECT tokenVersion FROM users WHERE id = ?', [userId]);
+    if (rows.length > 0) {
+      tokenVersion = rows[0].tokenVersion || 1;
+    }
+  } catch (err) {
+    console.warn('Could not query tokenVersion during signToken:', err.message);
+  }
+  return jwt.sign({ id: userId, tokenVersion }, process.env.JWT_SECRET, { expiresIn: '7d' });
 }
 
 function formatUser(row) {
@@ -151,7 +162,7 @@ exports.signup = async (req, res) => {
       if (result.status === 'rejected') console.error('Signup email failed:', result.reason?.message);
     }));
 
-    const token = signToken(userId);
+    const token = await signToken(userId);
 
     res.status(201).json({
       token,
@@ -186,18 +197,76 @@ exports.login = async (req, res) => {
     const [rows] = await pool.query('SELECT id, firstName, lastName, email, passwordHash, plan, role, isVerified, phone, linkedinUrl, indeedUrl, naukriUrl, githubUrl, createdAt FROM users WHERE email = ?', [normalizedEmail]);
 
     if (rows.length === 0) {
+      const ip = getRealIp(req);
+      const ua = req.headers['user-agent'] || '';
+      await logSecurityEvent(null, normalizedEmail, 'FAILED_LOGIN', ip, ua, 'Email not registered');
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     const user = rows[0];
 
     if (!user.passwordHash) {
+      const ip = getRealIp(req);
+      const ua = req.headers['user-agent'] || '';
+      await logSecurityEvent(user.id, user.email, 'FAILED_LOGIN', ip, ua, 'Google login account, password not set');
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
+      const ip = getRealIp(req);
+      const ua = req.headers['user-agent'] || '';
+      await logSecurityEvent(user.id, user.email, 'FAILED_LOGIN', ip, ua, 'Incorrect password');
       return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Dynamic admin/owner role synchronization on login
+    const envEmails = (process.env.ADMIN_EMAILS || '')
+      .split(',')
+      .map(e => e.trim().toLowerCase())
+      .filter(Boolean);
+    const ADMIN_EMAILS = ['mindcraftgamer26@gmail.com', 'demo@hirenextai.com', ...envEmails];
+    if (ADMIN_EMAILS.includes(normalizedEmail) && user.role !== 'admin' && user.role !== 'owner') {
+      const newRole = (normalizedEmail === 'mindcraftgamer26@gmail.com' || normalizedEmail === 'demo@hirenextai.com') ? 'owner' : 'admin';
+      try {
+        await pool.query('UPDATE users SET role = ? WHERE id = ?', [newRole, user.id]);
+        user.role = newRole;
+      } catch (dbErr) {
+        console.warn('Failed to upgrade admin role on login:', dbErr.message);
+      }
+    }
+
+    // Force 2FA OTP verification for admin/owner users
+    if (user.role === 'admin' || user.role === 'owner') {
+      const otp = String(crypto.randomInt(100000, 999999));
+      const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 mins
+      const hashed = crypto.createHash('sha256').update(otp).digest('hex');
+
+      // Send email using SMTP Queue
+      const emailQueue = require('../services/emailQueue');
+      await emailQueue.addJob({
+        recipient: normalizedEmail,
+        templateName: 'OTP Email',
+        payload: { otp }
+      });
+
+      // Update in DB
+      await pool.query(
+        'UPDATE users SET otpCode = ?, otpExpiresAt = ? WHERE id = ?',
+        [hashed, expiresAt, user.id]
+      );
+
+      // Log security & verification success events
+      const ip = getRealIp(req);
+      const ua = req.headers['user-agent'] || '';
+      await logSecurityEvent(user.id, user.email, 'OTP_REQUEST', ip, ua, 'Requested admin login 2FA OTP');
+      await logVerificationEvent(user.id, user.email, otp, 'SENT', ip, ua);
+
+      return res.json({
+        requiresOTP: true,
+        email: user.email,
+        message: '2FA OTP Verification required. A code has been sent to your email.'
+      });
     }
 
     // Update lastLoginAt
@@ -207,7 +276,7 @@ exports.login = async (req, res) => {
       console.warn('Could not update lastLoginAt:', dbErr.message);
     }
 
-    const token = signToken(user.id);
+    const token = await signToken(user.id);
 
     res.json({
       token,
@@ -299,7 +368,7 @@ exports.googleAuth = async (req, res) => {
       };
     }
 
-    const token = signToken(user.id);
+    const token = await signToken(user.id);
 
     res.json({
       token,
@@ -436,7 +505,7 @@ exports.verifyEmail = async (req, res) => {
     }
 
     await pool.query(
-      'UPDATE users SET isVerified = TRUE WHERE id = ?',
+      'UPDATE users SET isVerified = TRUE, verificationStatus = "Verified", verifiedAt = NOW() WHERE id = ?',
       [foundUserId]
     );
 
@@ -495,13 +564,14 @@ exports.sendOtp = async (req, res) => {
       return res.status(400).json({ error: 'Phone number is required' });
     }
 
-    const otp = String(Math.floor(100000 + Math.random() * 900000));
+    const otp = String(crypto.randomInt(100000, 999999));
+    
+    // Hash the OTP before storing it in the map
+    const hashedOtp = crypto.createHash('sha256').update(otp).digest('hex');
     phoneOtps.set(phone, {
-      otp,
+      otp: hashedOtp,
       expiresAt: Date.now() + 5 * 60 * 1000 // 5 minutes
     });
-
-    console.log('OTP for', phone, ':', otp);
 
     const apiKey = process.env.FAST2SMS_API_KEY;
     if (apiKey) {
@@ -520,13 +590,13 @@ exports.sendOtp = async (req, res) => {
           })
         });
         const responseData = await response.json();
-        console.log('Fast2SMS response:', responseData);
+        console.log('Fast2SMS response status:', response.status);
       } catch (smsErr) {
         console.error('Fast2SMS send error:', smsErr.message);
       }
     }
 
-    res.json({ success: true, message: 'OTP sent', otp: process.env.NODE_ENV !== 'production' ? otp : undefined });
+    res.json({ success: true, message: 'OTP sent' });
   } catch (err) {
     console.error('Send OTP error:', err);
     res.status(500).json({ error: 'Internal server error' });
@@ -550,44 +620,34 @@ exports.verifyOtp = async (req, res) => {
       return res.status(400).json({ success: false, message: 'OTP expired. Please resend.' });
     }
 
-    if (record.otp !== String(otp)) {
+    const incomingHash = crypto.createHash('sha256').update(String(otp)).digest('hex');
+    if (record.otp !== incomingHash) {
       return res.status(400).json({ success: false, message: 'Invalid OTP' });
     }
 
     phoneOtps.delete(phone);
 
     let user;
-    try {
-      const email = `${phone.replace(/\D/g, "") || 'phone'}@phone.hirenextai.com`;
-      const [rows] = await pool.query('SELECT id, firstName, lastName, email, plan, role, isVerified FROM users WHERE email = ?', [email]);
-      if (rows.length > 0) {
-        user = formatUser(rows[0]);
-      } else {
-        const [result] = await pool.query(
-          `INSERT INTO users (firstName, lastName, email, plan, role, isVerified)
-           VALUES ('Phone', 'User', ?, 'free', 'user', TRUE)`,
-          [email]
-        );
-        user = {
-          id: result.insertId,
-          name: 'Phone User',
-          email,
-          plan: 'free',
-          role: 'user'
-        };
-      }
-    } catch (dbErr) {
-      console.warn('Database error during phone verification, using mock user:', dbErr.message);
+    const email = `${phone.replace(/\D/g, "") || 'phone'}@phone.hirenextai.com`;
+    const [rows] = await pool.query('SELECT id, firstName, lastName, email, plan, role, isVerified FROM users WHERE email = ?', [email]);
+    if (rows.length > 0) {
+      user = formatUser(rows[0]);
+    } else {
+      const [result] = await pool.query(
+        `INSERT INTO users (firstName, lastName, email, plan, role, isVerified)
+         VALUES ('Phone', 'User', ?, 'free', 'user', TRUE)`,
+        [email]
+      );
       user = {
-        id: 9999,
+        id: result.insertId,
         name: 'Phone User',
-        email: `${phone.replace(/\D/g, "") || 'phone'}@phone.hirenextai.com`,
+        email,
         plan: 'free',
         role: 'user'
       };
     }
 
-    const token = signToken(user.id);
+    const token = await signToken(user.id);
 
     res.json({
       success: true,

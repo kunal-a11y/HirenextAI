@@ -2,33 +2,50 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const db = require('../config/db');
+const geminiService = require('../services/geminiService');
 
-// Call OpenRouter API helper
+// Helper to extract JSON from markdown code blocks or plain text
+function extractJSON(text) {
+    try {
+        return JSON.parse(text);
+    } catch (e) {
+        const match = text.match(/```json\s*([\s\S]*?)\s*```/) || text.match(/```\s*([\s\S]*?)\s*```/);
+        if (match) {
+            try {
+                return JSON.parse(match[1]);
+            } catch (e2) {
+                // Fall through
+            }
+        }
+        const firstBrace = text.indexOf('{');
+        const lastBrace = text.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace !== -1) {
+            try {
+                return JSON.parse(text.slice(firstBrace, lastBrace + 1));
+            } catch (e3) {
+                // Fall through
+            }
+        }
+        throw e;
+    }
+}
+
+// Call Gemini API helper (kept name callOpenRouter to minimize changes)
 const callOpenRouter = async (systemPrompt, userPrompt) => {
     try {
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                model: "openai/gpt-4o-mini", // Fallback generic model
-                messages: [
-                    { role: "system", content: systemPrompt },
-                    { role: "user", content: userPrompt }
-                ],
-                response_format: { type: "json_object" }
-            })
+        const prompt = `System Instruction:
+${systemPrompt}
+
+User Input:
+${userPrompt}`;
+
+        const response = await geminiService.generateContent(prompt, {
+            endpoint: '/api/interview'
         });
 
-        const data = await response.json();
-        if (data.choices && data.choices.length > 0) {
-            return JSON.parse(data.choices[0].message.content);
-        }
-        throw new Error("Invalid response from AI");
+        return extractJSON(response);
     } catch (err) {
-        console.error("OpenRouter Error:", err);
+        console.error("Gemini Interview Error:", err);
         throw err;
     }
 };
@@ -208,6 +225,40 @@ router.post('/save', auth, async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Failed to save interview' });
+    }
+});
+
+// Get past interview history
+router.get('/history', auth, async (req, res) => {
+    try {
+        const [rows] = await db.query(
+            `SELECT id, role, difficulty, overall_score, createdAt 
+             FROM interviews 
+             WHERE user_id = ? 
+             ORDER BY createdAt DESC`,
+            [req.user.id]
+        );
+        res.json({ success: true, history: rows });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Failed to fetch interview history' });
+    }
+});
+
+// Get detailed interview session by ID
+router.get('/:id', auth, async (req, res) => {
+    try {
+        const [rows] = await db.query(
+            `SELECT * FROM interviews WHERE id = ? AND user_id = ? LIMIT 1`,
+            [req.params.id, req.user.id]
+        );
+        if (rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Interview session not found' });
+        }
+        res.json({ success: true, interview: rows[0] });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Failed to fetch interview details' });
     }
 });
 

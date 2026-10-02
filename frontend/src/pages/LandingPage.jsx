@@ -46,7 +46,7 @@ export default function LandingPage() {
         .hn-landing {
           min-height: 100vh;
           overflow-x: hidden;
-          background: #ffffff;
+          background: #FFFFFF;
           color: #000000;
           font-family: 'DM Sans', sans-serif;
           scroll-behavior: smooth;
@@ -83,7 +83,7 @@ export default function LandingPage() {
           padding: 14px 28px; border-radius: 10px; transition: all 0.2s;
         }
         .hn-primary-button { background: #000; color: #fff; }
-        .hn-primary-button:hover { background: #222; transform: translateY(-1px); }
+        .hn-primary-button:hover { background: #111111; transform: translateY(-1px); }
         .hn-secondary-button { background: transparent; color: #000; border: 1px solid rgba(0,0,0,0.15); }
         .hn-secondary-button:hover { border-color: #000; }
         .hn-section { padding: 96px 48px; max-width: 1180px; margin: 0 auto; }

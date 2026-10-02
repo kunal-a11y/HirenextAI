@@ -5,7 +5,17 @@ const inMemoryTickets = require('../models/inMemoryTickets');
 const { sendSupportNotification, sendUserConfirmation } = require('../services/emailService');
 const xss = require('xss');
 
-router.post('/ticket', async (req, res) => {
+const rateLimit = require('express-rate-limit');
+
+const ticketLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5, // Limit each IP to 5 tickets per hour
+  message: { message: 'Too many support tickets submitted from this IP. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+router.post('/ticket', ticketLimiter, async (req, res) => {
   try {
     let { name, email, subject, message, category } = req.body;
 
@@ -53,7 +63,7 @@ router.post('/ticket', async (req, res) => {
     try {
       await pool.query(
         'INSERT INTO support_tickets (name, email, subject, message, category, status) VALUES (?, ?, ?, ?, ?, ?)',
-        [name, email, subject, message, category, 'open']
+        [name, email, subject, message, category, 'new']
       );
       ticketSavedToDb = true;
       console.log('Ticket successfully saved to database');

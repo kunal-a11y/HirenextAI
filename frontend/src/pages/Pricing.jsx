@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import anime from "animejs/lib/anime.es.js";
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
-import { CheckCircle2, X, Loader2, ChevronDown } from "lucide-react";
+import { CheckCircle2, X, Loader2, ChevronDown, Sparkles, Shield, Zap, Target } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 import useUIStore from "../store/useUIStore";
@@ -54,11 +55,11 @@ export default function Pricing() {
       const order = await res.json();
       const options = {
         key: order.keyId, amount: order.amount, currency: order.currency ?? "INR",
-        name: "HireNextAI",
+        name: "HirenextAI",
         description: `${planName.toUpperCase()} Plan — ${annual ? "Annual" : "Monthly"}`,
         order_id: order.orderId ?? order.id,
         prefill: { name: user?.name ?? "", email: user?.email ?? "" },
-        theme: { color: "#FFFFFF" },
+        theme: { color: "#000000" },
         handler: async (response) => {
           try {
             const verifyRes = await fetch(`${API}/payment/verify`, {
@@ -88,65 +89,70 @@ export default function Pricing() {
 
   const plans = [
     {
-      id: 1, name: "Free", badge: "Get Started", tagline: "Perfect to try HirenextAI", highlight: false,
+      id: 1, name: "Free", badge: "FREE", tagline: "Perfect to try HirenextAI", highlight: false,
       priceMonthly: "0", priceYearly: "0",
+      badgeGradient: "from-zinc-150 to-neutral-200 text-neutral-800 border-neutral-300",
       features: [
-        { text: "20 AI Credits per month", included: true }, { text: "10 Job Applications tracking", included: true },
-        { text: "Basic Job Search", included: true }, { text: "AI Chat (1 credit/message)", included: true },
-        { text: "Cover Letter (2 credits each)", included: true }, { text: "Resume Review (3 credits each)", included: true },
-        { text: "Apply with AI (Extension)", included: false }, { text: "Mock Interview AI", included: false }, { text: "Priority Support", included: false },
+        { text: "HirenextAI 0.1 model access", included: true },
+        { text: "5,000 Daily Credits", included: true },
+        { text: "ATS Resume Builder", included: true },
+        { text: "Basic ATS Resume Analysis", included: true },
+        { text: "Job Search & Tracking", included: true },
+        { text: "AI Career Assistant", included: true },
+        { text: "Interview Practice (HR)", included: true },
+        { text: "Basic AI Responses", included: true },
+        { text: "AI Cover Letters & Templates", included: false },
+        { text: "Priority Support queue", included: false },
       ],
       action: () => navigate("/register"),
     },
     {
-      id: 2, name: "Pro", badge: "Most Popular", tagline: "For active job seekers", highlight: true,
-      priceMonthly: "299", priceYearly: "249", yearlyBilledText: "billed ₹2,988/yr", savings: "Save ₹600/year",
+      id: 2, name: "Plus", badge: "POPULAR", tagline: "For active job seekers", highlight: true,
+      priceMonthly: "149", priceYearly: "119", yearlyBilledText: "billed ₹1,428/yr", savings: "Save ₹360/year",
+      badgeGradient: "from-blue-500 to-indigo-600 text-white border-transparent",
       features: [
-        { text: "200 AI Credits per month", included: true }, { text: "Unlimited Job Tracking", included: true },
-        { text: "Advanced Job Search", included: true }, { text: "Unlimited AI Chat", included: true },
-        { text: "Unlimited Cover Letters", included: true }, { text: "Unlimited Resume Reviews", included: true },
-        { text: "Apply with AI (Extension)", included: true }, { text: "Mock Interview AI (5/day)", included: true },
-        { text: "Priority Support", included: false }, { text: "Career Coaching", included: false },
+        { text: "HirenextAI Flash model access", included: true },
+        { text: "Faster response speeds", included: true },
+        { text: "20,000 Monthly Credits", included: true },
+        { text: "Better ATS Resume Analysis", included: true },
+        { text: "Unlimited Job Search", included: true },
+        { text: "AI Cover Letters", included: true },
+        { text: "AI Recruiter Messages", included: true },
+        { text: "AI Career Roadmaps", included: true },
+        { text: "Priority Support", included: true },
+        { text: "Recruiter Dashboard access", included: false },
       ],
-      action: () => handlePay("pro", 2),
+      action: () => handlePay("plus", 2),
     },
     {
-      id: 3, name: "Max", badge: "Power User", tagline: "For serious professionals", highlight: false,
-      priceMonthly: "599", priceYearly: "499", yearlyBilledText: "billed ₹5,988/yr", savings: "Save ₹1,200/year",
+      id: 3, name: "Pro", badge: "PRO", tagline: "For serious professionals", highlight: false,
+      priceMonthly: "299", priceYearly: "239", yearlyBilledText: "billed ₹2,868/yr", savings: "Save ₹720/year",
+      badgeGradient: "from-purple-500 to-indigo-600 text-white border-transparent",
       features: [
-        { text: "Unlimited AI Credits", included: true }, { text: "Unlimited Everything in Pro", included: true },
-        { text: "Mock Interview AI (Unlimited)", included: true }, { text: "Priority Support (24hr)", included: true },
-        { text: "Early Access to New Features", included: true }, { text: "Advanced Analytics Dashboard", included: true },
-        { text: "LinkedIn Profile Optimization", included: true }, { text: "1 Career Coaching Session/month", included: true },
-        { text: "Team Features", included: false },
+        { text: "HirenextAI Pro model access", included: true },
+        { text: "Unlimited Credits (Fair Usage)", included: true },
+        { text: "Fastest AI Responses", included: true },
+        { text: "Premium Resume Intelligence", included: true },
+        { text: "Advanced Interview AI", included: true },
+        { text: "Career Analytics Dashboard", included: true },
+        { text: "Recruiter Dashboard Access", included: true },
+        { text: "Future Premium Features", included: true },
+        { text: "Priority Support Queue", included: true },
+        { text: "Personal Career Coaching", included: true },
       ],
-      action: () => handlePay("max", 3),
-    },
-    {
-      id: 4, name: "Ultimate", badge: "Family & Friends", tagline: "Share with family & friends", highlight: false,
-      priceMonthly: "999", priceYearly: "799", yearlyBilledText: "billed ₹9,588/yr", savings: "Save ₹2,400/year",
-      note: "Perfect for family job seekers",
-      features: [
-        { text: "Everything in Max", included: true }, { text: "Up to 5 Members", included: true },
-        { text: "Each member gets full Pro access", included: true }, { text: "Shared Job Tracking Dashboard", included: true },
-        { text: "Family Admin Panel", included: true }, { text: "Priority Support (12hr)", included: true },
-        { text: "Unlimited AI Credits for all", included: true }, { text: "All AI Features for all", included: true },
-        { text: "Early Access to New Features", included: true },
-      ],
-      action: () => handlePay("ultimate", 4),
-    },
+      action: () => handlePay("pro", 3),
+    }
   ];
 
   const faqs = [
     { q: "Can I cancel anytime?", a: "Yes. Cancel your subscription anytime from your account settings. Your access continues until the end of your billing period." },
-    { q: "What are AI Credits?", a: "AI Credits power all AI features. Cover letter generation uses 2 credits, resume review uses 3 credits, and AI chat uses 1 credit per message. Credits reset every month." },
-    { q: "How does the free plan work?", a: "The free plan gives you 20 AI credits monthly with no time limit. Perfect for occasional job searching. Upgrade when you need more power." },
+    { q: "What are HirenextAI Credits?", a: "HirenextAI Credits power all AI features. Generative resume drafts, keyword density optimization checks, and messages with the AI career assistant consume credits. Credits reset automatically every day." },
+    { q: "How does the free plan work?", a: "The Free plan gives you access to the HirenextAI 0.1 model with 5,000 daily credits at no cost. Perfect for occasional job seekers. Upgrade as your search intensifies." },
     { q: "Is there a refund policy?", a: "We offer a 7-day refund for new paid subscribers. Contact us at support@hirenextai.com within 7 days of your first payment." },
-    { q: "What is Apply with AI?", a: "Our Chrome extension that automatically fills job application forms with your details. Available on Pro plan and above." },
+    { q: "What is Apply with AI?", a: "Our Google Chrome extension that automatically maps and autofills job application portal forms with your details. Available on Plus and Pro plans." },
     { q: "Do prices include GST?", a: "Displayed prices exclude GST. 18% GST will be added at checkout as per Indian tax regulations." }
   ];
 
-  // Anime.js page entrance animation
   useEffect(() => {
     anime({
       targets: '.pricing-animate',
@@ -154,7 +160,7 @@ export default function Pricing() {
       translateY: [30, 0],
       duration: 600,
       easing: 'easeOutExpo',
-      delay: anime.stagger(80, { start: 100 })
+      delay: anime.stagger(85, { start: 100 })
     });
     anime({
       targets: '.pricing-card-animate',
@@ -167,7 +173,6 @@ export default function Pricing() {
     });
   }, []);
 
-  // Animate FAQ items when opened
   useEffect(() => {
     if (openFaq !== null) {
       anime({
@@ -181,51 +186,56 @@ export default function Pricing() {
   }, [openFaq]);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#000000", overflowX: "hidden", width: "100%", position: "relative" }}>
+    <div style={{ minHeight: "100vh", background: "#FFFFFF", overflowX: "hidden", width: "100%", position: "relative" }}>
       {/* Subtle grid background */}
       <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)', backgroundSize: "40px 40px", maskImage: "radial-gradient(ellipse 60% 50% at 50% 50%, black 40%, transparent 100%)", WebkitMaskImage: "radial-gradient(ellipse 60% 50% at 50% 50%, black 40%, transparent 100%)" }} />
+        <div style={{ position: "absolute", inset: 0, backgroundImage: 'linear-gradient(rgba(0,0,0,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.015) 1px, transparent 1px)', backgroundSize: "40px 40px", maskImage: "radial-gradient(ellipse 60% 50% at 50% 50%, black 40%, transparent 100%)", WebkitMaskImage: "radial-gradient(ellipse 60% 50% at 50% 50%, black 40%, transparent 100%)" }} />
       </div>
+
+      {/* Background ambient glow shapes */}
+      <div className="absolute top-[-10%] left-[-100px] w-96 h-96 bg-purple-50 rounded-full blur-[130px] opacity-40 pointer-events-none" />
+      <div className="absolute top-[40%] right-[-100px] w-96 h-96 bg-blue-50 rounded-full blur-[130px] opacity-45 pointer-events-none" />
 
       <div className="relative z-10">
         <Navbar />
 
         {/* Header */}
         <section ref={headerRef} className="pt-36 pb-16 px-6 text-center">
-          <div className="pricing-animate inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#1F1F1F] bg-[#111111] text-sm text-[#999999] mb-6">
-            Simple, transparent pricing
+          {/* Accent tag badge */}
+          <div className="pricing-animate inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 text-blue-750 mb-6 shadow-sm">
+            <Zap className="w-3.5 h-3.5 text-blue-650" />
+            Simple, Transparent Pricing
           </div>
-          <h1 className="pricing-animate font-display font-extrabold text-white tracking-tight mb-3" style={{ fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1.1 }}>
+          
+          <h1 className="pricing-animate font-display font-extrabold text-black tracking-tight mb-3" style={{ fontSize: 'clamp(36px, 5vw, 56px)', lineHeight: 1.1 }}>
             Invest in Your Future
           </h1>
-          <p className="pricing-animate text-[#555555] text-base max-w-xl mx-auto mb-8">
-            Start free. Upgrade when ready. Cancel anytime. No hidden fees.
+          <p className="pricing-animate text-neutral-500 text-sm max-w-xl mx-auto mb-8 font-medium">
+            Start free with HirenextAI 0.1 model access. Upgrade to Flash or Pro when you are ready to accelerate.
           </p>
 
           {/* Toggle */}
-          <div className="pricing-animate inline-flex items-center rounded-full border border-[#1F1F1F] bg-[#111111] p-1">
-            <button onClick={() => setAnnual(false)} className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 ${!annual ? 'bg-white text-black' : 'text-[#555555] hover:text-white'}`}>
+          <div className="pricing-animate inline-flex items-center rounded-full border border-neutral-150 bg-neutral-50/80 backdrop-blur-xl p-1">
+            <button onClick={() => setAnnual(false)} className={`px-6 py-2 rounded-full text-xs font-bold transition-all duration-200 ${!annual ? 'bg-black text-white shadow-sm' : 'text-neutral-600 hover:text-black'}`}>
               Monthly
             </button>
-            <button onClick={() => setAnnual(true)} className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 ${annual ? 'bg-white text-black' : 'text-[#555555] hover:text-white'}`}>
+            <button onClick={() => setAnnual(true)} className={`px-6 py-2 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${annual ? 'bg-black text-white shadow-sm' : 'text-neutral-600 hover:text-black'}`}>
               Yearly
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/25">Save 20%</span>
+              <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-100 to-teal-50 border border-emerald-250/50 text-emerald-700">Save 20%</span>
             </button>
           </div>
         </section>
 
         {/* Cards Grid */}
         <section ref={cardsRef} className="pb-16 px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-[1200px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1050px] mx-auto items-stretch">
             {plans.map((plan) => (
               <div
                 key={plan.name}
-                className="pricing-card-animate flex flex-col relative rounded-[14px] p-7 transition-all duration-300 hover:-translate-y-1"
+                className="pricing-card-animate flex flex-col relative rounded-2xl p-7 transition-all duration-300 bg-white border hover:shadow-[0_12px_48px_rgba(0,0,0,0.04)]"
                 style={{
-                  background: plan.highlight ? '#111111' : '#111111',
-                  border: plan.highlight ? '1.5px solid #FFFFFF' : '1px solid #1F1F1F',
-                  transform: plan.highlight ? 'scale(1.02)' : undefined,
-                  boxShadow: plan.highlight ? '0 0 40px rgba(255,255,255,0.05)' : undefined,
+                  borderColor: plan.highlight ? '#000000' : '#E5E7EB',
+                  boxShadow: plan.highlight ? '0 10px 30px rgba(0,0,0,0.03)' : '0 4px 12px rgba(0,0,0,0.01)',
                 }}
                 onMouseEnter={(e) => {
                   anime({ targets: e.currentTarget, translateY: -6, duration: 250, easing: 'easeOutQuad' });
@@ -236,66 +246,74 @@ export default function Pricing() {
               >
                 {/* Badge */}
                 {plan.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-bold px-4 py-1 rounded-full"
-                    style={{
-                      background: plan.highlight ? '#FFFFFF' : '#111111',
-                      color: plan.highlight ? '#000000' : '#999999',
-                      border: plan.highlight ? 'none' : '1px solid #1F1F1F',
-                    }}>
-                    {plan.badge}
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className={`whitespace-nowrap text-[9px] font-extrabold px-3 py-1 rounded-full border bg-gradient-to-r shadow-sm uppercase tracking-wider ${plan.badgeGradient}`}>
+                      {plan.badge}
+                    </span>
                   </div>
                 )}
 
                 <div className="mt-5 mb-4">
-                  <h3 className="font-display text-xl font-bold text-white">{plan.name}</h3>
-                  <p className="text-xs text-[#555555] mt-1">{plan.tagline}</p>
+                  <h3 className="font-display text-xl font-bold text-black flex items-center gap-1.5">
+                    {plan.name}
+                    {plan.highlight && <span className="text-[9px] px-2 py-0.5 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 text-blue-700 uppercase tracking-widest font-extrabold">Most Popular</span>}
+                  </h3>
+                  <p className="text-xs text-neutral-450 font-medium mt-1">{plan.tagline}</p>
                 </div>
 
                 {/* Price */}
                 <div className="mb-6">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-lg font-semibold text-white/60">₹</span>
-                    <span className="font-display text-5xl font-extrabold text-white tracking-tight leading-none">{annual ? plan.priceYearly : plan.priceMonthly}</span>
-                    <span className="text-sm text-[#555555]">/mo</span>
+                    <span className="text-lg font-semibold text-neutral-400">₹</span>
+                    <span className="font-display text-5xl font-extrabold text-black tracking-tight leading-none">{annual ? plan.priceYearly : plan.priceMonthly}</span>
+                    <span className="text-xs text-neutral-400 font-bold uppercase ml-0.5">/ month</span>
                   </div>
-                  {annual && plan.yearlyBilledText && <p className="text-xs text-[#333333] mt-1">{plan.yearlyBilledText}</p>}
+                  {annual && plan.yearlyBilledText && <p className="text-[10px] font-bold text-neutral-400 mt-1.5 uppercase tracking-wider">{plan.yearlyBilledText}</p>}
                   {annual && plan.savings && (
                     <div className="mt-2">
-                      <span className="inline-flex text-[10px] px-2 py-0.5 rounded-full bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]/20">{plan.savings}</span>
+                      <span className="inline-flex text-[9px] font-extrabold px-2.5 py-0.5 rounded-full bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-250/50 text-emerald-700 uppercase tracking-wider">{plan.savings}</span>
                     </div>
                   )}
                 </div>
 
-                <div className="border-t border-[#1F1F1F] mb-5" />
+                <div className="border-t border-neutral-100 mb-5" />
 
                 {/* Features */}
                 <div className="flex-1">
-                  <ul className="space-y-3">
+                  <ul className="space-y-3.5">
                     {plan.features.map((f, idx) => (
-                      <li key={idx} className={`flex items-center gap-2.5 text-[13px] ${f.included ? 'text-white/70' : 'text-[#333333]'}`}>
-                        {f.included ? <CheckCircle2 size={15} className="text-white/50 shrink-0" /> : <X size={14} className="text-[#333333] shrink-0" />}
-                        <span>{f.text}</span>
+                      <li key={idx} className="flex items-start gap-2.5 text-xs font-medium">
+                        {f.included ? (
+                          <CheckCircle2 size={16} className="text-emerald-550 shrink-0 mt-0.5" />
+                        ) : (
+                          <X size={14} className="text-neutral-300 shrink-0 mt-0.5" />
+                        )}
+                        <span className={f.included ? 'text-neutral-700' : 'text-neutral-400 line-through'}>{f.text}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
                 {/* Button */}
-                <div className="mt-6 pt-4">
-                  {plan.note && <p className="text-center text-[11px] text-[#333333] mb-3">{plan.note}</p>}
+                <div className="mt-8 pt-4">
+                  {plan.note && <p className="text-center text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-3">{plan.note}</p>}
                   <button
                     onClick={plan.action}
                     disabled={paying === plan.name.toLowerCase()}
-                    className="w-full py-3 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98]"
+                    className="w-full py-3.5 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] shadow-sm hover:shadow"
                     style={{
-                      background: plan.highlight ? '#FFFFFF' : 'transparent',
-                      color: plan.highlight ? '#000000' : '#FFFFFF',
-                      border: plan.highlight ? 'none' : '1px solid #2A2A2A',
+                      background: plan.highlight ? '#000000' : '#FFFFFF',
+                      color: plan.highlight ? '#FFFFFF' : '#000000',
+                      border: '1px solid #000000',
                     }}
-                    onMouseDown={(e) => anime({ targets: e.currentTarget, scale: 0.96, duration: 100, easing: 'easeOutQuad' })}
-                    onMouseUp={(e) => anime({ targets: e.currentTarget, scale: 1, duration: 100, easing: 'easeOutQuad' })}
                   >
-                    {paying === plan.name.toLowerCase() ? <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</> : plan.highlight ? `Upgrade to ${plan.name}` : plan.name === "Free" ? "Get Started Free" : `Upgrade to ${plan.name}`}
+                    {paying === plan.name.toLowerCase() ? (
+                      <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
+                    ) : plan.name === "Free" ? (
+                      "Get Started Free"
+                    ) : (
+                      `Upgrade to ${plan.name}`
+                    )}
                   </button>
                 </div>
               </div>
@@ -304,23 +322,23 @@ export default function Pricing() {
         </section>
 
         {/* FAQ */}
-        <section className="py-16 max-w-[700px] mx-auto px-6">
-          <h2 className="pricing-animate text-2xl font-display font-bold text-white text-center mb-2">Frequently Asked Questions</h2>
-          <p className="pricing-animate text-[#555555] text-sm text-center mb-10">Everything you need to know before signing up.</p>
+        <section className="py-16 max-w-[700px] mx-auto px-6 relative">
+          <h2 className="pricing-animate text-2xl font-display font-bold text-black text-center mb-2">Frequently Asked Questions</h2>
+          <p className="pricing-animate text-neutral-450 text-xs text-center mb-10 font-medium">Everything you need to know before signing up.</p>
 
-          <div className="space-y-3">
+          <div className="space-y-3 relative z-10">
             {faqs.map((faq, i) => {
               const isOpen = openFaq === i;
               return (
-                <div key={i} className="pricing-card-animate rounded-[14px] border overflow-hidden transition-colors duration-200"
-                  style={{ background: '#111111', borderColor: isOpen ? '#2A2A2A' : '#1F1F1F' }}>
-                  <button onClick={() => setOpenFaq(isOpen ? null : i)} className="w-full flex justify-between items-center px-6 py-5 text-left">
-                    <span className="text-sm font-semibold text-white">{faq.q}</span>
-                    <ChevronDown size={16} className={`text-[#555555] shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                <div key={i} className="pricing-card-animate rounded-2xl border overflow-hidden transition-colors duration-200"
+                  style={{ background: '#FFFFFF', borderColor: isOpen ? '#A3A3A3' : '#E5E7EB' }}>
+                  <button onClick={() => setOpenFaq(isOpen ? null : i)} className="w-full flex justify-between items-center px-6 py-5 text-left active:bg-neutral-50/50">
+                    <span className="text-xs font-bold text-neutral-800">{faq.q}</span>
+                    <ChevronDown size={16} className={`text-neutral-500 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
                   </button>
                   {isOpen && (
                     <div className={`faq-answer-${i} px-6 pb-5`}>
-                      <p className="text-sm text-[#999999] leading-relaxed">{faq.a}</p>
+                      <p className="text-xs text-neutral-500 leading-relaxed font-medium">{faq.a}</p>
                     </div>
                   )}
                 </div>
@@ -329,15 +347,146 @@ export default function Pricing() {
           </div>
         </section>
 
-        {/* Bottom CTA */}
-        <section className="py-16 text-center">
-          <p className="text-lg text-[#555555] mb-5">Still deciding? Start for <span className="text-white font-semibold">free</span> →</p>
-          <button onClick={() => navigate("/register")} className="px-8 py-3.5 rounded-xl bg-white text-black font-semibold text-sm transition-all hover:bg-white/90 active:scale-[0.98]"
-            onMouseDown={(e) => anime({ targets: e.currentTarget, scale: 0.96, duration: 100, easing: 'easeOutQuad' })}
-            onMouseUp={(e) => anime({ targets: e.currentTarget, scale: 1, duration: 100, easing: 'easeOutQuad' })}>
-            Start Free
-          </button>
-          <p className="text-xs text-[#333333] mt-3">No credit card required</p>
+        {/* Upgraded Premium Bottom CTA */}
+        <section className="py-24 bg-white border-t border-neutral-100 relative overflow-hidden text-center z-10">
+          <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.02]">
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] bg-[size:24px_24px]" />
+          </div>
+
+          <div className="max-w-4xl mx-auto px-6 relative z-10">
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-orange-100 to-red-50 border border-orange-250/50 text-orange-700 mb-6 shadow-sm"
+            >
+              <Target className="w-3.5 h-3.5 text-orange-650" />
+              <span className="text-[9px] font-bold uppercase tracking-widest">Start Optimization</span>
+            </motion.div>
+
+            {/* Headline */}
+            <motion.h2
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl md:text-5xl font-black text-black tracking-tight leading-[1.1] mb-6"
+            >
+              Ready To Accelerate<br />
+              <span className="bg-gradient-to-r from-neutral-400 via-neutral-600 to-black bg-clip-text text-transparent">Your Career?</span>
+            </motion.h2>
+
+            {/* Subheadline */}
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-neutral-500 text-xs max-w-xl mx-auto mb-10 leading-relaxed font-semibold"
+            >
+              Choose the plan that fits your goals and unlock HirenextAI models designed to help you build resumes, optimize keyword profiles, and prepare for interviews.
+            </motion.p>
+
+            {/* Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="flex flex-col sm:flex-row gap-3.5 justify-center mb-10"
+            >
+              <button
+                onClick={() => navigate("/register")}
+                className="h-11 px-7 bg-black hover:bg-neutral-800 text-white font-bold rounded-xl text-xs flex items-center justify-center transition-all shadow-md active:scale-[0.98]"
+              >
+                Get Started Free
+              </button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (cardsRef.current) {
+                    cardsRef.current.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className="h-11 px-7 bg-white hover:bg-neutral-50 border border-neutral-200 text-black font-bold rounded-xl text-xs flex items-center justify-center transition-all shadow-sm active:scale-[0.98]"
+              >
+                Compare Plans
+              </button>
+            </motion.div>
+
+            {/* Trust Row */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+              className="flex flex-wrap items-center justify-center gap-2 mb-16"
+            >
+              {["No Credit Card Required", "Cancel Anytime", "Secure Payments", "Instant Access"].map((item) => (
+                <span key={item} className="px-3 py-1 rounded-full bg-neutral-50 border border-neutral-100 text-[9px] font-bold text-neutral-600 flex items-center gap-1.5 uppercase tracking-wider shadow-sm">
+                  <span className="text-emerald-500 font-bold text-[8.5px]">✓</span> {item}
+                </span>
+              ))}
+            </motion.div>
+
+            {/* Floating Visual Cards */}
+            <div className="hidden lg:block relative h-8 max-w-4xl mx-auto overflow-visible pointer-events-none">
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute left-[-40px] top-[-150px] bg-white border border-neutral-150 rounded-xl px-4 py-2.5 shadow-sm flex items-center gap-2 pointer-events-auto hover:scale-105 transition-all font-sans"
+              >
+                <span className="text-emerald-500 font-bold text-[10px]">✓</span>
+                <span className="text-[10px] font-bold text-black uppercase tracking-wider font-sans">HirenextAI 0.1</span>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+                className="absolute left-[-90px] top-[-80px] bg-white border border-neutral-150 rounded-xl px-4 py-2.5 shadow-sm flex items-center gap-2 pointer-events-auto hover:scale-105 transition-all font-sans"
+              >
+                <span className="text-emerald-500 font-bold text-[10px]">✓</span>
+                <span className="text-[10px] font-bold text-black uppercase tracking-wider font-sans">HirenextAI Flash ⚡</span>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+                className="absolute left-[-20px] top-[-20px] bg-white border border-neutral-150 rounded-xl px-4 py-2.5 shadow-sm flex items-center gap-2 pointer-events-auto hover:scale-105 transition-all font-sans"
+              >
+                <span className="text-emerald-500 font-bold text-[10px]">✓</span>
+                <span className="text-[10px] font-bold text-black uppercase tracking-wider font-sans">HirenextAI Pro 🚀</span>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, -7, 0] }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+                className="absolute right-[-40px] top-[-150px] bg-white border border-neutral-150 rounded-xl px-4 py-2.5 shadow-sm flex items-center gap-2 pointer-events-auto hover:scale-105 transition-all font-sans"
+              >
+                <span className="text-emerald-500 font-bold text-[10px]">✓</span>
+                <span className="text-[10px] font-bold text-black uppercase tracking-wider font-sans">Daily Credits</span>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 4.0, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+                className="absolute right-[-90px] top-[-80px] bg-white border border-neutral-150 rounded-xl px-4 py-2.5 shadow-sm flex items-center gap-2 pointer-events-auto hover:scale-105 transition-all font-sans"
+              >
+                <span className="text-emerald-500 font-bold text-[10px]">✓</span>
+                <span className="text-[10px] font-bold text-black uppercase tracking-wider font-sans">ATS Matching</span>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, -9, 0] }}
+                transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut", delay: 1.0 }}
+                className="absolute right-[-20px] top-[-20px] bg-white border border-neutral-150 rounded-xl px-4 py-2.5 shadow-sm flex items-center gap-2 pointer-events-auto hover:scale-105 transition-all font-sans"
+              >
+                <span className="text-emerald-500 font-bold text-[10px]">✓</span>
+                <span className="text-[10px] font-bold text-black uppercase tracking-wider font-sans">SecurityVault</span>
+              </motion.div>
+            </div>
+          </div>
         </section>
 
         <Footer />

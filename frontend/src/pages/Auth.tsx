@@ -35,8 +35,8 @@ function InputRow({
   tabIndex,
 }) {
   return (
-    <div className="group flex items-center gap-3 rounded-xl border border-white/[0.1] bg-white/[0.05] px-4 py-3.5 transition-all duration-200 focus-within:border-indigo-500/60 focus-within:bg-white/[0.07] focus-within:shadow-[0_0_0_3px_rgba(99,102,241,0.12)]">
-      <Icon className="h-4 w-4 shrink-0 text-white/30 transition-colors duration-200 group-focus-within:text-indigo-400/70" />
+    <div className="group flex items-center gap-3 rounded-xl border border-white/[0.1] bg-[#111111] px-4 py-3.5 transition-all duration-200 focus-within:border-[#1F1F1F] focus-within:bg-[#111111] focus-within:shadow-[0_0_0_3px_rgba(255,255,255,0.12)]">
+      <Icon className="h-4 w-4 shrink-0 text-white/30 transition-colors duration-200 group-focus-within:text-white" />
       <input
         type={type}
         name={name}
@@ -66,11 +66,11 @@ function RolePicker({ role, onChange }) {
           onClick={() => onChange(value)}
           className={`flex flex-col items-center gap-1.5 rounded-xl border p-3 text-center transition-all duration-200 ${
             role === value
-              ? "border-indigo-500/60 bg-indigo-500/15 text-white"
-              : "border-white/10 bg-white/[0.03] text-white/50 hover:border-white/20 hover:text-white/80"
+              ? "border-[#1F1F1F] bg-[#111111] text-white"
+              : "border-white/10 bg-[#111111] text-white/50 hover:border-white/20 hover:text-white/80"
           }`}
         >
-          <Icon className={`h-5 w-5 ${role === value ? "text-indigo-400" : "text-white/40"}`} />
+          <Icon className={`h-5 w-5 ${role === value ? "text-white" : "text-white/40"}`} />
           <span className="text-xs font-semibold">{label}</span>
           <span className="text-[10px] text-white/30">{desc}</span>
         </button>
@@ -83,7 +83,7 @@ export default function Auth() {
   const { login, signup, isLoading, setDemoMode } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const defaultMode = location.pathname.startsWith("/register") ? "signup" : "signin";
   const [mode, setMode] = useState(defaultMode);
   const [emailStep, setEmailStep] = useState("idle");
@@ -228,7 +228,7 @@ export default function Auth() {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
     }
-    
+
     // Update state in Zustand store
     useAuthStore.setState({
       user: user,
@@ -272,11 +272,11 @@ export default function Auth() {
   }
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#09090f] p-4">
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#111111] p-4">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[15%] top-[20%] h-[500px] w-[500px] rounded-full bg-indigo-600/[0.12] blur-[120px]" />
-        <div className="absolute bottom-[15%] right-[10%] h-[400px] w-[400px] rounded-full bg-purple-600/[0.08] blur-[100px]" />
-        <div className="absolute left-[60%] top-[60%] h-[300px] w-[300px] rounded-full bg-violet-500/[0.06] blur-[80px]" />
+        <div className="absolute left-[15%] top-[20%] h-[500px] w-[500px] rounded-full bg-[#111111] blur-[120px]" />
+        <div className="absolute bottom-[15%] right-[10%] h-[400px] w-[400px] rounded-full bg-[#111111] blur-[100px]" />
+        <div className="absolute left-[60%] top-[60%] h-[300px] w-[300px] rounded-full bg-[#111111] blur-[80px]" />
       </div>
 
       <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="relative z-10 mb-8">
@@ -291,7 +291,7 @@ export default function Auth() {
         transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
         className="relative z-10 w-full max-w-[400px]"
       >
-        <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] shadow-[0_32px_64px_rgba(0,0,0,0.5)] backdrop-blur-2xl">
+        <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[#111111] shadow-[0_32px_64px_rgba(0,0,0,0.5)] backdrop-blur-2xl">
           <div className="flex border-b border-white/[0.07]">
             {["signin", "signup"].map((m) => (
               <button
@@ -301,7 +301,7 @@ export default function Auth() {
                 className={`relative flex-1 py-4 text-sm font-semibold transition-all duration-200 ${mode === m ? "text-white" : "text-white/40 hover:text-white/70"}`}
               >
                 {m === "signin" ? "Sign In" : "Sign Up"}
-                {mode === m && <motion.div layoutId="auth-tab-indicator" className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-indigo-500 to-purple-500" />}
+                {mode === m && <motion.div layoutId="auth-tab-indicator" className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-white to-white" />}
               </button>
             ))}
           </div>
@@ -325,7 +325,7 @@ export default function Auth() {
                   initial={{ opacity: 0, height: 0, marginBottom: 0 }}
                   animate={{ opacity: 1, height: "auto", marginBottom: 16 }}
                   exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-                  className="overflow-hidden rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300"
+                  className="overflow-hidden rounded-xl border border-[#1F1F1F] bg-[#111111] px-4 py-3 text-sm text-white"
                 >
                   {error}
                 </motion.div>
@@ -338,8 +338,8 @@ export default function Auth() {
                   {/* Email & Password Form (Always visible at the top by default) or Forgot Password Form */}
                   {forgotPasswordMode ? (
                     <form onSubmit={handleForgotPasswordSubmit} className="space-y-3">
-                      <div className="group flex items-center gap-3 rounded-xl border border-white/[0.1] bg-white/[0.05] px-4 py-3.5 transition-all duration-200 focus-within:border-indigo-500/60 focus-within:bg-white/[0.07] focus-within:shadow-[0_0_0_3px_rgba(99,102,241,0.12)]">
-                        <Mail className="h-4 w-4 shrink-0 text-white/30 transition-colors duration-200 group-focus-within:text-indigo-400/70" />
+                      <div className="group flex items-center gap-3 rounded-xl border border-white/[0.1] bg-[#111111] px-4 py-3.5 transition-all duration-200 focus-within:border-[#1F1F1F] focus-within:bg-[#111111] focus-within:shadow-[0_0_0_3px_rgba(255,255,255,0.12)]">
+                        <Mail className="h-4 w-4 shrink-0 text-white/30 transition-colors duration-200 group-focus-within:text-white" />
                         <input
                           type="email"
                           required
@@ -353,7 +353,7 @@ export default function Auth() {
                       <button
                         type="submit"
                         disabled={isSendingReset}
-                        className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 py-3.5 text-sm font-semibold text-white shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all duration-200 hover:opacity-90 active:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-white to-white py-3.5 text-sm font-semibold text-white shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all duration-200 hover:opacity-90 active:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         {isSendingReset ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Send Reset Link <ArrowRight className="h-4 w-4" /></>}
                       </button>
@@ -383,8 +383,8 @@ export default function Auth() {
                         />
                       )}
 
-                      <div className="group flex items-center gap-3 rounded-xl border border-white/[0.1] bg-white/[0.05] px-4 py-3.5 transition-all duration-200 focus-within:border-indigo-500/60 focus-within:bg-white/[0.07] focus-within:shadow-[0_0_0_3px_rgba(99,102,241,0.12)]">
-                        <Mail className="h-4 w-4 shrink-0 text-white/30 transition-colors duration-200 group-focus-within:text-indigo-400/70" />
+                      <div className="group flex items-center gap-3 rounded-xl border border-white/[0.1] bg-[#111111] px-4 py-3.5 transition-all duration-200 focus-within:border-[#1F1F1F] focus-within:bg-[#111111] focus-within:shadow-[0_0_0_3px_rgba(255,255,255,0.12)]">
+                        <Mail className="h-4 w-4 shrink-0 text-white/30 transition-colors duration-200 group-focus-within:text-white" />
                         <input
                           ref={emailInputRef}
                           type="email"
@@ -417,7 +417,7 @@ export default function Auth() {
                               setForgotPasswordMode(true);
                               setError("");
                             }}
-                            className="text-xs text-indigo-300 transition-colors hover:text-indigo-200"
+                            className="text-xs text-white transition-colors hover:text-white"
                           >
                             Forgot password?
                           </button>
@@ -427,7 +427,7 @@ export default function Auth() {
                       <button
                         type="submit"
                         disabled={isLoading}
-                        className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 py-3.5 text-sm font-semibold text-white shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all duration-200 hover:opacity-90 active:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-white to-white py-3.5 text-sm font-semibold text-white shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all duration-200 hover:opacity-90 active:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <>{mode === "signin" ? "Sign In" : "Create Account"} <ArrowRight className="h-4 w-4" /></>}
                       </button>
@@ -436,9 +436,9 @@ export default function Auth() {
 
                   {/* Or continue with Divider */}
                   <div className="flex items-center gap-3 py-1">
-                    <div className="h-px flex-1 bg-white/[0.08]" />
+                    <div className="h-px flex-1 bg-[#111111]" />
                     <span className="text-[11px] font-medium uppercase tracking-wider text-white/25">or continue with</span>
-                    <div className="h-px flex-1 bg-white/[0.08]" />
+                    <div className="h-px flex-1 bg-[#111111]" />
                   </div>
 
                   {/* Google and Phone Buttons */}
@@ -446,26 +446,26 @@ export default function Auth() {
                     <button
                       onClick={handleGoogleLogin}
                       disabled={googleLoading}
-                      className="flex w-full items-center justify-center gap-3 rounded-xl bg-white py-3.5 text-sm font-semibold text-gray-800 shadow-[0_2px_12px_rgba(0,0,0,0.3)] transition-all duration-200 hover:bg-gray-50 active:bg-gray-100"
+                      className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#111111] py-3.5 text-sm font-semibold text-white shadow-[0_2px_12px_rgba(0,0,0,0.3)] transition-all duration-200 hover:bg-black hover:text-black active:bg-[#111111]"
                     >
                       <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        <path fill="#999999" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                        <path fill="#999999" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path fill="#FFFFFF" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                        <path fill="#999999" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                       </svg>
                       Continue with Google
-                      {googleLoading && <Loader2 className="h-3.5 w-3.5 animate-spin text-gray-500" />}
+                      {googleLoading && <Loader2 className="h-3.5 w-3.5 animate-spin text-white0" />}
                     </button>
 
                     <div className="w-full flex flex-col items-center">
                       <button
                         disabled={true}
-                        className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.02] py-3.5 text-sm font-medium text-white/40 cursor-not-allowed"
+                        className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/[0.08] bg-[#111111] py-3.5 text-sm font-medium text-white/40 cursor-not-allowed"
                       >
-                        <Phone className="h-4 w-4 shrink-0 text-indigo-400/40" />
+                        <Phone className="h-4 w-4 shrink-0 text-white" />
                         Continue with Phone
-                        <Lock className="h-3.5 w-3.5 shrink-0 text-yellow-400 fill-yellow-400/20 ml-1.5" />
+                        <Lock className="h-3.5 w-3.5 shrink-0 text-white fill-white/10 ml-1.5" />
                       </button>
                       <span className="text-[10px] text-white/30 mt-1">Coming soon</span>
                     </div>
@@ -490,7 +490,7 @@ export default function Auth() {
                         <span className="text-xs font-medium text-white/40">Phone OTP</span>
                       </div>
                       <InputRow icon={Phone} type="tel" name="phone" placeholder="+91 98765 43210" value={phone} onChange={e => setPhone(e.target.value)} required autoFocus />
-                      <button type="submit" className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600/80 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-indigo-600">
+                      <button type="submit" className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#111111] py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-black hover:text-black">
                         Send OTP <ArrowRight className="h-4 w-4" />
                       </button>
                       <button type="button" onClick={() => { setPhoneStep("idle"); setError(""); }} className="w-full py-1 text-center text-xs text-white/30 transition-colors hover:text-white/50">
@@ -508,13 +508,13 @@ export default function Auth() {
                       className="space-y-6 text-center"
                     >
                       <div className="flex flex-col items-center">
-                        <div className="w-1.5 h-6 bg-purple-500 rounded-full mb-4 animate-pulse" />
+                        <div className="w-1.5 h-6 bg-[#111111] rounded-full mb-4 animate-pulse" />
                         <h2 className="text-xl font-bold text-white tracking-tight">Let's verify your number</h2>
                         <p className="mt-2 text-xs text-white/40 leading-relaxed max-w-[280px] mx-auto">
                           We've sent a 6-digit code to your phone. It'll auto-verify once entered.
                         </p>
                         {otpHint && (
-                          <div className="mt-2.5 px-3 py-1.5 rounded bg-amber-500/10 border border-amber-500/20 text-[11px] font-medium text-amber-300">
+                          <div className="mt-2.5 px-3 py-1.5 rounded bg-[#111111] border border-[#1F1F1F] text-[11px] font-medium text-white">
                             {otpHint}
                           </div>
                         )}
@@ -533,14 +533,14 @@ export default function Auth() {
                             value={digit}
                             onChange={(e) => handleOtpChange(e.target.value, idx)}
                             onKeyDown={(e) => handleOtpKeyDown(e, idx)}
-                            whileFocus={{ 
-                              scale: 1.08, 
-                              borderColor: "#a855f7",
-                              boxShadow: "0 0 15px rgba(168, 85, 247, 0.35)"
+                            whileFocus={{
+                              scale: 1.08,
+                              borderColor: "#999999",
+                              boxShadow: "0 0 15px rgba(255,255,255, 0.35)"
                             }}
                             animate={digit ? { scale: [1, 1.12, 1] } : { scale: 1 }}
                             transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                            className="w-11 h-14 bg-white/[0.04] border border-white/10 rounded-xl text-center text-xl font-mono font-bold text-white focus:outline-none transition-all"
+                            className="w-11 h-14 bg-[#111111] border border-white/10 rounded-xl text-center text-xl font-mono font-bold text-white focus:outline-none transition-all"
                           />
                         ))}
                       </div>
@@ -550,7 +550,7 @@ export default function Auth() {
                         <button
                           type="button"
                           onClick={handleSendOtp}
-                          className="font-bold text-purple-400 hover:text-purple-300 transition-colors"
+                          className="font-bold text-white hover:text-white transition-colors"
                         >
                           Resend
                         </button>
@@ -574,7 +574,7 @@ export default function Auth() {
             {demoEnabled && mode === "signup" && phoneStep === "idle" && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="mt-5 text-center">
                 <button onClick={() => setDemoModalOpen(true)} className="group inline-flex items-center gap-1.5 text-sm text-white/30 transition-colors hover:text-white/60">
-                  <Sparkles className="h-3.5 w-3.5 text-indigo-400/50 transition-colors group-hover:text-indigo-400" />
+                  <Sparkles className="h-3.5 w-3.5 text-white transition-colors group-hover:text-white" />
                   Try Demo First
                 </button>
               </motion.div>
@@ -595,9 +595,9 @@ export default function Auth() {
 
         <p className="mt-5 text-center text-sm text-white/30">
           {mode === "signin" ? (
-            <>New here?{" "}<button onClick={() => reset("signup")} className="font-medium text-indigo-400/80 transition-colors hover:text-indigo-400">Create a free account</button></>
+            <>New here?{" "}<button onClick={() => reset("signup")} className="font-medium text-white transition-colors hover:text-white">Create a free account</button></>
           ) : (
-            <>Already have an account?{" "}<button onClick={() => reset("signin")} className="font-medium text-indigo-400/80 transition-colors hover:text-indigo-400">Sign in</button></>
+            <>Already have an account?{" "}<button onClick={() => reset("signin")} className="font-medium text-white transition-colors hover:text-white">Sign in</button></>
           )}
         </p>
       </motion.div>

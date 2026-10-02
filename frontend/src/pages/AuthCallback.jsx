@@ -24,7 +24,7 @@ export default function AuthCallback() {
       }
 
       localStorage.setItem('token', token);
-      
+
       // Update state in Zustand store
       useAuthStore.setState({
         token: token,
@@ -35,15 +35,22 @@ export default function AuthCallback() {
       // Hydrate user profile info
       await useAuthStore.getState().fetchMe();
 
-      navigate('/chat', { replace: true });
+      const user = useAuthStore.getState().user;
+      const isAdmin = user?.role === 'admin' || user?.role === 'owner';
+
+      if (isAdmin) {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/chat', { replace: true });
+      }
     };
 
     finish();
   }, [params, navigate]);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
-      <p className="text-white/50">Completing sign in...</p>
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <p className="text-gray-500">Completing sign in...</p>
     </div>
   );
 }

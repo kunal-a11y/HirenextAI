@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, CheckCircle2, Info, Shield } from 'lucide-react';
@@ -28,6 +28,7 @@ import VerifyEmailPage from './pages/VerifyEmailPage';
 import AdminPanel from './pages/AdminPanel';
 import AuthCallback from './pages/AuthCallback';
 import Extension from './pages/Extension';
+import SharedChatPage from './pages/SharedChatPage';
 import PricingModal from './components/modals/PricingModal';
 import ScrollToTop from './components/ScrollToTop';
 import { CookieConsent } from './components/layout/CookieConsent';
@@ -36,54 +37,56 @@ import useSettingsStore from './store/useSettingsStore';
 import useAuthStore from './store/useAuthStore';
 import useUserStore from './store/useUserStore';
 
+const ENABLE_EXTENSION = false;
+
 const Toast = () => {
   const { toast } = useUIStore();
 
   const getToastConfig = () => {
     if (!toast) return null;
     const lowerMsg = toast.toLowerCase();
-    
-    const isError = lowerMsg.includes('fail') || 
-                    lowerMsg.includes('err') || 
-                    lowerMsg.includes('wrong') || 
-                    lowerMsg.includes('incorrect') || 
-                    lowerMsg.includes('invalid') || 
-                    lowerMsg.includes('not found') || 
-                    lowerMsg.includes('denied') || 
-                    lowerMsg.includes('expire') || 
+
+    const isError = lowerMsg.includes('fail') ||
+                    lowerMsg.includes('err') ||
+                    lowerMsg.includes('wrong') ||
+                    lowerMsg.includes('incorrect') ||
+                    lowerMsg.includes('invalid') ||
+                    lowerMsg.includes('not found') ||
+                    lowerMsg.includes('denied') ||
+                    lowerMsg.includes('expire') ||
                     lowerMsg.includes('unable');
 
-    const isSuccess = lowerMsg.includes('success') || 
-                      lowerMsg.includes('sent') || 
-                      lowerMsg.includes('save') || 
-                      lowerMsg.includes('copi') || 
-                      lowerMsg.includes('creat') || 
-                      lowerMsg.includes('update') || 
-                      lowerMsg.includes('complet') || 
-                      lowerMsg.includes('verifi') || 
-                      lowerMsg.includes('log') || 
+    const isSuccess = lowerMsg.includes('success') ||
+                      lowerMsg.includes('sent') ||
+                      lowerMsg.includes('save') ||
+                      lowerMsg.includes('copi') ||
+                      lowerMsg.includes('creat') ||
+                      lowerMsg.includes('update') ||
+                      lowerMsg.includes('complet') ||
+                      lowerMsg.includes('verifi') ||
+                      lowerMsg.includes('log') ||
                       lowerMsg.includes('welcome');
 
     if (isError) {
       return {
-        icon: <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />,
-        border: 'border-rose-500/30',
-        glow: 'shadow-[0_8px_30px_rgba(244,63,94,0.15)]',
-        text: 'text-rose-200'
+        icon: <AlertTriangle className="w-4 h-4 text-black shrink-0" />,
+        border: 'border-[#E0E0E0]',
+        glow: 'shadow-[0_8px_30px_rgba(255,255,255,0.15)]',
+        text: 'text-black'
       };
     } else if (isSuccess) {
       return {
-        icon: <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />,
-        border: 'border-emerald-500/30',
-        glow: 'shadow-[0_8px_30px_rgba(16,185,129,0.15)]',
-        text: 'text-emerald-200'
+        icon: <CheckCircle2 className="w-4 h-4 text-black shrink-0" />,
+        border: 'border-[#E0E0E0]',
+        glow: 'shadow-[0_8px_30px_rgba(255,255,255,0.15)]',
+        text: 'text-black'
       };
     } else {
       return {
-        icon: <Info className="w-4 h-4 text-purple-300 shrink-0" />,
-        border: 'border-[#8B5CF6]/30',
-        glow: 'shadow-[0_8px_30px_rgba(139,92,246,0.15)]',
-        text: 'text-purple-200'
+        icon: <Info className="w-4 h-4 text-black shrink-0" />,
+        border: 'border-[#E0E0E0]',
+        glow: 'shadow-[0_8px_30px_rgba(255,255,255,0.15)]',
+        text: 'text-black'
       };
     }
   };
@@ -100,7 +103,7 @@ const Toast = () => {
           transition={{ type: 'spring', stiffness: 350, damping: 25 }}
           className="fixed top-24 right-6 z-[9999] pointer-events-auto"
         >
-          <div className={`bg-[#0f0f18]/95 backdrop-blur-md border ${config.border} rounded-2xl px-5 py-3.5 ${config.glow} flex items-center gap-3 max-w-sm whitespace-pre-wrap`}>
+          <div className={`bg-[#F7F7F7] backdrop-blur-md border ${config.border} rounded-2xl px-5 py-3.5 ${config.glow} flex items-center gap-3 max-w-sm whitespace-pre-wrap`}>
             {config.icon}
             <span className={`text-[13px] font-medium leading-tight ${config.text}`}>
               {toast}
@@ -127,33 +130,24 @@ function PrivateRoute({ children }) {
   return children ? children : <Outlet />;
 }
 
-const envEmails = ('')
-  .split(',')
-  .map(e => e.trim().toLowerCase())
-  .filter(Boolean);
-
-const ADMIN_EMAILS = ['mindcraftgamer26@gmail.com', 'demo@hirenextai.com', 'your-real-email@gmail.com', ...envEmails];
-
-
 function AdminRoute({ children }) {
   const token = localStorage.getItem('token');
-  const storedUser = (() => {
-    try {
-      return JSON.parse(localStorage.getItem('user') || 'null');
-    } catch {
-      return null;
-    }
-  })();
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  
+  const params = new URLSearchParams(window.location.search);
+  const otpSent = params.get('otp_sent') === 'true';
+  const email = params.get('email');
 
+  // If no token exists, only allow access if they are in the active 2FA OTP verification flow
   if (!token) {
+    if (otpSent && email) {
+      return children;
+    }
     return <Navigate to="/login" replace />;
   }
 
-  const email = (storedUser?.email || '').toLowerCase();
-  const isAdmin =
-    storedUser?.role === 'admin' || ADMIN_EMAILS.includes(email);
-
-  if (!isAdmin) {
+  // Reject non-admin role tokens
+  if (user?.role !== 'admin' && user?.role !== 'owner') {
     return <Navigate to="/chat" replace />;
   }
 
@@ -165,6 +159,16 @@ export default function App() {
   const { fetchMe, token } = useAuthStore();
 
   useEffect(() => {
+    let savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'system') {
+      savedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
     if (token || localStorage.getItem('token')) {
       fetchMe();
       fetchSettings();
@@ -201,7 +205,7 @@ export default function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/updates" element={<Updates />} />
         <Route path="/v1-preview" element={<V1Preview />} />
-        
+
         {/* Authentication Routes */}
         <Route
           path="/login"
@@ -234,7 +238,13 @@ export default function App() {
         {/* Demo chat — no login required */}
         <Route path="/demo" element={<ChatPage demo />} />
         <Route path="/preview" element={<Navigate to="/demo" replace />} />
-        <Route path="/extension" element={<Extension />} />
+        <Route path="/share/:shareId" element={<SharedChatPage />} />
+        <Route path="/share/chat/:shareId" element={<SharedChatPage />} />
+        {ENABLE_EXTENSION ? (
+          <Route path="/extension" element={<Extension />} />
+        ) : (
+          <Route path="/extension" element={<Navigate to="/" replace />} />
+        )}
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/admin" element={<AdminRoute><AdminPanel /></AdminRoute>} />
 
@@ -259,4 +269,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-

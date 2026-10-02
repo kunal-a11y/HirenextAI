@@ -105,3 +105,58 @@ exports.clearHistory = async (req, res) => {
         res.status(500).json({ message: 'Server Error clearing history' });
     }
 };
+
+const crypto = require('crypto');
+
+exports.shareChat = async (req, res) => {
+    const { messages, title, options } = req.body;
+    if (!messages || !Array.isArray(messages)) {
+        return res.status(400).json({ message: 'Messages are required and must be an array.' });
+    }
+    try {
+        const shareId = crypto.randomBytes(8).toString('hex');
+        await pool.query(
+            'INSERT INTO shared_chats (id, title, messages, options) VALUES (?, ?, ?, ?)',
+            [shareId, title || 'Shared Chat', JSON.stringify(messages), JSON.stringify(options || {})]
+        );
+        
+        const baseUrl = (process.env.FRONTEND_URL || 'https://hirenextai.com').replace(/\/$/, '');
+        const shareUrl = `${baseUrl}/share/${shareId}`;
+        res.json({ shareUrl, shareId });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error generating share link' });
+    }
+};
+
+exports.getSharedChat = async (req, res) => {
+    const { shareId } = req.params;
+    try {
+        const [rows] = await pool.query(
+            'SELECT title, messages, options, createdAt FROM shared_chats WHERE id = ?',
+            [shareId]
+        );
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'Shared chat not found' });
+        }
+        const chat = rows[0];
+        const options = JSON.parse(chat.options || '{}');
+        
+        if (options.expiresAt) {
+            const expiry = new Date(options.expiresAt);
+            if (expiry < new Date()) {
+                return res.status(410).json({ message: 'This shared chat has expired' });
+            }
+        }
+        
+        res.json({
+            title: chat.title,
+            messages: JSON.parse(chat.messages || '[]'),
+            options,
+            createdAt: chat.createdAt
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error loading shared chat' });
+    }
+};

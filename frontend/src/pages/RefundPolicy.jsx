@@ -24,8 +24,8 @@ function FadeUp({ children, delay = 0, className = "" }) {
 const sections = [
   {
     icon: Clock3,
-    color: "text-emerald-400",
-    bg: "bg-emerald-500/10 border-emerald-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "Time Limit",
     title: "48-Hour Refund Window",
     points: [
@@ -37,12 +37,12 @@ const sections = [
   },
   {
     icon: Wallet,
-    color: "text-amber-400",
-    bg: "bg-amber-500/10 border-amber-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "Usage Rules",
     title: "Usage-Based Refund Logic",
     points: [
-      "If AI credits, tokens, or paid features have already been consumed, we deduct the value of usage before processing any refund.",
+      "If AI credits or paid features have already been consumed, we deduct the value of usage before processing any refund.",
       "If the full purchased quota has been used within 48 hours, no refund will be issued.",
       "If only part of the quota has been used, any approved refund will be based on the unused portion only.",
       "We calculate usage fairly and transparently — you can view your usage history in Dashboard → Usage.",
@@ -50,8 +50,8 @@ const sections = [
   },
   {
     icon: Ban,
-    color: "text-rose-400",
-    bg: "bg-rose-500/10 border-rose-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "After Window",
     title: "After 48 Hours",
     points: [
@@ -63,8 +63,8 @@ const sections = [
   },
   {
     icon: ShieldCheck,
-    color: "text-blue-400",
-    bg: "bg-blue-500/10 border-blue-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "Cancellation",
     title: "Cancellation Policy",
     points: [
@@ -76,8 +76,8 @@ const sections = [
   },
   {
     icon: Globe,
-    color: "text-purple-400",
-    bg: "bg-purple-500/10 border-purple-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "Global",
     title: "International Payments",
     points: [
@@ -89,8 +89,8 @@ const sections = [
   },
   {
     icon: Mail,
-    color: "text-indigo-400",
-    bg: "bg-indigo-500/10 border-indigo-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     tag: "Support",
     title: "How to Request a Refund",
     points: [
@@ -108,9 +108,9 @@ export default function RefundPolicy() {
   return (
     <div style={{ minHeight: '100vh', overflowX: 'hidden', width: '100%' }} className="bg-background relative">
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute left-[15%] top-[-60px] h-[600px] w-[600px] rounded-full bg-indigo-500/10 blur-[160px]" />
-        <div className="absolute bottom-[10%] right-[-60px] h-[400px] w-[400px] rounded-full bg-purple-600/8 blur-[130px]" />
-        <div className="absolute bottom-[20%] right-[-5%] h-[400px] w-[400px] rounded-full bg-emerald-500/4 blur-[100px]" />
+        <div className="absolute left-[15%] top-[-60px] h-[600px] w-[600px] rounded-full bg-[#F7F7F7] blur-[160px]" />
+        <div className="absolute bottom-[10%] right-[-60px] h-[400px] w-[400px] rounded-full bg-[#F7F7F7] blur-[130px]" />
+        <div className="absolute bottom-[20%] right-[-5%] h-[400px] w-[400px] rounded-full bg-[#F7F7F7] blur-[100px]" />
         <div
           className="absolute inset-0 opacity-[0.018]"
           style={{ backgroundImage: "radial-gradient(circle at 1px 1px,rgba(255,255,255,0.5) 1px,transparent 0)", backgroundSize: "40px 40px" }}
@@ -125,49 +125,49 @@ export default function RefundPolicy() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-4"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] mb-4"
           >
-            <Sparkles className="w-4 h-4 text-[#8B5CF6]" />
-            <span className="text-white/80 text-sm font-medium">Refund & Cancellation</span>
+            <Sparkles className="w-4 h-4 text-black" />
+            <span className="text-[#222222] text-sm font-medium">Refund & Cancellation</span>
           </motion.div>
 
           <motion.div
             animate={{ rotate: [0, -360] }}
             transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-            className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(16,185,129,0.2)]"
+            className="w-16 h-16 rounded-2xl bg-[#F7F7F7] border border-[#E0E0E0] flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(255,255,255,0.2)]"
           >
-            <RotateCcw className="w-8 h-8 text-emerald-400" />
+            <RotateCcw className="w-8 h-8 text-black" />
           </motion.div>
 
-          <h1 className="text-4xl md:text-5xl font-display font-extrabold mb-3 text-white">Refund Policy</h1>
-          <p className="text-white/35 text-sm mb-4">Last updated: May 2026</p>
-          <p className="text-white/55 max-w-2xl mx-auto text-sm leading-relaxed font-light">
+          <h1 className="text-4xl md:text-5xl font-display font-extrabold mb-3 text-black">Refund Policy</h1>
+          <p className="text-black/35 text-sm mb-4">Last updated: May 2026</p>
+          <p className="text-black/55 max-w-2xl mx-auto text-sm leading-relaxed font-light">
             We keep our refund and cancellation policy simple and fair. You have a full 48-hour money-back guarantee on all new paid subscriptions — no questions asked.
           </p>
 
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 mt-6">
-            <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0" />
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-[#F7F7F7] border border-[#E0E0E0] mt-6">
+            <CheckCircle className="w-5 h-5 text-black shrink-0" />
             <div className="text-left">
-              <p className="text-white font-bold text-sm">48-Hour Money-Back Guarantee</p>
-              <p className="text-emerald-400/70 text-xs mt-0.5">Full refund on all new paid plans within 48 hours of purchase</p>
+              <p className="text-black font-bold text-sm">48-Hour Money-Back Guarantee</p>
+              <p className="text-black text-xs mt-0.5">Full refund on all new paid plans within 48 hours of purchase</p>
             </div>
           </div>
 
           <div className="flex flex-wrap justify-center gap-3 mt-6">
-            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/60 text-xs font-medium">
-              <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] text-[#555555] text-xs font-medium">
+              <CheckCircle className="w-3.5 h-3.5 text-black" />
               <span>No Questions Asked</span>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/60 text-xs font-medium">
-              <XCircle className="w-3.5 h-3.5 text-rose-400" />
+            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] text-[#555555] text-xs font-medium">
+              <XCircle className="w-3.5 h-3.5 text-black" />
               <span>Cancel Anytime</span>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/60 text-xs font-medium">
-              <Globe className="w-3.5 h-3.5 text-blue-400" />
+            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] text-[#555555] text-xs font-medium">
+              <Globe className="w-3.5 h-3.5 text-black" />
               <span>Global Coverage</span>
             </motion.div>
-            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/60 text-xs font-medium">
-              <Lock className="w-3.5 h-3.5 text-indigo-400" />
+            <motion.div whileHover={{ scale: 1.05, y: -2 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] text-[#555555] text-xs font-medium">
+              <Lock className="w-3.5 h-3.5 text-black" />
               <span>Secure Payments</span>
             </motion.div>
           </div>
@@ -177,37 +177,37 @@ export default function RefundPolicy() {
         <FadeUp>
           <div className="glass-card p-6 mb-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <motion.div whileHover={{ scale: 1.04 }} transition={{ type: "spring", stiffness: 300 }} className="relative">
-              <div className="text-2xl font-display font-extrabold text-white">48 Hours</div>
-              <div className="text-xs text-white/40 mt-1">Full refund window</div>
-              <div className="hidden md:block absolute top-1/2 -translate-y-1/2 right-0 h-8 border-r border-white/5" />
-            </motion.div>
-            
-            <motion.div whileHover={{ scale: 1.04 }} transition={{ type: "spring", stiffness: 300 }} className="relative">
-              <div className="text-2xl font-display font-extrabold text-white">2 Days</div>
-              <div className="text-xs text-white/40 mt-1">Refund processing time</div>
-              <div className="hidden md:block absolute top-1/2 -translate-y-1/2 right-0 h-8 border-r border-white/5" />
+              <div className="text-2xl font-display font-extrabold text-black">48 Hours</div>
+              <div className="text-xs text-[#777777] mt-1">Full refund window</div>
+              <div className="hidden md:block absolute top-1/2 -translate-y-1/2 right-0 h-8 border-r border-[#E0E0E0]" />
             </motion.div>
 
             <motion.div whileHover={{ scale: 1.04 }} transition={{ type: "spring", stiffness: 300 }} className="relative">
-              <div className="text-2xl font-display font-extrabold text-white">0 Fees</div>
-              <div className="text-xs text-white/40 mt-1">No cancellation charges</div>
-              <div className="hidden md:block absolute top-1/2 -translate-y-1/2 right-0 h-8 border-r border-white/5" />
+              <div className="text-2xl font-display font-extrabold text-black">2 Days</div>
+              <div className="text-xs text-[#777777] mt-1">Refund processing time</div>
+              <div className="hidden md:block absolute top-1/2 -translate-y-1/2 right-0 h-8 border-r border-[#E0E0E0]" />
+            </motion.div>
+
+            <motion.div whileHover={{ scale: 1.04 }} transition={{ type: "spring", stiffness: 300 }} className="relative">
+              <div className="text-2xl font-display font-extrabold text-black">0 Fees</div>
+              <div className="text-xs text-[#777777] mt-1">No cancellation charges</div>
+              <div className="hidden md:block absolute top-1/2 -translate-y-1/2 right-0 h-8 border-r border-[#E0E0E0]" />
             </motion.div>
 
             <motion.div whileHover={{ scale: 1.04 }} transition={{ type: "spring", stiffness: 300 }}>
-              <div className="text-2xl font-display font-extrabold text-white">24/7</div>
-              <div className="text-xs text-white/40 mt-1">Support available</div>
+              <div className="text-2xl font-display font-extrabold text-black">24/7</div>
+              <div className="text-xs text-[#777777] mt-1">Support available</div>
             </motion.div>
           </div>
         </FadeUp>
 
         {/* Important Info Card */}
         <FadeUp>
-          <div className="glass-card p-5 mb-6 border border-amber-500/20 bg-amber-500/5 flex items-start gap-4">
-            <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5 shrink-0" />
+          <div className="glass-card p-5 mb-6 border border-[#E0E0E0] bg-[#F7F7F7] flex items-start gap-4">
+            <AlertTriangle className="w-5 h-5 text-black mt-0.5 shrink-0" />
             <div>
-              <p className="text-white font-semibold text-sm mb-1">Important: 48-Hour Window Starts at Payment Time</p>
-              <p className="text-white/50 text-xs leading-relaxed font-light">
+              <p className="text-black font-semibold text-sm mb-1">Important: 48-Hour Window Starts at Payment Time</p>
+              <p className="text-[#666666] text-xs leading-relaxed font-light">
                 Your refund window begins at the exact moment your payment is processed — not at the start of the next calendar day. Check your payment confirmation email for the exact timestamp.
               </p>
             </div>
@@ -235,8 +235,8 @@ export default function RefundPolicy() {
                         <IconComponent className={`w-5 h-5 ${section.color}`} />
                       </div>
                       <div className="flex items-center">
-                        <h2 className="text-base font-bold text-white">{section.title}</h2>
-                        <span className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-white/30 text-[10px] ml-3">
+                        <h2 className="text-base font-bold text-black">{section.title}</h2>
+                        <span className="px-2 py-0.5 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] text-[#888888] text-[10px] ml-3">
                           {section.tag}
                         </span>
                       </div>
@@ -246,7 +246,7 @@ export default function RefundPolicy() {
                       transition={{ duration: 0.3 }}
                       className="shrink-0"
                     >
-                      <ChevronDown className="w-4 h-4 text-white/40" />
+                      <ChevronDown className="w-4 h-4 text-[#777777]" />
                     </motion.div>
                   </div>
 
@@ -259,21 +259,21 @@ export default function RefundPolicy() {
                         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                         className="overflow-hidden"
                       >
-                        <div className="border-t border-white/5 px-6 pb-6 pt-5">
+                        <div className="border-t border-[#E0E0E0] px-6 pb-6 pt-5">
                           <ul className="space-y-3">
                             {section.points.map((point, j) => (
                               <li key={j} className="flex items-start gap-3">
                                 <div className={`w-1.5 h-1.5 rounded-full mt-2 shrink-0 bg-current ${section.color}`} />
                                 {i === 5 && j === 0 ? (
-                                  <p className="text-white/60 text-sm leading-relaxed font-light">
+                                  <p className="text-[#555555] text-sm leading-relaxed font-light">
                                     <span>To request a refund, </span>
-                                    <Link to="/contact" className="text-[#8B5CF6] hover:text-purple-300 underline underline-offset-4 transition-colors font-medium">
+                                    <Link to="/contact" className="text-black hover:text-black underline underline-offset-4 transition-colors font-medium">
                                       visit our Contact page
                                     </Link>
                                     <span> and submit a refund request within 48 hours of purchase.</span>
                                   </p>
                                 ) : (
-                                  <p className="text-white/60 text-sm leading-relaxed font-light">{point}</p>
+                                  <p className="text-[#555555] text-sm leading-relaxed font-light">{point}</p>
                                 )}
                               </li>
                             ))}
@@ -292,39 +292,39 @@ export default function RefundPolicy() {
         <div className="mt-16">
           <FadeUp>
             <div className="glass-card p-10 text-center relative overflow-hidden max-w-3xl mx-auto mb-8">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/6 to-[#8B5CF6]/6 pointer-events-none" />
-              
+              <div className="absolute inset-0 bg-gradient-to-br from-white to-[#999999]/6 pointer-events-none" />
+
               <motion.div
                 animate={{ rotate: [0, -360] }}
                 transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
                 className="inline-flex mb-4"
               >
-                <RotateCcw className="w-8 h-8 text-emerald-400" />
+                <RotateCcw className="w-8 h-8 text-black" />
               </motion.div>
 
-              <h2 className="text-2xl font-display font-bold text-white mb-3 relative z-10">Need a Refund or Have a Billing Question?</h2>
-              <p className="text-white/55 text-sm mb-6 max-w-lg mx-auto relative z-10 font-light">
+              <h2 className="text-2xl font-display font-bold text-black mb-3 relative z-10">Need a Refund or Have a Billing Question?</h2>
+              <p className="text-black/55 text-sm mb-6 max-w-lg mx-auto relative z-10 font-light">
                 Our support team is available 24/7 to help with refund requests, billing queries, and cancellations. We aim to respond within 24 hours.
               </p>
 
               <div className="mb-6 relative z-10">
-                <Link to="/contact" className="btn-primary py-3 px-8 inline-flex items-center gap-2 text-white font-semibold">
+                <Link to="/contact" className="btn-primary py-3 px-8 inline-flex items-center gap-2 text-black font-semibold">
                   <ArrowRight className="w-4 h-4" />
                   <span>Contact Support</span>
                 </Link>
               </div>
 
               <div className="flex flex-wrap gap-4 justify-center mt-5 relative z-10">
-                <div className="flex items-center gap-1.5 text-white/35 text-xs">
-                  <Clock3 className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="flex items-center gap-1.5 text-black/35 text-xs">
+                  <Clock3 className="w-3.5 h-3.5 text-black" />
                   <span>Refunds within 48 hours</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-white/35 text-xs">
-                  <CheckCircle className="w-3.5 h-3.5 text-blue-400" />
+                <div className="flex items-center gap-1.5 text-black/35 text-xs">
+                  <CheckCircle className="w-3.5 h-3.5 text-black" />
                   <span>No questions asked</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-white/35 text-xs">
-                  <Globe className="w-3.5 h-3.5 text-purple-400" />
+                <div className="flex items-center gap-1.5 text-black/35 text-xs">
+                  <Globe className="w-3.5 h-3.5 text-black" />
                   <span>24/7 support</span>
                 </div>
               </div>

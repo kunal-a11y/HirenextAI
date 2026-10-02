@@ -12,7 +12,7 @@ export default function AuthCallback() {
 
     if (token) {
       localStorage.setItem('token', token);
-      
+
       // Update state in Zustand store
       useAuthStore.setState({
         token: token,
@@ -30,8 +30,8 @@ export default function AuthCallback() {
   }, [params, navigate]);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center">
-      <p className="text-white/50">Completing sign in...</p>
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <p className="text-[#666666]">Completing sign in...</p>
     </div>
   );
 }

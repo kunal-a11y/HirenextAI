@@ -18,4 +18,14 @@ router.get('/history', auth, chatController.getHistory);
 // @access  Private
 router.delete('/clear', auth, chatController.clearHistory);
 
+// @route   POST api/chat/share
+// @desc    Share a chat session
+// @access  Private
+router.post('/share', auth, chatController.shareChat);
+
+// @route   GET api/chat/share/:shareId
+// @desc    Get shared chat by ID
+// @access  Public
+router.get('/share/:shareId', chatController.getSharedChat);
+
 module.exports = router;

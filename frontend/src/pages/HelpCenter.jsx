@@ -95,8 +95,8 @@ const categories = [
   {
     icon: Zap,
     title: "AI Tools",
-    color: "text-indigo-400",
-    bg: "bg-indigo-500/10 border-indigo-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     questions: [
       "How many AI generations do I get on the free plan?",
       "How do I generate a cover letter?",
@@ -108,8 +108,8 @@ const categories = [
   {
     icon: Briefcase,
     title: "Job Search",
-    color: "text-emerald-400",
-    bg: "bg-emerald-500/10 border-emerald-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     questions: [
       "Where do job listings come from?",
       "How do I search for remote jobs worldwide?",
@@ -121,8 +121,8 @@ const categories = [
   {
     icon: User,
     title: "Account & Profile",
-    color: "text-purple-400",
-    bg: "bg-purple-500/10 border-purple-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     questions: [
       "How do I update my skills?",
       "Can I change my email address?",
@@ -134,8 +134,8 @@ const categories = [
   {
     icon: CreditCard,
     title: "Billing & Plans",
-    color: "text-amber-400",
-    bg: "bg-amber-500/10 border-amber-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     questions: [
       "What is included in the free plan?",
       "How do I upgrade to Pro?",
@@ -147,8 +147,8 @@ const categories = [
   {
     icon: Shield,
     title: "Privacy & Security",
-    color: "text-rose-400",
-    bg: "bg-rose-500/10 border-rose-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     questions: [
       "Is my resume data secure?",
       "Do you sell my personal data?",
@@ -160,8 +160,8 @@ const categories = [
   {
     icon: BookOpen,
     title: "Getting Started",
-    color: "text-teal-400",
-    bg: "bg-teal-500/10 border-teal-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
     questions: [
       "How do I create my first resume?",
       "What is the Demo mode?",
@@ -178,24 +178,24 @@ const popularGuides = [
     title: "Write a Winning Resume",
     tag: "5 min read",
     desc: "Step-by-step guide to using AI Resume Optimizer to beat ATS filters and get more callbacks.",
-    color: "text-indigo-400",
-    bg: "bg-indigo-500/10 border-indigo-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
   },
   {
     icon: Zap,
     title: "Craft the Perfect Cover Letter",
     tag: "3 min read",
     desc: "How to generate and personalise AI cover letters that match the job description every time.",
-    color: "text-amber-400",
-    bg: "bg-amber-500/10 border-amber-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
   },
   {
     icon: TrendingUp,
     title: "Track Your Applications",
     tag: "4 min read",
     desc: "Use the job tracker to stay organised, follow up on time, and never miss an opportunity.",
-    color: "text-emerald-400",
-    bg: "bg-emerald-500/10 border-emerald-500/20",
+    color: "text-white",
+    bg: "bg-[#111111] border-[#E0E0E0]",
   },
 ];
 
@@ -253,11 +253,11 @@ export default function HelpCenter() {
   return (
     <div style={{ minHeight: '100vh', overflowX: 'hidden', width: '100%' }} className="bg-background relative">
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-60px] left-[20%] w-[600px] h-[600px] rounded-full bg-indigo-500/10 blur-[160px]" />
-        <div className="absolute bottom-[10%] right-[-60px] w-[400px] h-[400px] rounded-full bg-purple-600/8 blur-[130px]" />
+        <div className="absolute top-[-60px] left-[20%] w-[600px] h-[600px] rounded-full bg-[#F7F7F7] blur-[160px]" />
+        <div className="absolute bottom-[10%] right-[-60px] w-[400px] h-[400px] rounded-full bg-[#F7F7F7] blur-[130px]" />
       </div>
       <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
-        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full bg-indigo-500/20 blur-[120px]" />
+        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full bg-[#F7F7F7] blur-[120px]" />
       </div>
 
       <Navbar />
@@ -267,23 +267,23 @@ export default function HelpCenter() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] mb-6"
         >
-          <Sparkles className="w-4 h-4 text-[#8B5CF6]" />
-          <span className="text-white/80 text-sm">Support & Guides</span>
+          <Sparkles className="w-4 h-4 text-black" />
+          <span className="text-[#222222] text-sm">Support & Guides</span>
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl md:text-5xl font-display font-extrabold mb-4 text-white"
+          className="text-4xl md:text-5xl font-display font-extrabold mb-4 text-black"
         >
           Help <span className="text-gradient">Center</span>
         </motion.h1>
-        <p className="text-white/60 mb-10 text-lg font-light">Find answers, explore guides, and get support for HirenextAI — we're here to help you land your dream job.</p>
+        <p className="text-[#555555] mb-10 text-lg font-light">Find answers, explore guides, and get support for HirenextAI — we're here to help you land your dream job.</p>
 
         {/* Search */}
         <div className="relative max-w-2xl mx-auto">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#888888]" />
           <input
             type="text"
             placeholder="Search for help (e.g. 'cover letter', 'billing', 'remote jobs')…"
@@ -292,15 +292,15 @@ export default function HelpCenter() {
             onClick={() => setIsFocused(true)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setTimeout(() => setIsFocused(false), 150)}
-            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-6 py-4 text-white placeholder:text-white/30 focus:outline-none focus:border-indigo-500/40 focus:bg-white/[0.07] transition-all text-sm"
+            className="w-full bg-[#F7F7F7] border border-[#E0E0E0] rounded-2xl pl-12 pr-6 py-4 text-black placeholder:text-[#888888] focus:outline-none focus:border-white focus:bg-[#F7F7F7] transition-all text-sm"
           />
           {isFocused && !search && (
-            <div className="absolute top-full left-0 right-0 mt-3 z-20 bg-background border border-white/10 rounded-2xl p-4 flex flex-wrap gap-2">
+            <div className="absolute top-full left-0 right-0 mt-3 z-20 bg-background border border-[#E0E0E0] rounded-2xl p-4 flex flex-wrap gap-2">
               {popularSearches.map((tag) => (
                 <div
                   key={tag}
                   onClick={() => setSearch(tag)}
-                  className="bg-white/5 border border-white/10 rounded-full text-white/50 text-xs px-3 py-1.5 cursor-pointer hover:text-white/80 transition-colors"
+                  className="bg-[#F7F7F7] border border-[#E0E0E0] rounded-full text-[#666666] text-xs px-3 py-1.5 cursor-pointer hover:text-[#222222] transition-colors"
                 >
                   {tag}
                 </div>
@@ -315,7 +315,7 @@ export default function HelpCenter() {
                 key={tag}
                 whileHover={{ scale: 1.05, y: -2 }}
                 onClick={() => setSearch(tag)}
-                className="bg-white/5 border border-white/10 rounded-full text-white/50 text-xs px-3 py-1.5 cursor-pointer hover:text-white/80 transition-colors"
+                className="bg-[#F7F7F7] border border-[#E0E0E0] rounded-full text-[#666666] text-xs px-3 py-1.5 cursor-pointer hover:text-[#222222] transition-colors"
               >
                 {tag}
               </motion.div>
@@ -335,8 +335,8 @@ export default function HelpCenter() {
                 transition={{ type: "spring", stiffness: 300 }}
                 className="glass-card p-5 text-center"
               >
-                <p className="text-2xl font-display font-extrabold text-white">{stat.value}</p>
-                <p className="text-xs text-white/40 mt-1">{stat.label}</p>
+                <p className="text-2xl font-display font-extrabold text-black">{stat.value}</p>
+                <p className="text-xs text-[#777777] mt-1">{stat.label}</p>
               </motion.div>
             ))}
           </div>
@@ -358,17 +358,17 @@ export default function HelpCenter() {
                   whileHover={{ y: -4 }}
                   className="glass-card p-6 relative"
                 >
-                  <span className="absolute top-5 right-5 bg-white/5 border border-white/10 text-white/30 text-[10px] rounded-full px-2 py-0.5">
+                  <span className="absolute top-5 right-5 bg-[#F7F7F7] border border-[#E0E0E0] text-[#888888] text-[10px] rounded-full px-2 py-0.5">
                     {cat.questions.length} questions
                   </span>
                   <div className={`w-10 h-10 rounded-xl border flex items-center justify-center mb-4 ${cat.bg}`}>
                     <cat.icon className={`w-5 h-5 ${cat.color}`} />
                   </div>
-                  <h3 className="font-semibold text-white mb-3">{cat.title}</h3>
+                  <h3 className="font-semibold text-black mb-3">{cat.title}</h3>
                   <ul className="space-y-2">
                     {cat.questions.map((q, j) => (
-                      <li key={j} onClick={() => { setSearch(q); setOpenFaq(0); }} className="flex items-start gap-2 text-sm text-white/50 hover:text-white/80 cursor-pointer transition-colors font-light">
-                        <ChevronRight className="w-3.5 h-3.5 mt-0.5 shrink-0 text-white/30" />
+                      <li key={j} onClick={() => { setSearch(q); setOpenFaq(0); }} className="flex items-start gap-2 text-sm text-[#666666] hover:text-[#222222] cursor-pointer transition-colors font-light">
+                        <ChevronRight className="w-3.5 h-3.5 mt-0.5 shrink-0 text-[#888888]" />
                         {q}
                       </li>
                     ))}
@@ -384,11 +384,11 @@ export default function HelpCenter() {
       {!search && (
         <section className="relative z-10 py-12 px-6 max-w-6xl mx-auto">
           <FadeUp className="text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6">
-              <PlayCircle className="w-4 h-4 text-[#8B5CF6]" />
-              <span className="text-white/80 text-sm">Quick Guides</span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F7F7F7] border border-[#E0E0E0] mb-6">
+              <PlayCircle className="w-4 h-4 text-black" />
+              <span className="text-[#222222] text-sm">Quick Guides</span>
             </div>
-            <h2 className="text-2xl font-display font-bold text-white text-center mb-8">Most Helpful Articles</h2>
+            <h2 className="text-2xl font-display font-bold text-black text-center mb-8">Most Helpful Articles</h2>
           </FadeUp>
           <div className="grid md:grid-cols-3 gap-5">
             {popularGuides.map((guide, index) => (
@@ -401,11 +401,11 @@ export default function HelpCenter() {
                   <div className={`w-10 h-10 rounded-xl border flex items-center justify-center mb-4 ${guide.bg}`}>
                     <guide.icon className={`w-5 h-5 ${guide.color}`} />
                   </div>
-                  <h3 className="font-semibold text-white mb-2">{guide.title}</h3>
-                  <span className="bg-white/5 border border-white/10 text-white/30 text-[10px] rounded-full px-2 py-0.5 inline-block mb-3">
+                  <h3 className="font-semibold text-black mb-2">{guide.title}</h3>
+                  <span className="bg-[#F7F7F7] border border-[#E0E0E0] text-[#888888] text-[10px] rounded-full px-2 py-0.5 inline-block mb-3">
                     {guide.tag}
                   </span>
-                  <p className="text-sm text-white/50 font-light leading-relaxed">{guide.desc}</p>
+                  <p className="text-sm text-[#666666] font-light leading-relaxed">{guide.desc}</p>
                 </motion.div>
               </FadeUp>
             ))}
@@ -416,7 +416,7 @@ export default function HelpCenter() {
       {/* FAQs */}
       <FadeUp>
         <section className="relative z-10 py-12 px-6 max-w-3xl mx-auto">
-          <h2 className="text-2xl font-display font-bold mb-8 text-center text-white">
+          <h2 className="text-2xl font-display font-bold mb-8 text-center text-black">
             {search ? `Results for "${search}"` : "Frequently Asked Questions"}
           </h2>
           <div className="space-y-3">
@@ -432,24 +432,24 @@ export default function HelpCenter() {
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full flex items-center justify-between px-6 py-4 text-left"
                 >
-                  <span className="text-sm font-medium text-white/90">{faq.q}</span>
+                  <span className="text-sm font-medium text-black">{faq.q}</span>
                   <motion.div
                     animate={{ rotate: openFaq === i ? 90 : 0 }}
                     transition={{ duration: 0.2 }}
                     className="shrink-0 ml-4"
                   >
-                    <ChevronRight className="w-4 h-4 text-white/40" />
+                    <ChevronRight className="w-4 h-4 text-[#777777]" />
                   </motion.div>
                 </button>
                 {openFaq === i && (
-                  <div className="px-6 pb-5 text-sm text-white/60 leading-relaxed border-t border-white/5 pt-4 font-light">
+                  <div className="px-6 pb-5 text-sm text-[#555555] leading-relaxed border-t border-[#E0E0E0] pt-4 font-light">
                     {faq.a}
                   </div>
                 )}
               </motion.div>
             ))}
             {search && filteredFaqs.length === 0 && (
-              <div className="text-center py-12 text-white/40 font-light">
+              <div className="text-center py-12 text-[#777777] font-light">
                 No results found. Try a different search term.
               </div>
             )}
@@ -472,24 +472,24 @@ export default function HelpCenter() {
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ repeat: Infinity, duration: 4 }}
             >
-              <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mx-auto mb-4">
-                <MessageCircle className="w-6 h-6 text-[#8B5CF6]" />
+              <div className="w-12 h-12 rounded-xl bg-[#F7F7F7] border border-[#E0E0E0] flex items-center justify-center mx-auto mb-4">
+                <MessageCircle className="w-6 h-6 text-black" />
               </div>
             </motion.div>
-            <h3 className="text-xl font-bold mb-2 text-white">Still need help?</h3>
-            <p className="text-white/50 mb-6 text-sm font-light">Can't find what you need? Our support team is real humans who actually care — typically responding within 24 hours.</p>
+            <h3 className="text-xl font-bold mb-2 text-black">Still need help?</h3>
+            <p className="text-[#666666] mb-6 text-sm font-light">Can't find what you need? Our support team is real humans who actually care — typically responding within 24 hours.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link to="/contact" className="btn-primary py-3 px-8 inline-flex items-center gap-2 text-white">
+              <Link to="/contact" className="btn-primary py-3 px-8 inline-flex items-center gap-2 text-black">
                 Contact Support
               </Link>
-              <a href="mailto:support@hirenextai.com" className="btn-secondary py-3 px-8 inline-flex items-center gap-2 text-white">
+              <a href="mailto:support@hirenextai.com" className="btn-secondary py-3 px-8 inline-flex items-center gap-2 text-black">
                 <Mail className="w-4 h-4" /> Email Us
               </a>
             </div>
             <div className="flex flex-wrap gap-4 justify-center mt-4">
               {["Typically replies in 24h", "Real human support", "Free for all users"].map((tag) => (
-                <span key={tag} className="inline-flex items-center gap-1 text-white/35 text-xs">
-                  <CheckCircle className="w-3.5 h-3.5 text-emerald-400/60" />
+                <span key={tag} className="inline-flex items-center gap-1 text-black/35 text-xs">
+                  <CheckCircle className="w-3.5 h-3.5 text-black" />
                   {tag}
                 </span>
               ))}

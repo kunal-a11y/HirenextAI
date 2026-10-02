@@ -96,6 +96,10 @@ router.post('/apply-with-ai', auth, checkCredits('weeklyApplyWithAI'), async (re
             [userId, title, company, location, salary, matchScore ?? match]
         );
 
+        // Deduct/log usage ONLY after successful DB insert
+        const { logAIUsage } = require('../middleware/checkCredits');
+        await logAIUsage(userId, 'weeklyApplyWithAI');
+
         res.json({ success: true, applicationId: result.insertId });
     } catch (err) {
         console.error("Save application tracker error:", err);

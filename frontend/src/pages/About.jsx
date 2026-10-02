@@ -35,13 +35,13 @@ function StatCard({ stat }) {
     <div ref={ref} className="about-stagger glass-card hover-glow p-6 text-center"
       onMouseEnter={(e) => anime({ targets: e.currentTarget, translateY: -4, duration: 250, easing: 'easeOutQuad' })}
       onMouseLeave={(e) => anime({ targets: e.currentTarget, translateY: 0, duration: 250, easing: 'easeOutQuad' })}>
-      <div className="mx-auto mb-4 flex h-9 w-9 items-center justify-center rounded-xl border border-[#1F1F1F] bg-[#111111]">
-        <Icon className="h-4 w-4 text-white/70" />
+      <div className="mx-auto mb-4 flex h-9 w-9 items-center justify-center rounded-xl border border-[#E0E0E0] bg-[#F7F7F7]">
+        <Icon className="h-4 w-4 text-[#444444]" />
       </div>
-      <p className="mb-2 text-3xl font-extrabold text-white">
+      <p className="mb-2 text-3xl font-extrabold text-black">
         {stat.countTarget ? stat.format(count) : stat.value}
       </p>
-      <p className="text-xs font-medium uppercase tracking-wide text-[#555555]">{stat.label}</p>
+      <p className="text-xs font-medium uppercase tracking-wide text-black">{stat.label}</p>
     </div>
   );
 }
@@ -112,19 +112,19 @@ export default function About() {
   }, []);
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-black text-white">
+    <div className="min-h-screen overflow-x-hidden bg-white text-black">
       <Navbar />
 
       <main className="relative">
         {/* Subtle background */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute left-[12%] top-24 h-[420px] w-[420px] rounded-full bg-white/[0.01] blur-[120px]" />
+          <div className="absolute left-[12%] top-24 h-[420px] w-[420px] rounded-full bg-[#F7F7F7] blur-[120px]" />
         </div>
 
         {/* Hero */}
         <div className="relative z-10 mx-auto max-w-5xl px-6 pb-16 pt-40 text-center">
-          <div className="about-animate mb-6 inline-flex items-center gap-2 rounded-full border border-[#1F1F1F] bg-[#111111] px-4 py-2 text-sm font-semibold text-[#999999]">
-            <Sparkles className="h-4 w-4 text-white/50" /> Our Story
+          <div className="about-animate mb-6 inline-flex items-center gap-2 rounded-full border border-[#E0E0E0] bg-[#F7F7F7] px-4 py-2 text-sm font-semibold text-black">
+            <Sparkles className="h-4 w-4 text-[#666666]" /> Our Story
           </div>
 
           <h1 className="mb-6 text-4xl font-extrabold leading-tight md:text-6xl">
@@ -137,7 +137,7 @@ export default function About() {
             <span className="about-word inline-block text-gradient">freshers</span>
           </h1>
 
-          <p className="about-animate mx-auto max-w-3xl text-base leading-relaxed text-[#999999] md:text-lg">
+          <p className="about-animate mx-auto max-w-3xl text-base leading-relaxed text-black md:text-lg">
             Founded in 2024 by Kunal Purohit — a developer who was tired of watching talented people fail at job hunting not because they lacked skill, but because they lacked the right tools.
           </p>
 
@@ -145,10 +145,10 @@ export default function About() {
             {featureTags.map((tag) => {
               const Icon = tag.icon;
               return (
-                <div key={tag.label} className="inline-flex items-center gap-2 rounded-full border border-[#1F1F1F] bg-[#111111] px-4 py-2 text-xs font-medium text-[#999999] transition-all hover:border-[#2A2A2A]"
+                <div key={tag.label} className="inline-flex items-center gap-2 rounded-full border border-[#E0E0E0] bg-[#F7F7F7] px-4 py-2 text-xs font-medium text-black transition-all hover:border-[#E0E0E0]"
                   onMouseEnter={(e) => anime({ targets: e.currentTarget, scale: 1.05, duration: 200, easing: 'easeOutQuad' })}
                   onMouseLeave={(e) => anime({ targets: e.currentTarget, scale: 1, duration: 200, easing: 'easeOutQuad' })}>
-                  <Icon className="h-3.5 w-3.5 text-white/50" />
+                  <Icon className="h-3.5 w-3.5 text-[#666666]" />
                   {tag.label}
                 </div>
               );
@@ -167,20 +167,20 @@ export default function About() {
         <div className="relative z-10 mx-auto max-w-5xl px-6 py-16">
           <div className="about-stagger glass-card relative overflow-hidden p-8 md:p-12">
             <div className="relative z-10">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#1F1F1F] bg-[#0D0D0D] px-3 py-1 text-xs font-bold text-white/60">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#E0E0E0] bg-[#F7F7F7] px-3 py-1 text-xs font-bold text-[#555555]">
                 <Target className="h-3.5 w-3.5" /> Our Mission
               </div>
               <h2 className="mb-5 max-w-3xl text-3xl font-bold leading-tight md:text-4xl">
                 Democratise Career Success for<br />
                 <span className="text-gradient">Every Job Seeker</span>
               </h2>
-              <p className="max-w-3xl text-base leading-relaxed text-[#999999]">
+              <p className="max-w-3xl text-base leading-relaxed text-black">
                 Whether you're a fresh graduate in Mumbai, a career switcher in London, or an experienced developer in New York — you deserve the same shot at landing your dream job.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 {missionTags.map((tag) => (
-                  <span key={tag} className="inline-flex items-center gap-2 rounded-full border border-[#1F1F1F] bg-[#0D0D0D] px-3 py-1.5 text-xs text-[#999999]">
-                    <CheckCircle className="h-3.5 w-3.5 text-[#22C55E]" /> {tag}
+                  <span key={tag} className="inline-flex items-center gap-2 rounded-full border border-[#E0E0E0] bg-[#F7F7F7] px-3 py-1.5 text-xs text-black">
+                    <CheckCircle className="h-3.5 w-3.5 text-black" /> {tag}
                   </span>
                 ))}
               </div>
@@ -191,11 +191,11 @@ export default function About() {
         {/* Values */}
         <section className="relative z-10 mx-auto max-w-6xl px-6 py-12">
           <div className="about-animate mb-12 text-center">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#1F1F1F] bg-[#111111] px-3 py-1 text-xs text-[#999999]">
-              <Sparkles className="h-3.5 w-3.5 text-white/50" /> Our Values
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#E0E0E0] bg-[#F7F7F7] px-3 py-1 text-xs text-black">
+              <Sparkles className="h-3.5 w-3.5 text-[#666666]" /> Our Values
             </div>
             <h2 className="mb-3 text-3xl font-bold md:text-4xl">What We Stand For</h2>
-            <p className="text-[#555555]">The principles that guide everything we build.</p>
+            <p className="text-black">The principles that guide everything we build.</p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
@@ -208,12 +208,12 @@ export default function About() {
                     anime({ targets: e.currentTarget.querySelector('.value-icon'), scale: [1, 1.2, 1], duration: 400, easing: 'easeOutElastic(1, .5)' });
                   }}
                   onMouseLeave={(e) => anime({ targets: e.currentTarget, translateY: 0, duration: 250, easing: 'easeOutQuad' })}>
-                  <span className="absolute right-5 top-5 rounded-full border border-[#1F1F1F] bg-[#0D0D0D] px-2.5 py-1 text-[10px] text-[#555555]">{value.tag}</span>
-                  <div className="value-icon mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-[#1F1F1F] bg-[#0D0D0D]">
-                    <Icon className="h-6 w-6 text-white/70" />
+                  <span className="absolute right-5 top-5 rounded-full border border-[#E0E0E0] bg-[#F7F7F7] px-2.5 py-1 text-[10px] text-black">{value.tag}</span>
+                  <div className="value-icon mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-[#E0E0E0] bg-[#F7F7F7]">
+                    <Icon className="h-6 w-6 text-[#444444]" />
                   </div>
-                  <h3 className="mb-3 text-lg font-bold text-white">{value.title}</h3>
-                  <p className="text-sm leading-relaxed text-[#999999]">{value.desc}</p>
+                  <h3 className="mb-3 text-lg font-bold text-black">{value.title}</h3>
+                  <p className="text-sm leading-relaxed text-black">{value.desc}</p>
                 </div>
               );
             })}
@@ -223,29 +223,29 @@ export default function About() {
         {/* Timeline */}
         <section className="relative z-10 mx-auto max-w-5xl px-6 py-16">
           <div className="about-animate mb-12 text-center">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#1F1F1F] bg-[#111111] px-3 py-1 text-xs text-[#999999]">
-              <Clock className="h-3.5 w-3.5 text-white/50" /> Our Journey
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#E0E0E0] bg-[#F7F7F7] px-3 py-1 text-xs text-black">
+              <Clock className="h-3.5 w-3.5 text-[#666666]" /> Our Journey
             </div>
             <h2 className="mb-3 text-3xl font-bold md:text-4xl">How We Got Here</h2>
-            <p className="text-[#555555]">From a single idea to 50,000+ job seekers worldwide.</p>
+            <p className="text-black">From a single idea to 50,000+ job seekers worldwide.</p>
           </div>
 
-          <div className="relative ml-4 space-y-6 border-l border-[#1F1F1F] pl-8">
+          <div className="relative ml-4 space-y-6 border-l border-[#E0E0E0] pl-8">
             {timeline.map((item) => {
               const Icon = item.icon;
               return (
                 <div key={item.title} className="about-stagger relative">
-                  <div className="absolute -left-[51px] top-6 flex h-9 w-9 items-center justify-center rounded-full border border-[#1F1F1F] bg-black">
-                    <Icon className="h-4 w-4 text-white/60" />
+                  <div className="absolute -left-[51px] top-6 flex h-9 w-9 items-center justify-center rounded-full border border-[#E0E0E0] bg-white">
+                    <Icon className="h-4 w-4 text-[#555555]" />
                   </div>
                   <div className="glass-card hover-glow p-6 transition-all"
                     onMouseEnter={(e) => anime({ targets: e.currentTarget, translateX: 4, duration: 200, easing: 'easeOutQuad' })}
                     onMouseLeave={(e) => anime({ targets: e.currentTarget, translateX: 0, duration: 200, easing: 'easeOutQuad' })}>
                     <div className="mb-3 flex flex-wrap items-center gap-3">
-                      <span className="rounded-full border border-[#1F1F1F] bg-[#0D0D0D] px-3 py-1 text-xs font-bold text-white/60">{item.year}</span>
-                      <h3 className="text-lg font-bold text-white">{item.title}</h3>
+                      <span className="rounded-full border border-[#E0E0E0] bg-[#F7F7F7] px-3 py-1 text-xs font-bold text-[#555555]">{item.year}</span>
+                      <h3 className="text-lg font-bold text-black">{item.title}</h3>
                     </div>
-                    <p className="text-sm leading-relaxed text-[#999999]">{item.desc}</p>
+                    <p className="text-sm leading-relaxed text-black">{item.desc}</p>
                   </div>
                 </div>
               );
@@ -260,27 +260,27 @@ export default function About() {
               <div className="flex justify-center">
                 <div className="relative">
                   <div className="rounded-full bg-gradient-to-br from-white/20 via-white/10 to-transparent p-[3px] shadow-[0_0_42px_rgba(255,255,255,0.05)]">
-                    <div className="h-32 w-32 overflow-hidden rounded-full border border-[#1F1F1F] bg-[#111111]">
+                    <div className="h-32 w-32 overflow-hidden rounded-full border border-[#E0E0E0] bg-[#F7F7F7]">
                       <img src="/founder.jpg" alt="Kunal Purohit" className="h-full w-full object-cover object-top" />
                     </div>
                   </div>
-                  <div className="absolute bottom-3 right-3 h-5 w-5 rounded-full border-[3px] border-black bg-[#22C55E] shadow-[0_0_18px_rgba(34,197,94,0.5)]" />
+                  <div className="absolute bottom-3 right-3 h-5 w-5 rounded-full border-[3px] border-black bg-[#F7F7F7] shadow-[0_0_18px_rgba(255,255,255,0.5)]" />
                 </div>
               </div>
               <div className="text-center md:text-left">
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#1F1F1F] bg-[#0D0D0D] px-3 py-1 text-xs font-bold text-white/60">
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#E0E0E0] bg-[#F7F7F7] px-3 py-1 text-xs font-bold text-[#555555]">
                   <Sparkles className="h-3.5 w-3.5" /> Founder & Developer
                 </div>
-                <h2 className="mb-2 text-3xl font-extrabold text-white">Kunal Purohit</h2>
-                <p className="mb-5 flex items-center justify-center gap-2 text-sm text-[#555555] md:justify-start">
-                  <MapPin className="h-4 w-4 text-white/40" /> Greater Noida, India
+                <h2 className="mb-2 text-3xl font-extrabold text-black">Kunal Purohit</h2>
+                <p className="mb-5 flex items-center justify-center gap-2 text-sm text-black md:justify-start">
+                  <MapPin className="h-4 w-4 text-[#777777]" /> Greater Noida, India
                 </p>
                 <div className="mb-5 flex flex-wrap justify-center gap-2 md:justify-start">
                   {founderSkills.map((skill) => (
-                    <span key={skill} className="rounded-full border border-[#1F1F1F] bg-[#0D0D0D] px-2.5 py-0.5 text-[10px] text-[#555555]">{skill}</span>
+                    <span key={skill} className="rounded-full border border-[#E0E0E0] bg-[#F7F7F7] px-2.5 py-0.5 text-[10px] text-black">{skill}</span>
                   ))}
                 </div>
-                <p className="max-w-2xl text-sm leading-relaxed text-[#999999] md:text-base">
+                <p className="max-w-2xl text-sm leading-relaxed text-black md:text-base">
                   Built HirenextAI with the vision to make job searching smarter and faster for job seekers worldwide.
                 </p>
               </div>
@@ -291,19 +291,19 @@ export default function About() {
         {/* CTA */}
         <div className="relative z-10 mx-auto max-w-4xl px-6 py-16 text-center">
           <div className="about-stagger glass-card overflow-hidden p-8 md:p-12">
-            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-[#1F1F1F] bg-[#0D0D0D]">
-              <Rocket className="h-6 w-6 text-white/70" />
+            <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-[#E0E0E0] bg-[#F7F7F7]">
+              <Rocket className="h-6 w-6 text-[#444444]" />
             </div>
             <h2 className="mb-4 text-3xl font-bold md:text-4xl">Ready to Land Your Dream Job?</h2>
-            <p className="mb-8 text-[#999999]">Join 50,000+ job seekers worldwide already using HirenextAI.</p>
+            <p className="mb-8 text-black">Join 50,000+ job seekers worldwide already using HirenextAI.</p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Link to="/register" className="btn-primary px-8 py-3">Get Started Free <ArrowRight className="h-4 w-4" /></Link>
               <Link to="/features" className="btn-secondary px-8 py-3">See Features</Link>
             </div>
             <div className="mt-6 flex flex-wrap justify-center gap-4">
               {ctaTrustTags.map((tag) => (
-                <span key={tag} className="inline-flex items-center gap-1.5 text-xs text-[#555555]">
-                  <CheckCircle className="h-3.5 w-3.5 text-[#22C55E]/60" /> {tag}
+                <span key={tag} className="inline-flex items-center gap-1.5 text-xs text-black">
+                  <CheckCircle className="h-3.5 w-3.5 text-[#555555]" /> {tag}
                 </span>
               ))}
             </div>

@@ -22,18 +22,27 @@ const PROFILE_URL_RULES = {
 function normalizeProfileUrl(value, field) {
   if (value === undefined) return undefined;
   const trimmed = String(value || '').trim();
+  
+  const rule = PROFILE_URL_RULES[field];
   if (!trimmed) {
-    throw new Error(`${rule.label} profile URL is required.`);
+    return null;
   }
 
-  const rule = PROFILE_URL_RULES[field];
   if (!rule) return xss(trimmed);
+
+  // If indeedUrl or naukriUrl, accept email addresses as well
+  if (field === 'indeedUrl' || field === 'naukriUrl') {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailRegex.test(trimmed)) {
+      return xss(trimmed);
+    }
+  }
 
   let parsed;
   try {
     parsed = new URL(trimmed);
   } catch {
-    throw new Error(`Enter a valid ${rule.label} profile URL.`);
+    throw new Error(`Enter a valid ${rule.label} profile URL or email.`);
   }
 
   const host = parsed.hostname.toLowerCase();

@@ -4,6 +4,10 @@ const RULES = [
   { folderId: 'cover-letters', keywords: ['cover letter', 'dear hiring', 'application letter'] },
   { folderId: 'resumes', keywords: ['resume', 'curriculum vitae', 'work experience', 'professional summary'] },
   { folderId: 'job-descriptions', keywords: ['job description', 'responsibilities:', 'requirements:', 'role overview'] },
+  { folderId: 'recruiter-messages', keywords: ['recruiter message', 'cold outreach', 'outreach message', 'message to recruiter', 'linkedin outreach', 'subject:'] },
+  { folderId: 'mind-maps', keywords: ['career roadmap', 'skills path', 'career path', 'roadmap details', 'roadmap:'] },
+  { folderId: 'interview-notes', keywords: ['interview questions', 'interview prep', 'interview preparation', 'question 1:', 'q&a'] },
+  { folderId: 'job-reports', keywords: ['job report', 'market analysis', 'salary report', 'job search results', 'search analysis'] },
 ];
 
 export function autoSaveFromAIResponse(content, meta = {}) {

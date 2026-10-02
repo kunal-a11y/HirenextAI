@@ -6,7 +6,7 @@ export default function LoginSuccess() {
 
   if (token) {
     localStorage.setItem("token", token);
-    window.location.href = "/chat";
+    window.location.href = `/auth/callback?token=${encodeURIComponent(token)}`;
   } else {
     window.location.href = "/login";
   }

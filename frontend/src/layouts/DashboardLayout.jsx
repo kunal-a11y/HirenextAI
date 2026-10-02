@@ -23,13 +23,13 @@ const DashboardLayout = () => {
 
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden font-sans">
-      
+
       {/* LEFT SIDEBAR */}
-      <div 
-        className={`${isCollapsed ? 'w-[60px]' : 'w-[260px]'} bg-sidebar border-r border-white/5 flex flex-col justify-between hidden md:flex shrink-0 transition-all duration-300 ease-in-out`}
+      <div
+        className={`${isCollapsed ? 'w-[60px]' : 'w-[260px]'} bg-sidebar border-r border-[#E0E0E0] flex flex-col justify-between hidden md:flex shrink-0 transition-all duration-300 ease-in-out`}
       >
         <div className="flex flex-col h-full overflow-hidden">
-          
+
           {/* Top Header */}
           <div className={`pt-4 pb-2 flex items-center shrink-0 ${isCollapsed ? 'px-2 justify-center' : 'px-4 justify-between'}`}>
             {!isCollapsed && (
@@ -37,9 +37,9 @@ const DashboardLayout = () => {
                 <span className="font-semibold text-[15px] tracking-tight">HirenextAI</span>
               </div>
             )}
-            <button 
+            <button
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="p-1.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-md transition-colors"
+              className="p-1.5 text-black hover:text-black hover:bg-[#F2F2F2] hover:text-black rounded-md transition-colors"
             >
               {isCollapsed ? <PanelLeftOpen size={18} strokeWidth={1.5} /> : <PanelLeftClose size={18} strokeWidth={1.5} />}
             </button>
@@ -47,9 +47,9 @@ const DashboardLayout = () => {
 
           {/* New Chat Button */}
           <div className="px-3 py-2 shrink-0">
-            <Link 
-              to="/dashboard/chat" 
-              className={`w-full flex items-center bg-white/5 hover:bg-white/10 border border-white/5 rounded-lg transition-colors font-medium ${isCollapsed ? 'justify-center py-2 px-0' : 'gap-2 px-3 py-2 text-sm'}`}
+            <Link
+              to="/dashboard/chat"
+              className={`w-full flex items-center bg-[#F7F7F7] hover:bg-[#F2F2F2] hover:text-black border border-[#E0E0E0] rounded-lg transition-colors font-medium ${isCollapsed ? 'justify-center py-2 px-0' : 'gap-2 px-3 py-2 text-sm'}`}
             >
               <Plus size={16} strokeWidth={2} />
               {!isCollapsed && <span>{t('New Chat')}</span>}
@@ -62,10 +62,10 @@ const DashboardLayout = () => {
               {navItems.map((item) => {
                 const isActive = location.pathname === item.path;
                 return (
-                  <Link 
+                  <Link
                     key={item.name}
-                    to={item.path} 
-                    className={`flex items-center rounded-lg transition-colors ${isActive ? 'bg-white/10 text-white font-medium' : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'} ${isCollapsed ? 'justify-center py-2 px-0' : 'gap-3 px-3 py-2 text-sm'}`}
+                    to={item.path}
+                    className={`flex items-center rounded-lg transition-colors ${isActive ? 'bg-[#F7F7F7] text-black font-medium' : 'text-black hover:text-black hover:bg-[#F2F2F2] hover:text-black'} ${isCollapsed ? 'justify-center py-2 px-0' : 'gap-3 px-3 py-2 text-sm'}`}
                     title={isCollapsed ? t(item.translationKey) : undefined}
                   >
                     <item.icon size={16} strokeWidth={1.5} />
@@ -79,7 +79,7 @@ const DashboardLayout = () => {
           {/* Recents */}
           {!isCollapsed && (
             <div className="px-3 mt-6 flex-1 overflow-y-auto">
-              <p className="text-[11px] font-medium text-gray-500 uppercase tracking-widest px-3 mb-2">Recents</p>
+              <p className="text-[11px] font-medium text-[#666666] uppercase tracking-widest px-3 mb-2">Recents</p>
               <div className="space-y-0.5">
                 {[
                   "Senior React Developer roles",
@@ -88,7 +88,7 @@ const DashboardLayout = () => {
                   "Salary negotiation advice",
                   "Remote jobs in Europe"
                 ].map((title, idx) => (
-                  <div key={idx} className="px-3 py-1.5 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-white/5 cursor-pointer text-[13px] truncate transition-colors">
+                  <div key={idx} className="px-3 py-1.5 rounded-lg text-black hover:text-black hover:bg-[#F2F2F2] hover:text-black cursor-pointer text-[13px] truncate transition-colors">
                     {title}
                   </div>
                 ))}
@@ -99,26 +99,26 @@ const DashboardLayout = () => {
 
         {/* Bottom User Profile */}
         <div className="p-3 shrink-0">
-          <div className={`flex items-center rounded-xl hover:bg-white/5 transition-colors cursor-pointer group ${isCollapsed ? 'justify-center p-2' : 'justify-between p-2'}`}>
+          <div className={`flex items-center rounded-xl hover:bg-[#F2F2F2] hover:text-black transition-colors cursor-pointer group ${isCollapsed ? 'justify-center p-2' : 'justify-between p-2'}`}>
             <div className="flex items-center gap-3 overflow-hidden">
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs font-medium shrink-0 text-white border border-white/5">
+              <div className="w-8 h-8 rounded-full bg-[#F7F7F7] flex items-center justify-center text-xs font-medium shrink-0 text-black border border-[#E0E0E0]">
                 JD
               </div>
               {!isCollapsed && (
                 <div className="overflow-hidden">
-                  <p className="text-[13px] font-medium text-gray-200 truncate group-hover:text-white">John Doe</p>
-                  <p className="text-[11px] text-gray-500">{getPlanDisplay(user.plan)}</p>
+                  <p className="text-[13px] font-medium text-black truncate group-hover:text-black">John Doe</p>
+                  <p className="text-[11px] text-[#666666]">{getPlanDisplay(user.plan)}</p>
                 </div>
               )}
             </div>
             {!isCollapsed && (
               <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button className="p-1.5 text-gray-400 hover:text-white rounded-md hover:bg-white/10 transition-colors">
+                <button className="p-1.5 text-black hover:text-black rounded-md hover:bg-[#F2F2F2] hover:text-black transition-colors">
                   <Download size={14} strokeWidth={2} />
                 </button>
-                <button 
+                <button
                   onClick={(e) => { e.preventDefault(); setIsSettingsOpen(true); }}
-                  className="p-1.5 text-gray-400 hover:text-white rounded-md hover:bg-white/10 transition-colors"
+                  className="p-1.5 text-black hover:text-black rounded-md hover:bg-[#F2F2F2] hover:text-black transition-colors"
                 >
                   <Settings size={14} strokeWidth={2} />
                 </button>
@@ -127,9 +127,9 @@ const DashboardLayout = () => {
           </div>
           {isCollapsed && (
              <div className="mt-2 flex flex-col items-center gap-1">
-               <button 
+               <button
                   onClick={(e) => { e.preventDefault(); setIsSettingsOpen(true); }}
-                  className="p-1.5 text-gray-400 hover:text-white rounded-md hover:bg-white/10 transition-colors"
+                  className="p-1.5 text-black hover:text-black rounded-md hover:bg-[#F2F2F2] hover:text-black transition-colors"
                   title="Settings"
                 >
                   <Settings size={14} strokeWidth={2} />

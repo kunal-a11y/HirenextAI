@@ -1,13 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 import useUserStore from "../store/useUserStore";
 import useUIStore from "../store/useUIStore";
 import api from "../lib/api";
-import anime from "animejs/lib/anime.es.js";
 import {
   Loader2, Mail, Lock, User, Phone, ArrowRight, Eye, EyeOff,
-  Sparkles, Briefcase, Building2, Target, Rocket, Zap, CheckCircle
+  Sparkles, Shield, Globe, CheckCircle
 } from "lucide-react";
 import { Logo } from "../components/Logo";
 import { DemoRoleModal } from "../components/DemoRoleModal";
@@ -16,8 +15,8 @@ import OTPVerification from "../components/auth/OTPVerification";
 
 function InputRow({ icon: Icon, type, name, placeholder, value, onChange, required, minLength, autoFocus, rightElement }) {
   return (
-    <div className="group flex items-center gap-3 rounded-[10px] border border-[#1F1F1F] bg-[#0D0D0D] px-4 py-3.5 transition-all duration-200 focus-within:border-[#444444] focus-within:shadow-[0_0_0_3px_rgba(255,255,255,0.05)]">
-      <Icon className="h-4 w-4 shrink-0 text-[#555555] transition-colors duration-200 group-focus-within:text-white/60" />
+    <div className="group flex items-center gap-3 rounded-xl border border-[#EAEAEA] bg-[#FFFFFF] px-4 py-3 transition-all duration-300 focus-within:border-black focus-within:shadow-[0_0_0_3px_rgba(0,0,0,0.05)]">
+      <Icon className="h-4 w-4 shrink-0 text-black/60 transition-colors duration-300 group-focus-within:text-black" />
       <input
         type={type}
         name={name}
@@ -27,7 +26,7 @@ function InputRow({ icon: Icon, type, name, placeholder, value, onChange, requir
         onChange={onChange}
         placeholder={placeholder}
         autoFocus={autoFocus}
-        className="min-w-0 flex-1 bg-transparent text-sm leading-none text-white placeholder:text-[#333333] focus:outline-none"
+        className="min-w-0 flex-1 bg-transparent text-sm leading-none text-black placeholder:text-[#AAAAAA] focus:outline-none"
       />
       {rightElement}
     </div>
@@ -38,26 +37,27 @@ export default function Auth() {
   const { login, signup, isLoading, setDemoMode } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const defaultMode = location.pathname.startsWith("/register") ? "signup" : "signin";
   const [mode, setMode] = useState(defaultMode);
-  const [emailStep, setEmailStep] = useState("idle");
   const [phoneStep, setPhoneStep] = useState("idle");
-  const [role, setRole] = useState("job_seeker");
+  const [role] = useState("job_seeker");
+  const [adminEmail, setAdminEmail] = useState("");
+  const [isAdmin2FA, setIsAdmin2FA] = useState(false);
   const [demoModalOpen, setDemoModalOpen] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [otpHint, setOtpHint] = useState(null);
   const [otpArray, setOtpArray] = useState(Array(6).fill(""));
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const otpRefs = useRef([]);
-  const leftPanelRef = useRef(null);
-  const formRef = useRef(null);
+  const [agreeTerms, setAgreeTerms] = useState(false);
 
   useEffect(() => { setOtp(otpArray.join("")); }, [otpArray]);
   const [error, setError] = useState("");
@@ -65,7 +65,6 @@ export default function Auth() {
   const [forgotPasswordMode, setForgotPasswordMode] = useState(false);
   const [isSendingReset, setIsSendingReset] = useState(false);
   const { showToast } = useUIStore();
-  const emailInputRef = useRef(null);
   const API = import.meta.env.VITE_API_URL ?? "/api";
   const demoEnabled = true;
 
@@ -83,51 +82,7 @@ export default function Auth() {
   }, [password]);
 
   const strengthLabel = passwordStrength <= 25 ? "Weak" : passwordStrength <= 50 ? "Fair" : passwordStrength <= 75 ? "Good" : "Strong";
-  const strengthColor = passwordStrength <= 25 ? "#EF4444" : passwordStrength <= 50 ? "#F59E0B" : passwordStrength <= 75 ? "#EAB308" : "#22C55E";
-
-  // Anime.js stagger animation for left panel features
-  useEffect(() => {
-    if (leftPanelRef.current) {
-      anime({
-        targets: '.auth-feature-item',
-        opacity: [0, 1],
-        translateX: [-20, 0],
-        duration: 500,
-        easing: 'easeOutExpo',
-        delay: anime.stagger(120, { start: 300 })
-      });
-      anime({
-        targets: '.auth-left-heading',
-        opacity: [0, 1],
-        translateY: [20, 0],
-        duration: 600,
-        easing: 'easeOutExpo',
-        delay: 100
-      });
-      anime({
-        targets: '.auth-left-stat',
-        opacity: [0, 1],
-        scale: [0.9, 1],
-        duration: 500,
-        easing: 'easeOutBack',
-        delay: 700
-      });
-    }
-  }, [mode]);
-
-  // Anime.js stagger for form elements
-  useEffect(() => {
-    if (formRef.current) {
-      anime({
-        targets: '.auth-form-element',
-        opacity: [0, 1],
-        translateY: [15, 0],
-        duration: 400,
-        easing: 'easeOutExpo',
-        delay: anime.stagger(60, { start: 150 })
-      });
-    }
-  }, [mode, forgotPasswordMode]);
+  const strengthColor = passwordStrength <= 25 ? "#DC2626" : passwordStrength <= 50 ? "#EA580C" : passwordStrength <= 75 ? "#EAB308" : "#16A34A";
 
   const handleForgotPasswordSubmit = async (e) => {
     e.preventDefault();
@@ -148,24 +103,16 @@ export default function Auth() {
     setMode(location.pathname.startsWith("/register") ? "signup" : "signin");
   }, [location.pathname]);
 
-  useEffect(() => {
-    if (phoneStep !== "idle" || emailStep !== "form") return;
-    const frame = window.requestAnimationFrame(() => {
-      emailInputRef.current?.focus();
-      emailInputRef.current?.select();
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [emailStep, phoneStep]);
-
   const reset = (newMode) => {
     setMode(newMode);
-    setEmailStep("idle");
     setPhoneStep("idle");
     setForgotPasswordMode(false);
     setError("");
     setName("");
     setEmail("");
     setPassword("");
+    setConfirmPassword("");
+    setAgreeTerms(false);
     setPhone("");
     setOtp("");
     setOtpArray(Array(6).fill(""));
@@ -176,18 +123,42 @@ export default function Auth() {
     const params = new URLSearchParams(location.search);
     const redirect = params.get("redirect");
     const redirectState = location.state?.redirectAfter;
+    
+    const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+    const isAdmin = storedUser?.role === 'admin' || storedUser?.role === 'owner';
+
     if (redirectState) navigate(redirectState);
     else if (redirect) navigate(redirect);
+    else if (isAdmin) navigate("/admin");
     else navigate("/chat");
   };
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (mode === "signup") {
+      if (password !== confirmPassword) {
+        setError("Passwords do not match.");
+        return;
+      }
+      if (!agreeTerms) {
+        setError("You must agree to the Terms and Privacy Policy.");
+        return;
+      }
+    }
+
     try {
       if (mode === "signin") {
         const res = await login(email, password);
-        if (res.success) redirectAfterAuth();
+        if (res.success) {
+          if (res.requiresOTP) {
+            setAdminEmail(res.email);
+            setIsAdmin2FA(true);
+          } else {
+            redirectAfterAuth();
+          }
+        }
         else setError(res.error || "Login failed. Please check your credentials.");
       } else {
         const res = await signup(name, email, password);
@@ -203,6 +174,10 @@ export default function Auth() {
     setGoogleLoading(true);
     const roleQuery = mode === "signup" ? `?role=${role}` : "";
     window.location.href = `${API}/auth/google${roleQuery}`;
+  };
+
+  const handleLinkedInLogin = () => {
+    window.location.href = `${API}/auth/linkedin`;
   };
 
   const handleSendOtp = async (e) => {
@@ -254,255 +229,326 @@ export default function Auth() {
     return <OTPVerification phone={phone} onVerify={handlePhoneVerifySuccess} onResend={() => handleSendOtp()} />;
   }
 
-  const features = [
-    { icon: Target, text: "Track every job application" },
-    { icon: Zap, text: "Practice with AI interviews" },
-    { icon: Rocket, text: "Get hired 3x faster" },
-  ];
+  if (isAdmin2FA) {
+    return (
+      <OTPVerification
+        email={adminEmail}
+        isAdminFlow={true}
+        onVerify={handlePhoneVerifySuccess}
+        onResend={async () => {
+          try {
+            await api.post('/api/admin/send-otp', { email: adminEmail });
+            showToast("2FA Code resent to your email.");
+          } catch (err) {
+            showToast(err.response?.data?.error || "Resend failed.");
+          }
+        }}
+      />
+    );
+  }
 
   return (
-    <div className="relative flex min-h-screen overflow-hidden bg-black">
-      {/* Left Decorative Panel - Hidden on mobile */}
-      <div ref={leftPanelRef} className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 relative overflow-hidden"
-        style={{ background: '#000000', backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
-        
-        {/* Decorative gradient blob */}
-        <div className="absolute top-[20%] left-[10%] w-[400px] h-[400px] rounded-full bg-white/[0.02] blur-[120px] pointer-events-none" />
-        
-        <div className="relative z-10">
-          <div className="auth-left-heading">
-            <h2 className="text-3xl font-display font-bold text-white mb-3 leading-tight">
-              Your AI Career<br />Assistant
-            </h2>
-            <p className="text-[#555555] text-sm max-w-[300px]">Everything you need to land your dream job, powered by AI.</p>
-          </div>
-
-          <div className="mt-12 space-y-5">
-            {features.map((feat, i) => {
-              const FIcon = feat.icon;
-              return (
-                <div key={i} className="auth-feature-item flex items-center gap-4 opacity-0">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#1F1F1F] bg-[#111111]">
-                    <FIcon className="h-5 w-5 text-white/70" />
-                  </div>
-                  <span className="text-sm font-medium text-white/80">{feat.text}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="auth-left-stat opacity-0 relative z-10">
-          <div className="flex items-center gap-3 rounded-xl border border-[#1F1F1F] bg-[#111111] px-5 py-4 max-w-[280px]">
-            <div className="flex -space-x-2">
-              {['bg-blue-500', 'bg-green-500', 'bg-amber-500'].map((bg, i) => (
-                <div key={i} className={`w-7 h-7 rounded-full ${bg} border-2 border-black flex items-center justify-center text-[9px] font-bold text-white`}>
-                  {['K', 'A', 'R'][i]}
-                </div>
-              ))}
-            </div>
-            <div>
-              <p className="text-xs font-bold text-white">10,000+ students</p>
-              <p className="text-[10px] text-[#555555]">trust HirenextAI</p>
-            </div>
-          </div>
-        </div>
+    <div className="relative flex flex-col lg:flex-row w-full h-screen lg:overflow-hidden bg-white text-black">
+      
+      {/* Top Left Logo Branding */}
+      <div className="absolute top-6 left-6 md:top-8 md:left-8 z-30">
+        <motion.a
+          href="/"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="inline-block text-black hover:text-black/80 font-syne"
+        >
+          <Logo size="sm" showText={true} />
+        </motion.a>
       </div>
 
-      {/* Right Form Panel */}
-      <div className="flex-1 flex flex-col items-center justify-center p-6 lg:p-12 relative">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute right-[-10%] top-[15%] h-[400px] w-[400px] rounded-full bg-white/[0.015] blur-[120px]" />
-        </div>
+      {/* Left Panel - Hero Section */}
+      <div className="relative w-full lg:w-1/2 h-[35vh] lg:h-full overflow-hidden z-10 select-none flex-shrink-0">
+        {/* Simple fade-in without scaling/zooming to prevent billboard/branding cropping */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          className="absolute inset-0 w-full h-full"
+        >
+          <img 
+            src="/hero-sketch-v2.png" 
+            alt="HirenextAI City Sketch" 
+            className="w-full h-full object-fill block"
+          />
+        </motion.div>
+        {/* 10% White Overlay */}
+        <div className="absolute inset-0 bg-white/10 pointer-events-none z-20" />
+      </div>
 
-        <div ref={formRef} className="relative z-10 w-full max-w-[400px]">
-          {/* Logo */}
-          <div className="auth-form-element mb-8 text-center">
-            <a href="/" className="block cursor-pointer transition-opacity hover:opacity-80">
-              <Logo size="md" />
-            </a>
-          </div>
-
-          <div className="auth-form-element mb-6 text-center">
-            <h1 className="font-display text-[1.5rem] font-bold text-white">
-              {mode === "signin" ? "Welcome back" : "Create your account"}
+      {/* Right Panel - Form Container */}
+      <div className="flex-1 flex flex-col items-center py-12 px-6 lg:px-16 lg:py-16 bg-white relative z-20 h-[65vh] lg:h-full lg:overflow-y-auto">
+        <div className="w-full max-w-[420px] flex flex-col my-auto">
+          
+          {/* Header */}
+          <div className="mb-6 text-left">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#8B5CF6]/5 border border-[#8B5CF6]/10 text-[#7C3AED] text-[10px] font-bold tracking-wider uppercase mb-3.5">
+              {mode === "signin" ? "WELCOME BACK" : "GET STARTED"}
+            </span>
+            <h1 className="font-display text-2xl md:text-3xl font-extrabold text-black leading-tight">
+              {mode === "signin" ? "Sign In To Continue" : "Create Your Account"}
             </h1>
-            <p className="mt-1.5 text-sm text-[#555555]">
-              {mode === "signin" ? "Sign in to your account" : "Start your AI-powered job search"}
+            <p className="mt-1.5 text-sm text-gray-500 font-light">
+              {mode === "signin" 
+                ? "Access your AI-powered career workspace." 
+                : "Join HirenextAI and land your dream job."}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-[#1F1F1F] bg-[#111111] p-7">
+          {/* Form Card */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="rounded-[20px] border border-[#EAEAEA] bg-[#FAFAFA]/40 p-6 sm:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.01)] backdrop-blur-md"
+          >
+            {/* Error Message */}
             <AnimatePresence>
               {error && (
                 <motion.div
                   key="error"
-                  initial={{ opacity: 0, height: 0, marginBottom: 0 }}
-                  animate={{ opacity: 1, height: "auto", marginBottom: 16 }}
-                  exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-                  className="overflow-hidden rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden rounded-xl border border-red-200 bg-red-50/50 px-4 py-3 text-xs text-red-600 mb-4 font-semibold"
                 >
                   {error}
                 </motion.div>
               )}
             </AnimatePresence>
 
-            <div className="space-y-4">
-              {phoneStep === "idle" ? (
-                <>
-                  {forgotPasswordMode ? (
-                    <form onSubmit={handleForgotPasswordSubmit} className="space-y-3">
-                      <div className="auth-form-element group flex items-center gap-3 rounded-[10px] border border-[#1F1F1F] bg-[#0D0D0D] px-4 py-3.5 transition-all duration-200 focus-within:border-[#444444] focus-within:shadow-[0_0_0_3px_rgba(255,255,255,0.05)]">
-                        <Mail className="h-4 w-4 shrink-0 text-[#555555]" />
-                        <input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address" className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-[#333333] focus:outline-none" />
-                      </div>
-                      <button type="submit" disabled={isSendingReset} className="auth-form-element mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3.5 text-sm font-semibold text-black transition-all duration-200 hover:bg-white/90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50">
-                        {isSendingReset ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Send Reset Link <ArrowRight className="h-4 w-4" /></>}
-                      </button>
-                      <button type="button" onClick={() => { setForgotPasswordMode(false); setError(""); }} className="w-full py-1 text-center text-xs text-[#555555] transition-colors hover:text-white/60">
-                        ← Back to login
-                      </button>
-                    </form>
+            {forgotPasswordMode ? (
+              <form onSubmit={handleForgotPasswordSubmit} className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-[#444444] ml-1">Email Address</label>
+                  <InputRow icon={Mail} type="email" name="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required />
+                </div>
+                
+                <motion.button 
+                  type="submit" 
+                  disabled={isSendingReset}
+                  whileHover={{ scale: 1.01, y: -1 }}
+                  whileTap={{ scale: 0.99 }}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-black py-3.5 text-sm font-semibold text-white transition-all hover:bg-black/90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
+                >
+                  {isSendingReset ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
-                    <form onSubmit={handleEmailSubmit} className="space-y-3">
-                      {mode === "signup" && (
-                        <div className="auth-form-element">
-                          <InputRow icon={User} type="text" name="name" placeholder="Full name" value={name} onChange={e => setName(e.target.value)} required />
-                        </div>
-                      )}
-
-                      <div className="auth-form-element">
-                        <div className="group flex items-center gap-3 rounded-[10px] border border-[#1F1F1F] bg-[#0D0D0D] px-4 py-3.5 transition-all duration-200 focus-within:border-[#444444] focus-within:shadow-[0_0_0_3px_rgba(255,255,255,0.05)]">
-                          <Mail className="h-4 w-4 shrink-0 text-[#555555] transition-colors duration-200 group-focus-within:text-white/60" />
-                          <input ref={emailInputRef} type="email" name="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" autoFocus={mode === "signin"} className="min-w-0 flex-1 bg-transparent text-sm leading-none text-white placeholder:text-[#333333] focus:outline-none" />
-                        </div>
-                      </div>
-
-                      <div className="auth-form-element">
-                        <InputRow
-                          icon={Lock}
-                          type={showPassword ? "text" : "password"}
-                          name="password"
-                          placeholder="Password"
-                          value={password}
-                          onChange={e => setPassword(e.target.value)}
-                          required
-                          minLength={6}
-                          rightElement={
-                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[#555555] hover:text-white/60 transition-colors">
-                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
-                          }
-                        />
-                      </div>
-
-                      {/* Password strength bar for signup */}
-                      {mode === "signup" && password.length > 0 && (
-                        <div className="auth-form-element">
-                          <div className="flex items-center gap-3">
-                            <div className="flex-1 h-1.5 rounded-full bg-[#1F1F1F] overflow-hidden">
-                              <div className="h-full rounded-full transition-all duration-300" style={{ width: `${passwordStrength}%`, background: strengthColor }} />
-                            </div>
-                            <span className="text-[10px] font-semibold" style={{ color: strengthColor }}>{strengthLabel}</span>
-                          </div>
-                        </div>
-                      )}
-
-                      {mode === "signin" && (
-                        <div className="auth-form-element text-left mt-1">
-                          <button type="button" onClick={() => { setForgotPasswordMode(true); setError(""); }} className="text-xs text-[#555555] transition-colors hover:text-white/70">
-                            Forgot password?
-                          </button>
-                        </div>
-                      )}
-
-                      <button type="submit" disabled={isLoading} className="auth-form-element mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3.5 text-sm font-semibold text-black transition-all duration-200 hover:bg-white/90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50">
-                        {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <>{mode === "signin" ? "Sign In" : "Create Account"} <ArrowRight className="h-4 w-4" /></>}
-                      </button>
-                    </form>
+                    <>Send Reset Link <ArrowRight className="h-4 w-4" /></>
                   )}
-
-                  {/* Divider */}
-                  <div className="auth-form-element flex items-center gap-3 py-1">
-                    <div className="h-px flex-1 bg-[#1F1F1F]" />
-                    <span className="text-[11px] font-medium uppercase tracking-wider text-[#333333]">or</span>
-                    <div className="h-px flex-1 bg-[#1F1F1F]" />
+                </motion.button>
+                
+                <button type="button" onClick={() => { setForgotPasswordMode(false); setError(""); }} className="w-full py-1 text-center text-xs text-gray-500 hover:text-black transition-colors focus:outline-none cursor-pointer">
+                  ← Back to login
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleEmailSubmit} className="space-y-4">
+                {mode === "signup" && (
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-[#444444] ml-1">Full Name</label>
+                    <InputRow icon={User} type="text" name="name" placeholder="John Doe" value={name} onChange={e => setName(e.target.value)} required />
                   </div>
+                )}
 
-                  {/* Google Button */}
-                  <div className="auth-form-element">
-                    <button onClick={handleGoogleLogin} disabled={googleLoading} className="flex w-full items-center justify-center gap-3 rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] py-3.5 text-sm font-medium text-white transition-all duration-200 hover:bg-[#161616] hover:border-[#2A2A2A]">
-                      <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                      </svg>
-                      Continue with Google
-                      {googleLoading && <Loader2 className="h-3.5 w-3.5 animate-spin text-white/40" />}
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-[#444444] ml-1">Email Address</label>
+                  <InputRow icon={Mail} type="email" name="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} required />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-[#444444] ml-1">Password</label>
+                  <InputRow
+                    icon={Lock}
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    rightElement={
+                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-black/40 hover:text-black transition-colors focus:outline-none">
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    }
+                  />
+                </div>
+
+                {/* Confirm Password (Signup only) */}
+                {mode === "signup" && (
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-[#444444] ml-1">Confirm Password</label>
+                    <InputRow
+                      icon={Lock}
+                      type={showConfirmPassword ? "text" : "password"}
+                      name="confirmPassword"
+                      placeholder="••••••••"
+                      value={confirmPassword}
+                      onChange={e => setConfirmPassword(e.target.value)}
+                      required
+                      minLength={6}
+                      rightElement={
+                        <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="text-black/40 hover:text-black transition-colors focus:outline-none">
+                          {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      }
+                    />
+                  </div>
+                )}
+
+                {/* Password strength bar for signup */}
+                {mode === "signup" && password.length > 0 && (
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-1 rounded-full bg-gray-200 overflow-hidden">
+                      <div className="h-full rounded-full transition-all duration-300" style={{ width: `${passwordStrength}%`, background: strengthColor }} />
+                    </div>
+                    <span className="text-[10px] font-semibold" style={{ color: strengthColor }}>{strengthLabel}</span>
+                  </div>
+                )}
+
+                {/* Options (Login only) */}
+                {mode === "signin" && (
+                  <div className="flex items-center justify-between mt-1 px-1">
+                    <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-gray-500 hover:text-black">
+                      <input type="checkbox" className="rounded border-gray-300 text-black focus:ring-black h-3.5 w-3.5" />
+                      Remember Me
+                    </label>
+                    <button type="button" onClick={() => { setForgotPasswordMode(true); setError(""); }} className="text-xs text-gray-500 hover:text-black transition-colors focus:outline-none font-medium">
+                      Forgot Password?
                     </button>
                   </div>
+                )}
 
-                  {/* Phone button (coming soon) */}
-                  <div className="auth-form-element w-full flex flex-col items-center">
-                    <button disabled={true} className="flex w-full items-center justify-center gap-3 rounded-xl border border-[#1F1F1F] bg-[#0D0D0D] py-3.5 text-sm font-medium text-[#555555] cursor-not-allowed">
-                      <Phone className="h-4 w-4 shrink-0" />
-                      Continue with Phone
-                      <Lock className="h-3.5 w-3.5 shrink-0 text-yellow-400 fill-yellow-400/20 ml-1.5" />
-                    </button>
-                    <span className="text-[10px] text-[#333333] mt-1">Coming soon</span>
-                  </div>
-                </>
-              ) : (
-                /* Phone OTP forms - kept intact */
-                <AnimatePresence mode="wait">
-                  {phoneStep === "enter_phone" && (
-                    <motion.form key="phone-input" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} onSubmit={handleSendOtp} className="space-y-2.5">
-                      <div className="mb-1 flex items-center gap-2">
-                        <button type="button" onClick={() => { setPhoneStep("idle"); setError(""); }} className="shrink-0 px-1 text-xs text-[#555555] hover:text-white/60">×</button>
-                        <span className="text-xs font-medium text-[#555555]">Phone OTP</span>
-                      </div>
-                      <InputRow icon={Phone} type="tel" name="phone" placeholder="+91 98765 43210" value={phone} onChange={e => setPhone(e.target.value)} required autoFocus />
-                      <button type="submit" className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-3 text-sm font-semibold text-black transition-all hover:bg-white/90">
-                        Send OTP <ArrowRight className="h-4 w-4" />
-                      </button>
-                      <button type="button" onClick={() => { setPhoneStep("idle"); setError(""); }} className="w-full py-1 text-center text-xs text-[#555555] hover:text-white/60">← Back to email sign in</button>
-                    </motion.form>
+                {/* Terms checkbox (Signup only) */}
+                {mode === "signup" && (
+                  <label className="flex items-start gap-2.5 cursor-pointer select-none text-xs text-gray-500 hover:text-black mt-1 px-1">
+                    <input 
+                      type="checkbox" 
+                      checked={agreeTerms} 
+                      onChange={e => setAgreeTerms(e.target.checked)} 
+                      required 
+                      className="rounded border-gray-300 text-black focus:ring-black h-3.5 w-3.5 mt-0.5" 
+                    />
+                    <span>
+                      I agree to the{" "}
+                      <a href="/terms" className="text-black font-semibold hover:underline">Terms</a>
+                      {" "}and{" "}
+                      <a href="/privacy-policy" className="text-black font-semibold hover:underline">Privacy Policy</a>
+                    </span>
+                  </label>
+                )}
+
+                {/* Submit button */}
+                <motion.button 
+                  type="submit" 
+                  disabled={isLoading}
+                  whileHover={{ scale: 1.01, y: -1 }}
+                  whileTap={{ scale: 0.99 }}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-black py-3.5 text-sm font-semibold text-white transition-all hover:bg-black/90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 mt-2 cursor-pointer shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <>{mode === "signin" ? "Sign In" : "Create Free Account"} <ArrowRight className="h-4 w-4" /></>
                   )}
-                </AnimatePresence>
-              )}
+                </motion.button>
+              </form>
+            )}
+
+            {/* Divider */}
+            <div className="flex items-center gap-3 py-3">
+              <div className="h-px flex-1 bg-[#EAEAEA]" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">or</span>
+              <div className="h-px flex-1 bg-[#EAEAEA]" />
             </div>
 
-            {demoEnabled && mode === "signup" && phoneStep === "idle" && (
-              <div className="mt-5 text-center">
-                <button onClick={() => setDemoModalOpen(true)} className="group inline-flex items-center gap-1.5 text-sm text-[#555555] hover:text-white/60 transition-colors">
-                  <Sparkles className="h-3.5 w-3.5 transition-colors group-hover:text-white/50" />
+            {/* Social Logins */}
+            <div className="space-y-2">
+              <motion.button 
+                onClick={handleGoogleLogin} 
+                disabled={googleLoading}
+                whileHover={{ scale: 1.01, y: -0.5 }}
+                className="flex w-full items-center justify-center gap-3 rounded-xl border border-[#E0E0E0] bg-white py-3 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 hover:border-[#C4C4C4] cursor-pointer"
+              >
+                <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                </svg>
+                Continue with Google
+                {googleLoading && <Loader2 className="h-3 w-3 animate-spin text-gray-400" />}
+              </motion.button>
+
+              <motion.button 
+                onClick={handleLinkedInLogin}
+                whileHover={{ scale: 1.01, y: -0.5 }}
+                className="flex w-full items-center justify-center gap-3 rounded-xl border border-[#E0E0E0] bg-white py-3 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 hover:border-[#C4C4C4] cursor-pointer"
+              >
+                <svg className="h-4 w-4 shrink-0 text-[#0A66C2] fill-[#0A66C2]" viewBox="0 0 24 24">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                </svg>
+                Continue with LinkedIn
+              </motion.button>
+            </div>
+
+            {demoEnabled && mode === "signup" && (
+              <div className="mt-4 text-center">
+                <button onClick={() => setDemoModalOpen(true)} className="group inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-black transition-colors focus:outline-none cursor-pointer">
+                  <Sparkles className="h-3 w-3 text-gray-400 group-hover:text-gray-600 transition-colors" />
                   Try Demo First
                 </button>
               </div>
             )}
-          </div>
+          </motion.div>
 
-          <div className="mt-5 px-2 text-center">
-            <p className="text-xs leading-relaxed text-[#333333]">
-              By continuing, you agree to HirenextAI's{" "}
-              <a href="/terms" className="text-[#555555] underline underline-offset-2 hover:text-white/70">Terms</a>
-              {" "}and{" "}
-              <a href="/privacy-policy" className="text-[#555555] underline underline-offset-2 hover:text-white/70">Privacy Policy</a>
-            </p>
-          </div>
-
-          <DemoRoleModal open={demoModalOpen} onClose={() => setDemoModalOpen(false)} onSelect={handleDemoSelect} loading={demoLoading} />
-
-          <p className="mt-5 text-center text-sm text-[#555555]">
+          {/* Switch Mode Footer */}
+          <div className="mt-5 text-center text-sm">
             {mode === "signin" ? (
-              <>Don't have an account?{" "}<button onClick={() => reset("signup")} className="font-semibold text-white hover:underline">Sign up →</button></>
+              <p className="text-gray-500 text-xs">
+                Don't have an account?{" "}
+                <button onClick={() => reset("signup")} className="font-bold text-[#8B5CF6] hover:underline cursor-pointer focus:outline-none">
+                  Create Account
+                </button>
+              </p>
             ) : (
-              <>Already have an account?{" "}<button onClick={() => reset("signin")} className="font-semibold text-white hover:underline">Sign in →</button></>
+              <p className="text-gray-500 text-xs">
+                Already have an account?{" "}
+                <button onClick={() => reset("signin")} className="font-bold text-[#8B5CF6] hover:underline cursor-pointer focus:outline-none">
+                  Sign In
+                </button>
+              </p>
             )}
-          </p>
+          </div>
+
+          {/* Trust Row */}
+          <div className="mt-10 border-t border-[#EAEAEA] pt-6">
+            <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+              <div className="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
+                <span className="text-[#8B5CF6] font-bold">✓</span> Secure Authentication
+              </div>
+              <div className="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
+                <span className="text-[#8B5CF6] font-bold">✓</span> Privacy First
+              </div>
+              <div className="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
+                <span className="text-[#8B5CF6] font-bold">✓</span> Protected Data
+              </div>
+              <div className="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
+                <span className="text-[#8B5CF6] font-bold">✓</span> Free To Start
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
+
+      <DemoRoleModal open={demoModalOpen} onClose={() => setDemoModalOpen(false)} onSelect={handleDemoSelect} loading={demoLoading} />
     </div>
   );
 }

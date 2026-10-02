@@ -26,15 +26,15 @@ const mockPool = {
         if (cleanedSql.includes('INSERT INTO support_tickets')) {
             return [{ insertId: 456 }];
         }
-        if (cleanedSql.includes('SELECT id, email, firstName, lastName, role FROM users WHERE id = ?')) {
-            return [[{ id: 999, email: 'admin@example.com', firstName: 'Admin', lastName: 'User', role: 'admin' }]];
+        if (cleanedSql.includes('FROM users WHERE id = ?')) {
+            return [[{ id: 999, email: 'admin@example.com', firstName: 'Admin', lastName: 'User', role: 'owner', isSuspended: 0, adminPermissions: null, tokenVersion: 1, ipAddress: '127.0.0.1', device: 'Desktop' }]];
         }
         if (cleanedSql.includes('SELECT COUNT(*) as count FROM users')) {
             return [[{ count: 12 }]];
         }
-        if (cleanedSql.includes('SELECT id, firstName, lastName, email, plan, role, createdAt, isVerified FROM users')) {
+        if (cleanedSql.includes('FROM users WHERE role = "user"')) {
             return [[
-                { id: 1, firstName: 'Test', lastName: 'User', email: 'test@example.com', plan: 'free', role: 'user', createdAt: new Date(), isVerified: 0 }
+                { id: 1, firstName: 'Test', lastName: 'User', email: 'test@example.com', plan: 'free', role: 'user', isSuspended: 0, lastLoginAt: new Date(), createdAt: new Date(), adminNotes: null, isVerified: 0 }
             ]];
         }
         if (cleanedSql.includes('SELECT 1')) {
@@ -127,7 +127,7 @@ async function runTests() {
         console.log('Response status:', usersRes.status);
         console.log('Response body:', usersData);
 
-        const usersQuery = queriesExecuted.find(q => q.sql.includes('SELECT id, firstName, lastName, email, plan, role, createdAt, isVerified FROM users'));
+        const usersQuery = queriesExecuted.find(q => q.sql.includes('FROM users WHERE role = "user"'));
         if (usersQuery && usersRes.status === 200) {
             console.log('✅ Test 3 Passed: User lists read from users table.');
         } else {

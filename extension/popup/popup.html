@@ -8,61 +8,172 @@
   
   <div class="header">
     <div class="logo">
-      <span class="logo-icon">H</span>
-      <span>HirenextAI <span class="agent-text">Agent</span></span>
+      <div class="logo-svg">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="7" fill="currentColor" />
+          <path d="M 50 50 V 25 H 35" stroke="currentColor" stroke-width="2.8" fill="none" stroke-linecap="round" />
+          <path d="M 50 38 H 63" stroke="currentColor" stroke-width="2.8" fill="none" stroke-linecap="round" />
+          <circle cx="63" cy="38" r="3.5" fill="currentColor" />
+          <circle cx="35" cy="25" r="3.5" fill="currentColor" />
+          <path d="M 50 50 H 75 V 35" stroke="currentColor" stroke-width="2.8" fill="none" stroke-linecap="round" />
+          <path d="M 62 50 V 63" stroke="currentColor" stroke-width="2.8" fill="none" stroke-linecap="round" />
+          <circle cx="62" cy="63" r="3.5" fill="currentColor" />
+          <circle cx="75" cy="35" r="3.5" fill="currentColor" />
+          <path d="M 50 50 V 75 H 65" stroke="currentColor" stroke-width="2.8" fill="none" stroke-linecap="round" />
+          <path d="M 50 62 H 37" stroke="currentColor" stroke-width="2.8" fill="none" stroke-linecap="round" />
+          <circle cx="37" cy="62" r="3.5" fill="currentColor" />
+          <circle cx="65" cy="75" r="3.5" fill="currentColor" />
+          <path d="M 50 50 H 25 V 65" stroke="currentColor" stroke-width="2.8" fill="none" stroke-linecap="round" />
+          <path d="M 38 50 V 37" stroke="currentColor" stroke-width="2.8" fill="none" stroke-linecap="round" />
+          <circle cx="38" cy="37" r="3.5" fill="currentColor" />
+          <circle cx="25" cy="65" r="3.5" fill="currentColor" />
+        </svg>
+      </div>
+      <span>HirenextAI <span class="agent-text">Assistant</span></span>
     </div>
     <div class="status-indicator">
-      <div class="status-dot" id="status-dot"></div>
-      <span id="status-text">Checking...</span>
+      <div class="status-dot offline" id="status-dot"></div>
+      <span id="status-text">Disconnected</span>
     </div>
   </div>
 
-  <!-- Disconnected State -->
-  <div class="body-content" id="disconnected-state" style="display: none;">
+  <!-- Welcome / Login Screen -->
+  <div class="body-content" id="welcome-screen">
     <div class="connect-message">
-      <p>Connect to HirenextAI to start auto-applying for jobs.</p>
+      <h2 class="welcome-title">HirenextAI Career Assistant</h2>
+      <p>Transform job websites into an intelligent career workspace. Autofill applications, analyze ATS matches, and prep interviews.</p>
     </div>
-    <button class="primary-btn" id="open-hirenextai">Open HirenextAI</button>
+    <div class="button-stack">
+      <button class="primary-btn font-bold" id="btn-sign-in">Sign In</button>
+      <button class="secondary-btn" id="btn-create-account">Create Account</button>
+      <button class="text-link-btn" id="btn-guest-continue">Continue as Guest</button>
+    </div>
   </div>
 
-  <!-- Connected State -->
+  <!-- Onboarding Step 1: Choose Permissions -->
+  <div class="body-content" id="onboarding-step1" style="display: none;">
+    <h3 class="step-title">Step 1: Choose Permissions</h3>
+    <p class="step-desc">Configure the permissions you grant the assistant.</p>
+    <div class="options-list">
+      <label class="toggle-control">
+        <input type="checkbox" id="perm-read-tabs" checked>
+        <span class="control-label">
+          <strong>Read Active Tab</strong>
+          <span class="label-sub">Extract job info from pages automatically</span>
+        </span>
+      </label>
+      <label class="toggle-control">
+        <input type="checkbox" id="perm-storage" checked>
+        <span class="control-label">
+          <strong>Local Storage Access</strong>
+          <span class="label-sub">Sync user profile and career history</span>
+        </span>
+      </label>
+      <label class="toggle-control">
+        <input type="checkbox" id="perm-notifications" checked>
+        <span class="control-label">
+          <strong>Browser Notifications</strong>
+          <span class="label-sub">Notify on application completion</span>
+        </span>
+      </label>
+    </div>
+    <button class="primary-btn mt-6" id="step1-next">Continue</button>
+  </div>
+
+  <!-- Onboarding Step 2: Choose Platforms -->
+  <div class="body-content" id="onboarding-step2" style="display: none;">
+    <h3 class="step-title">Step 2: Supported Job Sites</h3>
+    <p class="step-desc">Select platforms to activate the Career Assistant.</p>
+    <div class="options-list grid-options">
+      <label class="check-box-label">
+        <input type="checkbox" id="site-linkedin" checked>
+        <span>LinkedIn</span>
+      </label>
+      <label class="check-box-label">
+        <input type="checkbox" id="site-indeed" checked>
+        <span>Indeed</span>
+      </label>
+      <label class="check-box-label">
+        <input type="checkbox" id="site-naukri" checked>
+        <span>Naukri</span>
+      </label>
+      <label class="check-box-label">
+        <input type="checkbox" id="site-glassdoor" checked>
+        <span>Glassdoor</span>
+      </label>
+      <label class="check-box-label">
+        <input type="checkbox" id="site-internshala" checked>
+        <span>Internshala</span>
+      </label>
+      <label class="check-box-label">
+        <input type="checkbox" id="site-other" checked>
+        <span>Other Tech Sites</span>
+      </label>
+    </div>
+    <button class="primary-btn mt-6" id="step2-next">Continue</button>
+  </div>
+
+  <!-- Onboarding Step 3: Automatic Assistance -->
+  <div class="body-content" id="onboarding-step3" style="display: none;">
+    <h3 class="step-title">Step 3: Auto Assistance</h3>
+    <p class="step-desc">Enable background features for an optimal experience.</p>
+    <div class="options-list">
+      <label class="toggle-control">
+        <input type="checkbox" id="opt-auto-inject" checked>
+        <span class="control-label">
+          <strong>Floating AI Assistant</strong>
+          <span class="label-sub">Show mascot helper bubble in bottom right corner</span>
+        </span>
+      </label>
+      <label class="toggle-control">
+        <input type="checkbox" id="opt-auto-track" checked>
+        <span class="control-label">
+          <strong>Auto Application Tracker</strong>
+          <span class="label-sub">Sync details to HirenextAI upon submission</span>
+        </span>
+      </label>
+    </div>
+    <button class="primary-btn mt-6" id="step3-finish">Finish Onboarding</button>
+  </div>
+
+  <!-- Connected State Dashboard -->
   <div class="body-content" id="connected-state" style="display: none;">
     <div class="user-info">
-      <div class="avatar" id="user-initials"></div>
+      <div class="avatar" id="user-initials">HI</div>
       <div class="user-details">
         <div class="user-name" id="user-name">Loading...</div>
         <div class="user-email" id="user-email">...</div>
       </div>
-      <div class="plan-badge" id="plan-badge">PRO</div>
+      <div class="plan-badge" id="plan-badge">FREE</div>
     </div>
 
     <div class="status-section">
-      <div class="ready-text">Ready to apply</div>
+      <div class="ready-text">Ready to Assist</div>
       <div class="last-applied" id="last-applied">Last applied: -</div>
     </div>
 
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-value" id="applied-today">-</div>
-        <div class="stat-label">Applied today</div>
+        <div class="stat-value" id="applied-today">0</div>
+        <div class="stat-label">Applied Today</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value" id="total-applied">-</div>
-        <div class="stat-label">Total applied</div>
+        <div class="stat-value" id="total-applied">0</div>
+        <div class="stat-label">Total Jobs</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value" id="success-rate">-</div>
-        <div class="stat-label">Success rate</div>
+        <div class="stat-value" id="success-rate">100%</div>
+        <div class="stat-label">Success Rate</div>
       </div>
     </div>
 
-    <button class="primary-btn" id="start-job-hunt">Start Job Hunt</button>
+    <button class="primary-btn font-bold" id="start-job-hunt">Open Career Board</button>
   </div>
 
   <div class="footer">
     <div class="version">v1.0.0</div>
     <div class="footer-links">
-      <a href="#" id="settings-link">Settings</a>
+      <a href="#" id="settings-link" style="display: none;">Settings</a>
       <a href="#" id="disconnect-link" style="display: none;">Disconnect</a>
     </div>
   </div>

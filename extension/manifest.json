@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "HirenextAI Agent",
+  "name": "HirenextAI Career Assistant",
   "version": "1.0.0",
-  "description": "AI powered job application agent by HirenextAI",
+  "description": "AI-powered career companion by HirenextAI that follows you across job sites, tracks applications, and assists with form filling.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApLSJXPDXSfOmo0dy0j0mGUaTqJQEWQjWV+HhnLmX/2I23k4V5n9Z824gVuAl0JThD+QqY9wsw11rG8PDsXZcUf9AA3ui6OLC3nt0wxG1ze2ANUfaIsdgjgsZQKuMiHRdQXLM89gjy5fwPaKT36qVboDP/06uctNnh+GnRTy22KbYa73WW9j2Y65bXWH3sb7BQbyCc0ZNHh8kXKolWPNbN1msBWiLB90dMeUijiKoRv/TxKCWxoF3BaGTMAo6HJTFPvCLfoXxncU0BvK4aj/QHOQbN2STOSMoJfF7qcckTS2ZxZ/FPpikBRJP7UT6urE18hn6t7jVSg/L5MUn+q4u4QIDAQAB",
   
   "permissions": [
@@ -20,6 +20,11 @@
     "https://*.naukri.com/*",
     "https://*.glassdoor.com/*",
     "https://*.internshala.com/*",
+    "https://*.wellfound.com/*",
+    "https://*.remoteok.com/*",
+    "https://*.remotive.com/*",
+    "https://*.arbeitnow.com/*",
+    "https://*.foundit.com/*",
     "https://hirenextai.com/*"
   ],
 
@@ -27,7 +32,9 @@
     "matches": [
       "https://hirenextai.com/*",
       "https://www.hirenextai.com/*",
+      "http://localhost:3000/*",
       "http://localhost:3003/*",
+      "http://127.0.0.1:3000/*",
       "http://127.0.0.1:3003/*"
     ]
   },
@@ -43,7 +50,12 @@
         "https://*.indeed.com/*",
         "https://*.naukri.com/*",
         "https://*.glassdoor.com/*",
-        "https://*.internshala.com/*"
+        "https://*.internshala.com/*",
+        "https://*.wellfound.com/*",
+        "https://*.remoteok.com/*",
+        "https://*.remotive.com/*",
+        "https://*.arbeitnow.com/*",
+        "https://*.foundit.com/*"
       ],
       "js": ["content.js", "overlay.js"],
       "css": ["overlay.css"],
@@ -62,7 +74,7 @@
   
   "web_accessible_resources": [
     {
-      "resources": ["overlay.css", "sounds/*"],
+      "resources": ["overlay.css", "sounds/*", "sidebar/*"],
       "matches": ["<all_urls>"]
     }
   ]

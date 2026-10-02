@@ -21,6 +21,15 @@ const useUIStore = create((set) => ({
 
   connectModalOpen: false,
   setConnectModalOpen: (open) => set({ connectModalOpen: open }),
+
+  imageGenOpen: false,
+  setImageGenOpen: (open) => set({ imageGenOpen: open }),
+  imageGenPrompt: '',
+  setImageGenPrompt: (prompt) => set({ imageGenPrompt: prompt }),
+  imageGenStatus: 'idle', // idle | generating | completed
+  setImageGenStatus: (status) => set({ imageGenStatus: status }),
+  imageGenUrl: '',
+  setImageGenUrl: (url) => set({ imageGenUrl: url }),
   
   isMobile: window.innerWidth < 768,
   setIsMobile: (isMobile) => set({ isMobile }),
@@ -33,6 +42,9 @@ const useUIStore = create((set) => ({
     set({ toast: message });
     setTimeout(() => set({ toast: null }), 3000);
   },
+
+  previewItem: null,
+  setPreviewItem: (item) => set({ previewItem: item }),
 }));
 
 export default useUIStore;

@@ -7,93 +7,59 @@ const PLANS = [
   {
     id: 'free',
     name: 'Free',
-    badge: 'Get Started',
-    badgeClass: 'bg-white/10 text-white/70 border-white/20',
+    badge: 'FREE',
+    badgeClass: 'from-zinc-150 to-neutral-200 text-neutral-800 border-neutral-300',
     price: 0,
     features: [
-      { text: '20 AI Credits/month', included: true },
-      { text: '10 Job Applications tracking', included: true },
-      { text: 'Basic Job Search', included: true },
-      { text: 'AI Chat (1 credit/message)', included: true },
-      { text: 'Cover Letter (2 credits each)', included: true },
-      { text: 'Resume Review (3 credits each)', included: true },
+      { text: 'HirenextAI 0.1 model access', included: true },
+      { text: '5,000 Daily Credits', included: true },
+      { text: 'ATS Resume Builder', included: true },
+      { text: 'Basic ATS Resume Analysis', included: true },
+      { text: 'Job Search & Tracking', included: true },
+      { text: 'AI Career Assistant', included: true },
     ],
     cta: 'Current Plan',
     disabled: true,
-    buttonClass: 'border border-white/20 text-white/50 bg-transparent cursor-not-allowed',
-    cardClass: 'border-white/10',
-    isPro: false,
-    isUltimate: false,
+    buttonClass: 'border border-neutral-200 text-neutral-400 bg-transparent cursor-not-allowed',
+    cardClass: 'border-neutral-200 bg-white',
+  },
+  {
+    id: 'plus',
+    name: 'Plus',
+    badge: 'POPULAR',
+    badgeClass: 'from-blue-500 to-indigo-650 text-white border-transparent',
+    price: 149,
+    features: [
+      { text: 'HirenextAI Flash model access', included: true },
+      { text: 'Faster response speeds', included: true },
+      { text: '20,000 Monthly Credits', included: true },
+      { text: 'Better ATS Resume Analysis', included: true },
+      { text: 'Unlimited Job Search', included: true },
+      { text: 'AI Cover Letters & Roadmaps', included: true },
+    ],
+    cta: 'Upgrade to Plus',
+    disabled: false,
+    buttonClass: 'bg-black text-white hover:bg-neutral-800 font-bold shadow-sm',
+    cardClass: 'border-black bg-white shadow-[0_4px_24px_rgba(0,0,0,0.02)]',
   },
   {
     id: 'pro',
     name: 'Pro',
-    badge: 'Most Popular',
-    badgeClass: 'bg-white/10 text-white border-white/20',
+    badge: 'PRO',
+    badgeClass: 'from-purple-500 to-indigo-650 text-white border-transparent',
     price: 299,
     features: [
-      { text: '200 AI Credits/month', included: true },
-      { text: 'Unlimited Job Tracking', included: true },
-      { text: 'Advanced Job Search', included: true },
-      { text: 'Unlimited AI Chat', included: true },
-      { text: 'Unlimited Cover Letters', included: true },
-      { text: 'Unlimited Resume Reviews', included: true },
-      { text: 'Apply with AI (Extension)', included: true },
-      { text: 'Mock Interview AI (5/day)', included: true },
+      { text: 'HirenextAI Pro model access', included: true },
+      { text: 'Unlimited Credits (Fair Usage)', included: true },
+      { text: 'Fastest AI Responses', included: true },
+      { text: 'Premium Resume Intelligence', included: true },
+      { text: 'Advanced Interview AI', included: true },
+      { text: 'Recruiter Dashboard access', included: true },
     ],
     cta: 'Upgrade to Pro',
     disabled: false,
-    buttonClass: 'bg-white text-black font-semibold hover:bg-white/90 shadow-[0_0_24px_rgba(255,255,255,0.1)] hover:opacity-95',
-    cardClass: 'border-white/30 shadow-[0_0_40px_rgba(255,255,255,0.05)]',
-    isPro: true,
-    isUltimate: false,
-  },
-  {
-    id: 'max',
-    name: 'Max',
-    badge: 'Power User',
-    badgeClass: 'bg-white/10 text-white/70 border-white/20',
-    price: 599,
-    features: [
-      { text: 'Unlimited AI Credits', included: true },
-      { text: 'Unlimited Everything in Pro', included: true },
-      { text: 'Mock Interview AI (Unlimited)', included: true },
-      { text: 'Priority Support (24hr)', included: true },
-      { text: 'Early Access to New Features', included: true },
-      { text: 'Advanced Analytics Dashboard', included: true },
-      { text: 'LinkedIn Profile Optimization', included: true },
-      { text: '1 Career Coaching Session/month', included: true },
-    ],
-    cta: 'Upgrade to Max',
-    disabled: false,
-    buttonClass: 'bg-white text-black font-semibold hover:bg-white/90',
-    cardClass: 'border-white/10',
-    isPro: false,
-    isUltimate: false,
-  },
-  {
-    id: 'ultimate',
-    name: 'Ultimate',
-    badge: 'Family & Friends',
-    badgeClass: 'bg-white/10 text-white/70 border-white/20',
-    price: 999,
-    features: [
-      { text: 'Everything in Max', included: true },
-      { text: 'Up to 5 Members', included: true },
-      { text: 'Each member gets full Pro access', included: true },
-      { text: 'Shared Job Tracking Dashboard', included: true },
-      { text: 'Family Admin Panel', included: true },
-      { text: 'Priority Support (12hr)', included: true },
-      { text: 'Unlimited AI Credits for all members', included: true },
-      { text: 'All AI Features for all members', included: true },
-      { text: 'Early Access to New Features', included: true },
-    ],
-    cta: 'Get Ultimate',
-    disabled: false,
-    buttonClass: 'bg-white text-black font-semibold hover:bg-white/90 shadow-[0_0_20px_rgba(255,255,255,0.1)]',
-    cardClass: 'border-white/20',
-    isPro: false,
-    isUltimate: true,
+    buttonClass: 'bg-black text-white hover:bg-neutral-800 font-bold shadow-sm',
+    cardClass: 'border-neutral-200 bg-white',
   },
 ];
 
@@ -128,7 +94,7 @@ const PricingModal = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[1100] bg-black/80 backdrop-blur-md"
+            className="fixed inset-0 z-[1100] bg-white/80 backdrop-blur-md"
             onClick={() => setPricingModalOpen(false)}
           />
           <div
@@ -140,13 +106,13 @@ const PricingModal = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.92 }}
               transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-              className="w-full max-w-6xl my-6 rounded-2xl border border-white/10 bg-[#000000] shadow-2xl overflow-hidden relative"
+              className="w-full max-w-5xl my-6 rounded-2xl border border-neutral-150 bg-neutral-50 shadow-2xl overflow-hidden relative"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 type="button"
                 onClick={() => setPricingModalOpen(false)}
-                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all z-50"
+                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-neutral-50 border border-neutral-150 flex items-center justify-center text-neutral-500 hover:text-black hover:bg-neutral-100 transition-all z-50"
                 aria-label="Close"
               >
                 <X className="w-4 h-4" />
@@ -159,60 +125,59 @@ const PricingModal = () => {
                 }}
               />
 
-              <div className="relative px-6 py-5 flex items-center justify-between border-b border-white/[0.06]">
-                <h2 className="text-xl font-bold text-white">Choose your plan</h2>
+              <div className="relative px-6 py-5 flex items-center justify-between border-b border-neutral-150 bg-white">
+                <h2 className="text-base font-extrabold text-black">Choose your plan</h2>
                 <button
                   type="button"
                   onClick={() => setPricingModalOpen(false)}
-                  className="p-2 rounded-xl text-white/50 hover:text-white hover:bg-white/[0.06] transition-colors"
+                  className="p-2 rounded-xl text-neutral-500 hover:text-black hover:bg-neutral-100 transition-colors"
                   aria-label="Close"
                 >
-                  <X size={22} />
+                  <X size={20} />
                 </button>
               </div>
 
               <div className="relative p-6 lg:p-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
                   {PLANS.map((plan, idx) => (
                     <motion.div
                       key={plan.id}
                       initial={{ opacity: 0, y: 28 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.07, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                      className={`
-                        relative flex flex-col bg-[#111111] rounded-2xl p-6 border transition-all duration-300
-                        hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)]
-                        ${plan.cardClass}
-                      `}
+                      className={` relative flex flex-col bg-white rounded-2xl p-6 border transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.02)] ${plan.cardClass} `}
                     >
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                         <span
-                          className={`whitespace-nowrap text-[10px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full border ${plan.badgeClass}`}
+                          className={`whitespace-nowrap text-[9px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full border bg-gradient-to-r shadow-sm ${plan.badgeClass}`}
                         >
                           {plan.badge}
                         </span>
                       </div>
 
-                      <h3 className="text-2xl font-bold text-white mt-4 mb-3">{plan.name}</h3>
+                      <h3 className="text-xl font-bold text-black mt-4 mb-1 flex items-center gap-1.5">
+                        {plan.name}
+                        {plan.id === 'plus' && <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 text-blue-750 font-extrabold uppercase tracking-wider">Popular</span>}
+                      </h3>
                       <div className="flex items-baseline gap-0.5 mb-6">
-                        <span className="text-lg font-semibold text-white/80">₹</span>
-                        <span className="text-4xl font-bold text-white">{plan.price}</span>
-                        <span className="text-sm text-white/40 ml-0.5">/mo</span>
+                        <span className="text-sm font-semibold text-neutral-400">₹</span>
+                        <span className="text-4xl font-extrabold text-black">{plan.price}</span>
+                        <span className="text-xs text-neutral-400 font-bold uppercase ml-0.5">/mo</span>
                       </div>
 
-                      <ul className="space-y-2.5 mb-8 flex-1">
+                      <ul className="space-y-3 mb-8 flex-1">
                         {plan.features.map((f) => (
-                          <li key={f.text} className="flex items-start gap-2 text-[13px]">
+                          <li key={f.text} className="flex items-start gap-2.5 text-xs font-medium">
                             {f.included ? (
                               <CheckCircle2
-                                size={16}
-                                className="text-white shrink-0 mt-0.5"
-                                strokeWidth={2}
+                                size={15}
+                                className="text-emerald-550 shrink-0 mt-0.5"
+                                strokeWidth={2.5}
                               />
                             ) : (
-                              <XCircle size={16} className="text-white/20 shrink-0 mt-0.5" />
+                              <XCircle size={15} className="text-neutral-200 shrink-0 mt-0.5" />
                             )}
-                            <span className={f.included ? 'text-white/75' : 'text-white/25 line-through'}>
+                            <span className={f.included ? 'text-neutral-700' : 'text-neutral-400 line-through'}>
                               {f.text}
                             </span>
                           </li>
@@ -223,7 +188,7 @@ const PricingModal = () => {
                         type="button"
                         disabled={plan.disabled}
                         onClick={() => handleUpgrade(plan)}
-                        className={`w-full py-3 rounded-xl text-sm font-semibold transition-all ${plan.buttonClass}`}
+                        className={`w-full py-3.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] ${plan.buttonClass}`}
                       >
                         {plan.cta}
                       </button>

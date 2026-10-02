@@ -1,39 +1,29 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Plus, Send, Mic, MicOff, AudioLines, X, Volume2, VolumeX } from 'lucide-react';
+import { Plus, Send, Mic, MicOff, AudioLines, X, Volume2, VolumeX, FileText, FileArchive, FileCode, File, Image as ImageIcon, Download, Eye } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import useChatStore from '../../store/useChatStore';
 import useUIStore from '../../store/useUIStore';
 import FileUploadMenu from './FileUploadMenu';
 import ModelSelector from './ModelSelector';
 import api from '../../lib/api';
-
-
+import Mascot from './Mascot';
 
 const ChatInput = ({ embedded = false, className = '', demo = false }) => {
   const { t } = useTranslation();
   const { sendMessage, selectedModel, setSelectedModel, messages, isTyping, startNewChat, currentChatId } = useChatStore();
-  const { plusPopupOpen, setPlusPopupOpen, showToast } = useUIStore();
+  const { plusPopupOpen, setPlusPopupOpen, showToast, previewItem, setPreviewItem } = useUIStore();
 
   const [input, setInput] = useState('');
   const [modelOpen, setModelOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [credits, setCredits] = useState(null);
+  const [mascotState, setMascotState] = useState('idle');
+  const [sendHovered, setSendHovered] = useState(false);
+  const prevIsTypingRef = useRef(false);
+  const [attachments, setAttachments] = useState([]);
+  const [isDragging, setIsDragging] = useState(false);
 
-  const fetchCredits = async () => {
-    if (demo) return;
-    try {
-      const res = await api.get('/api/user/credits');
-      setCredits(res.data);
-    } catch (err) {
-      console.error('Failed to fetch credits:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchCredits();
-  }, [messages, demo]);
-  
   // Voice to Voice and Voice to Text states
   const [isVoiceMode, setIsVoiceMode] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -58,6 +48,80 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
   const voiceTimerRef = useRef(null);
   const voiceTimeoutRef = useRef(null);
   const autoSendTimeoutRef = useRef(null);
+
+  const fetchCredits = async () => {
+    if (demo) return;
+    try {
+      const res = await api.get('/api/user/credits');
+      setCredits(res.data);
+    } catch (err) {
+      console.error('Failed to fetch credits:', err);
+    }
+  };
+
+  const getPlaceholderText = () => {
+    if (isListening) return "Listening... speak now";
+    
+    const hasResume = attachments.some(a => 
+      a.name.toLowerCase().includes('resume') || 
+      ['pdf', 'doc', 'docx'].includes(a.name.split('.').pop().toLowerCase())
+    );
+    if (hasResume) return "Ask me to improve your resume...";
+
+    if (messages && messages.length > 0) {
+      const isInterview = messages.some(m => 
+        m.content?.toLowerCase().includes('interview') || 
+        m.content?.toLowerCase().includes('mock')
+      );
+      if (isInterview) return "Ask your interview question...";
+
+      const isJob = messages.some(m => 
+        m.content?.toLowerCase().includes('job') || 
+        m.content?.toLowerCase().includes('role') || 
+        m.content?.toLowerCase().includes('hiring') ||
+        m.content?.toLowerCase().includes('search')
+      );
+      if (isJob) return "What role are you looking for?";
+    }
+
+    return "How can I help you find your dream job today?";
+  };
+
+  useEffect(() => {
+    fetchCredits();
+  }, [messages, demo]);
+
+  // Coordinate Mascot states
+  useEffect(() => {
+    if (isTyping) {
+      // Stay in thinking during stream
+      if (mascotState !== 'sent' && mascotState !== 'thinking') {
+        setMascotState('thinking');
+      }
+    } else {
+      if (prevIsTypingRef.current) {
+        setMascotState('complete');
+        const timer = setTimeout(() => {
+          setMascotState('idle');
+        }, 1500);
+        return () => clearTimeout(timer);
+      } else if (mascotState === 'complete') {
+        // Wait for complete timer to finish
+      } else {
+        const isUserActive = isFocused || input.trim().length > 0 || attachments.length > 0 || isVoiceMode || isListening;
+        if (isUserActive) {
+          if (mascotState !== 'sent') {
+            setMascotState('thinking');
+          }
+        } else {
+          setMascotState('idle');
+        }
+      }
+    }
+    prevIsTypingRef.current = isTyping;
+  }, [isTyping, isFocused, input, attachments, isVoiceMode, isListening, mascotState]);
+  
+
 
   useEffect(() => {
     isVoiceModeRef.current = isVoiceMode;
@@ -203,6 +267,7 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
       window.dispatchEvent(new CustomEvent('hn-demo-signup'));
       return;
     }
+    setMascotState('sent');
     await sendMessage(text);
     setVoiceTranscript('');
   };
@@ -548,7 +613,13 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
   const toggleVoiceToText = handleMicToggle;
 
   const handleSend = () => {
-    if (!input.trim()) return;
+    let finalContent = input.trim();
+    if (attachments.length > 0) {
+      const attachmentTokens = attachments.map(att => `[Attached file: ${att.name}]`).join('\n');
+      finalContent = finalContent ? `${finalContent}\n${attachmentTokens}` : attachmentTokens;
+    }
+
+    if (!finalContent.trim()) return;
     if (demo) {
       window.dispatchEvent(new CustomEvent('hn-demo-signup'));
       return;
@@ -556,8 +627,14 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
     try {
       recognitionRef.current?.stop();
     } catch(e) {}
-    sendMessage(input.trim());
+    setMascotState('sent');
+    sendMessage(finalContent.trim());
     setInput('');
+    // Revoke object URLs to prevent memory leaks
+    attachments.forEach(att => {
+      if (att.previewUrl) URL.revokeObjectURL(att.previewUrl);
+    });
+    setAttachments([]);
     dictationBaseRef.current = '';
     dictationFinalRef.current = '';
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
@@ -570,19 +647,143 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
     }
   };
 
-  const handleFileSelect = (file) => {
-    showToast(`Attached: ${file.name}`);
-    setInput((prev) => {
-      const note = prev ? `${prev}\n` : '';
-      return `${note}[Attached file: ${file.name}]`;
+  const handleFilesSelect = (filesList) => {
+    const newAtts = [];
+    const ids = [];
+    
+    for (let i = 0; i < filesList.length; i++) {
+      const file = filesList[i];
+      const id = Math.random().toString(36).substring(2, 9);
+      const previewUrl = file.type.startsWith('image/') ? URL.createObjectURL(file) : null;
+      newAtts.push({
+        id,
+        file,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        previewUrl,
+        progress: 0
+      });
+      ids.push(id);
+    }
+
+    if (newAtts.length === 0) return;
+
+    setAttachments((prev) => [...prev, ...newAtts]);
+    setMascotState('thinking');
+    showToast(`Attached ${newAtts.length} file(s)`);
+
+    // Simulate progress bar loader
+    newAtts.forEach((att) => {
+      let cur = 0;
+      const interval = setInterval(() => {
+        cur += Math.floor(Math.random() * 15) + 15;
+        if (cur >= 100) {
+          cur = 100;
+          clearInterval(interval);
+        }
+        setAttachments((prev) =>
+          prev.map((a) => (a.id === att.id ? { ...a, progress: cur } : a))
+        );
+      }, 80);
     });
+  };
+
+  const handleFileSelect = (file) => {
+    handleFilesSelect([file]);
+  };
+
+  // Drag & Drop handlers
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    const files = e.dataTransfer?.files;
+    if (files && files.length > 0) {
+      handleFilesSelect(files);
+      setMascotState('thinking');
+    }
+  };
+
+  // Clipboard Paste listener
+  useEffect(() => {
+    const handlePaste = (e) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      
+      const files = [];
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          const file = items[i].getAsFile();
+          if (file) {
+            files.push(file);
+          }
+        }
+      }
+      
+      if (files.length > 0) {
+        e.preventDefault();
+        handleFilesSelect(files);
+        setMascotState('thinking');
+      }
+    };
+    
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.addEventListener('paste', handlePaste);
+    }
+    return () => {
+      if (textarea) {
+        textarea.removeEventListener('paste', handlePaste);
+      }
+    };
+  }, [textareaRef]);
+
+  const handleRemoveAttachment = (id) => {
+    setAttachments((prev) => {
+      const target = prev.find(a => a.id === id);
+      if (target?.previewUrl) {
+        URL.revokeObjectURL(target.previewUrl);
+      }
+      return prev.filter((a) => a.id !== id);
+    });
+  };
+
+  const handleDownloadAttachment = (att) => {
+    const url = att.previewUrl || URL.createObjectURL(att.file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = att.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    if (!att.previewUrl) {
+      setTimeout(() => URL.revokeObjectURL(url), 100);
+    }
   };
 
   useEffect(() => {
     const el = textareaRef.current;
     if (!el) return;
     el.style.height = 'auto';
-    el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
+    const style = window.getComputedStyle(el);
+    const lineHeight = parseFloat(style.lineHeight) || 24;
+    const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom) || 12;
+    const maxHeight = lineHeight * 8 + padding;
+    el.style.height = `${Math.min(el.scrollHeight, maxHeight)}px`;
   }, [input]);
 
   const formatVoiceTime = (totalSeconds) => {
@@ -591,8 +792,8 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
     return `${mins}:${String(secs).padStart(2, '0')}`;
   };
 
-  const canSend = input.trim().length > 0;
-  const hasActiveGlow = isFocused || isListening || input.length > 0;
+  const canSend = input.trim().length > 0 || attachments.length > 0;
+  const hasActiveGlow = isFocused || isListening || input.length > 0 || attachments.length > 0;
 
   const inputGlowClass = isListening
     ? 'border-[#444444] shadow-[0_0_20px_rgba(255,255,255,0.05)] bg-[#0D0D0D]'
@@ -607,12 +808,17 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
       className={
         embedded
           ? `relative w-full ${className}`
-          : `relative px-4 pb-4 pt-2 bg-gradient-to-t from-background via-background/95 to-transparent`
+          : `relative px-4 pb-4 pt-2 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)]/95 to-transparent`
       }
     >
       <style>{`
         @keyframes micPulse {
-          0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5); }
+          0% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2); }
+          70% { box-shadow: 0 0 0 12px rgba(0, 0, 0, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+        }
+        .dark @keyframes micPulse {
+          0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.3); }
           70% { box-shadow: 0 0 0 12px rgba(255, 255, 255, 0); }
           100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
         }
@@ -636,30 +842,45 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
         }
       `}</style>
       <div className={embedded ? 'w-full' : 'max-w-3xl mx-auto'}>
-        <div
-          className={`chat-input-bar rounded-2xl border transition-all duration-300 ease-in-out !overflow-visible 
-            ${isVoiceMode 
-              ? 'bg-[#111111] border-[#1F1F1F] shadow-[0_0_30px_rgba(255,255,255,0.05)]' 
-              : inputGlowClass}`}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
+        <div className="relative w-full !overflow-visible">
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`chat-input-bar relative rounded-2xl border border-[var(--border-color)] bg-[var(--bg-input)] text-[var(--text-primary)] transition-all duration-300 ease-in-out !overflow-visible ${
+              modelOpen || plusPopupOpen ? 'z-[9000]' : 'z-[300]'
+            } ${isVoiceMode ? 'shadow-[0_0_30px_rgba(255,255,255,0.05)]' : ''}`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            {/* Mascot docked inside input wrapper to the top-right corner with 20-30px spacing */}
+            <Mascot 
+              chatState={mascotState} 
+              sendHovered={sendHovered} 
+              className="absolute pointer-events-none -top-16 right-4 sm:right-6 md:right-8 scale-[0.65] sm:scale-75 md:scale-90 lg:scale-100 origin-bottom transition-all duration-300 overflow-visible" 
+            />
+            {isDragging && (
+              <div className="absolute inset-0 bg-white/70 dark:bg-black/85 backdrop-blur-[1px] border-2 border-dashed border-black dark:border-white rounded-2xl flex items-center justify-center z-50 pointer-events-none">
+                <p className="text-sm font-bold text-black dark:text-white">Drop files here to upload</p>
+              </div>
+            )}
+
           {isVoiceMode ? (
             /* Voice to voice active content */
             <div className="px-4 py-3.5 flex items-center justify-between gap-4 relative z-10">
-              {/* Left side: animated waveform bars (5 bars, purple, bouncing animation) */}
+              {/* Left side: animated waveform bars (5 bars, bouncing animation) */}
               <div className="flex items-center gap-2 h-8 shrink-0">
                 <div className="flex items-center gap-1">
                   {[0, 1, 2, 3, 4].map((i) => (
                     <div
                       key={i}
-                      className={`w-1 rounded-full transition-colors duration-300 ${isListening ? 'bg-white' : 'bg-[#999999]'} animate-voice-bounce`}
+                      className={`w-1 rounded-full transition-colors duration-300 ${isListening ? 'bg-black dark:bg-white' : 'bg-gray-400'} animate-voice-bounce`}
                       style={{ animationDelay: `${i * 0.1}s` }}
                     />
                   ))}
                 </div>
                 {isMuted && (
-                  <span className="text-[11px] text-rose-400 font-medium px-1.5 py-0.5 rounded bg-rose-500/10 border border-rose-500/20">
+                  <span className="text-[11px] text-rose-500 font-medium px-1.5 py-0.5 rounded bg-rose-500/10 border border-rose-500/20">
                     🔇 Muted
                   </span>
                 )}
@@ -668,11 +889,11 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
               {/* Center: live transcript text */}
               <div className="flex-1 min-w-0">
                 {voiceTranscript ? (
-                  <span className="text-white/80 text-sm italic block truncate">
+                  <span className="text-black/80 dark:text-white/80 text-sm italic block truncate">
                     {voiceTranscript}
                   </span>
                 ) : (
-                  <span className="text-white/30 text-sm block">
+                  <span className="text-black/30 dark:text-white/30 text-sm block">
                     Listening...
                   </span>
                 )}
@@ -682,7 +903,7 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
               <button
                 type="button"
                 onClick={exitVoiceMode}
-                className="p-1 rounded-full hover:bg-white/10 text-white/50 hover:text-white transition-colors shrink-0"
+                className="p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-gray-500 hover:text-black dark:hover:text-white transition-colors shrink-0"
                 aria-label="Cancel voice mode"
               >
                 <X size={16} />
@@ -691,6 +912,98 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
           ) : (
             /* Normal input content */
             <>
+              {/* Attachment Cards Area */}
+              {attachments.length > 0 && (
+                <div className="flex flex-wrap gap-3 px-4 pt-4 pb-2 border-b border-[var(--border-color)]">
+                  {attachments.map((att) => {
+                    const ext = att.name.split('.').pop().toLowerCase();
+                    const isPDF = ext === 'pdf';
+                    const isWord = ['doc', 'docx'].includes(ext);
+                    
+                    return (
+                      <div 
+                        key={att.id} 
+                        className="flex items-center gap-2.5 p-2 min-w-[190px] max-w-[230px] relative group transition-all duration-200 shadow-sm border border-[#E0E0E0] dark:border-[#2A2A2A] bg-white dark:bg-[#1E1E1E] text-black dark:text-white rounded-xl overflow-hidden"
+                      >
+                        {/* Left: Thumbnail/Icon */}
+                        {att.previewUrl ? (
+                          <div className="relative w-10 h-10 rounded-lg overflow-hidden border border-[#E0E0E0] dark:border-[#2A2A2A] shrink-0">
+                            <img src={att.previewUrl} alt={att.name} className="w-full h-full object-cover" />
+                          </div>
+                        ) : isPDF ? (
+                          <div className="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-950/30 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0 border border-red-200/50 dark:border-red-900/30">
+                            <FileText size={20} />
+                          </div>
+                        ) : isWord ? (
+                          <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 border border-blue-200/50 dark:border-blue-900/30">
+                            <FileText size={20} />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-gray-400 flex items-center justify-center shrink-0 border border-gray-200/50 dark:border-neutral-700/50">
+                            <File size={20} />
+                          </div>
+                        )}
+                        
+                        {/* Center: Filename + size/progress */}
+                        <div className="flex-1 min-w-0 pr-2">
+                          <p className="text-[12px] font-semibold truncate">{att.name}</p>
+                          {att.progress < 100 ? (
+                            <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium mt-0.5">Uploading {att.progress}%</p>
+                          ) : (
+                            <p className="text-[10px] text-gray-500 mt-0.5">{formatFileSize(att.size)}</p>
+                          )}
+                        </div>
+
+                        {/* Always Visible Remove (top right X icon button) */}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveAttachment(att.id)}
+                          className="absolute top-1.5 right-1.5 p-0.5 rounded-full bg-black/5 dark:bg-white/10 text-gray-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors shadow-sm duration-200 z-10"
+                          title="Remove"
+                        >
+                          <X size={10} />
+                        </button>
+                        
+                        {/* Hover Overlay with Preview, Download, and Remove Actions */}
+                        <div className="absolute inset-0 bg-white/95 dark:bg-[#1E1E1E]/95 backdrop-blur-[1px] rounded-xl opacity-0 group-hover:opacity-100 flex items-center justify-center gap-3 transition-all duration-200 z-20">
+                          <button
+                            type="button"
+                            onClick={() => setPreviewItem(att)}
+                            className="p-1.5 text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                            title="Preview"
+                          >
+                            <Eye size={16} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDownloadAttachment(att)}
+                            className="p-1.5 text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                            title="Download"
+                          >
+                            <Download size={16} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveAttachment(att.id)}
+                            className="p-1.5 text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-lg transition-colors cursor-pointer"
+                            title="Remove"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+
+                        {/* Progress bar line at bottom */}
+                        {att.progress < 100 && (
+                          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 dark:bg-neutral-800">
+                            <div className="h-full bg-black dark:bg-white transition-all duration-100" style={{ width: `${att.progress}%` }} />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
               <div className="px-4 pt-3 pb-1 relative z-0 isolate">
                 <textarea
                   ref={textareaRef}
@@ -699,18 +1012,14 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
                   onKeyDown={handleKeyDown}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
-                  placeholder={isListening ? "Listening... speak now" : "How can I help you find your dream job today?"}
+                  onPaste={() => setMascotState('thinking')}
+                  placeholder={getPlaceholderText()}
                   rows={1}
-                  className={`
-                    w-full bg-transparent border-none outline-none resize-none
-                    text-[15px] text-white placeholder:text-white/25
-                    max-h-[200px] custom-scrollbar leading-relaxed
-                    ${isListening ? 'placeholder:text-white/30' : ''}
-                  `}
+                  className="w-full bg-transparent border-none outline-none resize-none text-[15px] text-[var(--text-primary)] placeholder:text-[var(--text-placeholder)] max-h-[200px] custom-scrollbar leading-relaxed"
                 />
               </div>
 
-              <div className="relative z-10 flex items-center justify-between gap-2 px-2 pb-2 pt-1 border-t border-white/[0.05] overflow-visible">
+              <div className="relative z-10 flex items-center justify-between gap-2 px-2 pb-2 pt-1 border-t border-[var(--border-color)] overflow-visible">
                 <div className="flex items-center gap-1">
                   <div className="relative shrink-0">
                     <FileUploadMenu onFileSelect={handleFileSelect} positionedByParent />
@@ -721,8 +1030,8 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
                       className={`
                         p-2 rounded-xl transition-all relative z-[1]
                         ${plusPopupOpen
-                          ? 'bg-white/10 text-white/70'
-                          : 'text-white/45 hover:text-white hover:bg-white/[0.06]'}
+                          ? 'bg-black/5 dark:bg-white/10 text-black dark:text-white/70'
+                          : 'text-gray-400 dark:text-white/45 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/[0.06]'}
                       `}
                       aria-label="Attach file"
                       aria-expanded={plusPopupOpen}
@@ -742,7 +1051,7 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
                 <div className="flex items-center gap-0.5">
                   <div className="relative flex items-center justify-center">
                     {isListening && (
-                      <span className="absolute inset-0 rounded-full animate-ping bg-white/50" aria-hidden />
+                      <span className="absolute inset-0 rounded-full animate-ping bg-black/10 dark:bg-white/50" aria-hidden />
                     )}
                     <button
                       type="button"
@@ -751,12 +1060,12 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
                       aria-label={isListening ? 'Stop listening' : 'Voice to text'}
                       className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
                         isListening
-                          ? 'bg-white/15 border border-white/40 shadow-[0_0_12px_rgba(255,255,255,0.35)]'
-                          : 'text-white/40 hover:text-white/70'
+                          ? 'bg-black/5 dark:bg-white/15 border border-black/10 dark:border-white/40 shadow-[0_0_12px_rgba(255,255,255,0.35)] text-black dark:text-white'
+                          : 'text-gray-400 dark:text-white/40 hover:text-black dark:hover:text-white'
                       }`}
                     >
                       {isListening
-                        ? <Mic className="w-4 h-4 text-white" />
+                        ? <Mic className="w-4 h-4" />
                         : <Mic className="w-4 h-4" />
                       }
                     </button>
@@ -772,7 +1081,7 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
                       }
                     }}
                     title="Voice to Voice"
-                    className={`p-2 rounded-xl transition-all ${isVoiceMode ? 'bg-white/10 text-white/70' : 'text-white/45 hover:text-white/70 hover:bg-white/5'}`}
+                    className={`p-2 rounded-xl transition-all ${isVoiceMode ? 'bg-black/5 dark:bg-white/10 text-black dark:text-white' : 'text-gray-400 dark:text-white/45 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'}`}
                     aria-label="Start voice conversation"
                   >
                     <AudioLines size={20} />
@@ -785,8 +1094,8 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
                     className={`
                       p-2.5 rounded-xl transition-all duration-300 ml-0.5
                       ${canSend
-                        ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.15)] hover:shadow-[0_0_22px_rgba(255,255,255,0.25)] hover:scale-[1.03] active:scale-[0.98]'
-                        : 'bg-white/[0.06] text-white/20 cursor-not-allowed'}
+                        ? 'bg-black text-white dark:bg-white dark:text-black shadow-md hover:bg-neutral-800 dark:hover:bg-gray-100 hover:scale-[1.03] active:scale-[0.98]'
+                        : 'bg-black/5 dark:bg-white/[0.06] text-gray-300 dark:text-white/20 cursor-not-allowed'}
                     `}
                     aria-label="Send message"
                   >
@@ -797,6 +1106,7 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
             </>
           )}
         </div>
+      </div>
 
         {/* Voice mode controls */}
         {isVoiceMode && (
@@ -861,19 +1171,19 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
 
               if (isFree) {
                 return (
-                  <div className="text-xs text-white/30 text-center mt-1">
+                  <div className="text-xs text-[var(--text-muted)] text-center mt-1 font-medium">
                     {dailyUsed}/5 AI messages today
                   </div>
                 );
               } else {
                 return (
-                  <div className="text-xs text-white/30 text-center mt-1">
+                  <div className="text-xs text-[var(--text-muted)] text-center mt-1 font-medium">
                     {dailyUsed} messages today
                   </div>
                 );
               }
             })()}
-            <p className="text-center text-[11px] text-white/20 mt-2">
+            <p className="text-center text-[11px] text-[var(--text-placeholder)] mt-2">
               HirenextAI can make mistakes. Verify important information.
             </p>
           </div>
@@ -881,6 +1191,24 @@ const ChatInput = ({ embedded = false, className = '', demo = false }) => {
       </div>
     </div>
   );
+};
+
+const formatFileSize = (bytes) => {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+};
+
+const getFileIcon = (filename) => {
+  const ext = filename.split('.').pop().toLowerCase();
+  if (['pdf'].includes(ext)) return '📄';
+  if (['doc', 'docx'].includes(ext)) return '📘';
+  if (['zip', 'rar', 'tar', 'gz', '7z'].includes(ext)) return '📦';
+  if (['mp4', 'mov', 'avi', 'mkv', 'webm'].includes(ext)) return '🎥';
+  if (['mp3', 'wav', 'ogg', 'm4a'].includes(ext)) return '🎵';
+  return '📎';
 };
 
 export default ChatInput;
